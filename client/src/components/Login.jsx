@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Context from "../util/context";
+import { useContext } from "react";
 
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const {session,setSession}  = useContext(Context) ;
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -25,6 +28,8 @@ const Login = () => {
         user,
         { withCredentials: true }
       );
+
+      setSession(data.user);
 
       navigate("/");
     } catch (err) {

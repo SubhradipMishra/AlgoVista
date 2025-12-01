@@ -31,32 +31,32 @@ const schema = new Schema(
       required: true,
     },
 
-    
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+
     modules: [
       {
         title: {
           type: String,
           required: true,
         },
-
         submodules: [
           {
             title: {
               type: String,
               required: true,
             },
-
             videoUrl: {
               type: String,
               default: null,
             },
-
-            
             pdfUrl: {
               type: String,
               default: null,
             },
-
             description: {
               type: String,
               default: "",

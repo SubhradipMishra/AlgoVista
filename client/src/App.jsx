@@ -26,6 +26,7 @@ import SortingVisualizer from "./components/devtools/Visualizer/SortingVisualize
 import UserSidebar from "./components/UserSidebar";
 import AddProblems from "./components/admin/AddProblems";
 import CodeEditor from "./components/CodeEditor";
+import AddCourse from "./components/admin/AddCourse";
 
 function App() {
   const [sessionLoading, setSessionLoading] = useState(true);
@@ -86,6 +87,8 @@ function App() {
            element={<AdminSettings/>}
           />
 
+          <Route path="/admin/course" element={<AddCourse />}/>
+
           <Route path="*" element={<NotFound />} />
 
 
@@ -95,7 +98,7 @@ function App() {
           
           <Route  path="/success-stories" element={<SuccessStory />}/>
 
-          <Route path="/admin/add-problems" element ={<AddProblems />} />
+          <Route path="/admin/problems" element ={<AddProblems />} />
 
 
           {/* SUPER ADMIN */}

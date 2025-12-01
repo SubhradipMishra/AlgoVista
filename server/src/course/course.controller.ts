@@ -13,7 +13,7 @@ const uploadToCloudinary = async (filePath: string) => {
 };
 
 /* ─── CREATE COURSE ───────────────────────────────────────────── */
-export const createCourse = async (req: Request, res: Response) => {
+export const createCourse = async (req: any, res: Response) => {
   try {
     const {
       title,
@@ -56,6 +56,7 @@ const [ , moduleIndex, subIndex, type ] = fieldname.split("_");
       difficultyLevel,
       duration,
       instructor,
+      createdBy:req.user._id,
       modules: parsedModules,
     });
 

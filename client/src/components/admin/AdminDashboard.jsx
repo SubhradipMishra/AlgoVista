@@ -1,15 +1,7 @@
 "use client";
 import React, { useState, useEffect, useContext } from "react";
-import {
-  MenuOutlined,
-  DashboardOutlined,
-  BranchesOutlined,
-  QuestionCircleOutlined,
-  SettingOutlined,
-  LogoutOutlined,
-  TrophyOutlined,
-} from "@ant-design/icons";
-import { Drawer, Menu, Avatar, Skeleton, message } from "antd";
+import { MenuOutlined } from "@ant-design/icons";
+import { Skeleton, message } from "antd";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import {
@@ -24,18 +16,19 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import Context from "../../util/context";
+import AdminSidebar from "./AdminSidebar";
 
 const AdminDashboard = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const { session, sessionLoading, setSession } = useContext(Context); // added setSession for logout
-  const [stats, setStats] = useState({
+  const { session, sessionLoading } = useContext(Context);
+
+  const [stats] = useState({
     roadmaps: 14,
     questions: 92,
     learners: 540,
   });
 
-  // 🔹 Redirect if not logged in or not admin
   useEffect(() => {
     if (!sessionLoading) {
       if (!session) {
@@ -47,17 +40,13 @@ const AdminDashboard = () => {
     }
   }, [session, sessionLoading, navigate]);
 
-  // 🔹 Skeleton Loading UI
   if (sessionLoading || !session) {
     return (
-      <div className="flex min-h-screen bg-[#0f0f17] text-white overflow-hidden">
-        {/* Sidebar Skeleton */}
-        <aside className="w-64 bg-[#141428]/90 border-r border-gray-800 backdrop-blur-lg p-6 flex flex-col gap-6">
+      <div className="flex min-h-screen bg-black text-white font-mono overflow-hidden">
+        <aside className="w-64 bg-gray-900 border-r border-gray-700 p-6 flex flex-col gap-6">
           <Skeleton.Avatar active size={64} shape="circle" />
           <Skeleton active paragraph={{ rows: 8 }} />
         </aside>
-
-        {/* Main Section Skeleton */}
         <main className="flex-1 px-8 md:px-16 py-10 overflow-y-auto">
           <Skeleton.Input
             active
@@ -66,10 +55,7 @@ const AdminDashboard = () => {
           />
           <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-8">
             {[...Array(6)].map((_, i) => (
-              <div
-                key={i}
-                className="bg-[#161624]/90 border border-gray-800 rounded-2xl p-6 shadow-lg"
-              >
+              <div key={i} className="bg-gray-900 border border-gray-700 rounded-2xl p-6 shadow-lg">
                 <Skeleton active paragraph={{ rows: 5 }} />
               </div>
             ))}
@@ -79,7 +65,6 @@ const AdminDashboard = () => {
     );
   }
 
-  // Chart Data
   const chartData = [
     { name: "Jan", Roadmaps: 3, Questions: 12, Learners: 50 },
     { name: "Feb", Roadmaps: 4, Questions: 15, Learners: 80 },
@@ -89,194 +74,65 @@ const AdminDashboard = () => {
     { name: "Jun", Roadmaps: 10, Questions: 35, Learners: 350 },
   ];
 
-  // Menu Items with routes
-  const menuItems = [
-    { key: "1", icon: <DashboardOutlined />, label: "Dashboard", route: "/admin/dashboard" },
-    { key: "2", icon: <BranchesOutlined />, label: "Roadmaps", route: "/admin/roadmaps" },
-    { key: "3", icon: <QuestionCircleOutlined />, label: "Questions", route: "/admin/questions" },
-    { key: "4", icon: <SettingOutlined />, label: "Settings", route: "/admin/settings" },
-    { key: "6", icon: <LogoutOutlined />, label: "Logout", route: "/logout" },
-   
-  ];
-
-  // Handle menu click
-  const handleMenuClick = ({ key }) => {
-    const item = menuItems.find((i) => i.key === key);
-    if (!item) return;
-
-    if (item.key === "5") {
-      // Logout
-      message.success("Logged out successfully!");
-      setSession(null); // Clear session from context
-      localStorage.removeItem("session"); // Optional: clear localStorage
-      navigate("/login");
-    } else {
-      navigate(item.route);
-      setOpen(false); // close drawer on mobile
-    }
-  };
-
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-[#0a0a14] via-[#111122] to-[#1c1c2e] text-white overflow-hidden">
-      {/* Sidebar - Desktop */}
-      <div className="hidden md:flex flex-col w-72 bg-[#10101a]/70 backdrop-blur-2xl border-r border-gray-800 p-6">
-        {/* Profile Card */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col items-center gap-3 border-b border-gray-700 pb-6 mb-6"
-        >
-          <Avatar
-            size={70}
-            src="https://avatars.githubusercontent.com/u/9919?s=200&v=4"
-          />
-          <div className="text-center">
-            <h2 className="text-lg font-semibold">
-              {session?.fullname || "Admin User"}
-            </h2>
-            <p className="text-sm text-gray-400 capitalize">
-              {session?.role || "admin"}
-            </p>
-          </div>
-        </motion.div>
-
-        {/* Menu */}
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={["1"]}
-          items={menuItems}
-          className="bg-transparent text-gray-300"
-          onClick={handleMenuClick}
-        />
-      </div>
-
-      {/* Drawer - Mobile */}
-      <Drawer
-        title={
-          <div className="flex flex-col items-center gap-2">
-            <Avatar
-              size={64}
-              src="https://avatars.githubusercontent.com/u/9919?s=200&v=4"
-            />
-            <div className="text-center">
-              <h3 className="text-lg font-semibold text-white">
-                {session?.fullname || "Admin"}
-              </h3>
-              <p className="text-gray-400 text-sm capitalize">
-                {session?.role || "admin"}
-              </p>
-            </div>
-          </div>
-        }
-        placement="left"
-        onClose={() => setOpen(false)}
-        open={open}
-        bodyStyle={{
-          backgroundColor: "#0f0f17",
-          color: "#fff",
-          padding: 0,
-        }}
-        headerStyle={{
-          backgroundColor: "#0f0f17",
-          borderBottom: "1px solid #333",
-        }}
-      >
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={["1"]}
-          items={menuItems}
-          className="bg-transparent text-gray-300"
-          onClick={handleMenuClick}
-        />
-      </Drawer>
+    <div className="min-h-screen flex bg-black text-white font-mono overflow-hidden">
+      {/* Sidebar */}
+      <AdminSidebar session={session} open={open} setOpen={setOpen} />
 
       {/* Main Content */}
-      <div className="flex-1 p-6 md:p-10 relative">
-        {/* Header */}
+      <main className="flex-1 p-6 md:p-10">
+        {/* Mobile Menu Button */}
         <div className="flex items-center justify-between mb-10">
-          <h1 className="text-3xl md:text-4xl font-extrabold tracking-wide">
-            Admin Dashboard 🚀
+          <h1 className="text-3xl md:text-4xl font-bold tracking-wide">
+            Admin Dashboard
           </h1>
-          <button
-            onClick={() => setOpen(true)}
-            className="md:hidden text-white text-2xl"
-          >
+          <button onClick={() => setOpen(true)} className="md:hidden text-white text-2xl">
             <MenuOutlined />
           </button>
         </div>
 
-        {/* Stat Cards */}
+        {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-14">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="p-6 rounded-2xl border border-gray-700 shadow-[0_0_30px_rgba(59,130,246,0.15)] bg-gradient-to-br from-blue-900/20 to-blue-700/10"
-          >
-            <h3 className="text-gray-400 mb-2">Total Roadmaps</h3>
-            <p className="text-4xl font-bold text-blue-400">
-              {stats.roadmaps}
-            </p>
-          </motion.div>
-
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="p-6 rounded-2xl border border-gray-700 shadow-[0_0_30px_rgba(16,185,129,0.15)] bg-gradient-to-br from-green-900/20 to-green-700/10"
-          >
-            <h3 className="text-gray-400 mb-2">Total Questions</h3>
-            <p className="text-4xl font-bold text-green-400">
-              {stats.questions}
-            </p>
-          </motion.div>
-
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="p-6 rounded-2xl border border-gray-700 shadow-[0_0_30px_rgba(234,179,8,0.15)] bg-gradient-to-br from-yellow-900/20 to-yellow-700/10"
-          >
-            <h3 className="text-gray-400 mb-2">Active Learners</h3>
-            <p className="text-4xl font-bold text-yellow-400">
-              {stats.learners}
-            </p>
-          </motion.div>
+          {[
+            { title: "Total Roadmaps", value: stats.roadmaps },
+            { title: "Total Questions", value: stats.questions },
+            { title: "Active Learners", value: stats.learners },
+          ].map((item, i) => (
+            <motion.div
+              key={i}
+              whileHover={{ scale: 1.05 }}
+              className="p-6 rounded-2xl border border-gray-700 shadow-lg bg-gray-900"
+            >
+              <h3 className="text-gray-400 mb-2">{item.title}</h3>
+              <p className="text-4xl font-bold text-white">{item.value}</p>
+            </motion.div>
+          ))}
         </div>
 
-        {/* Chart Section */}
+        {/* Chart */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="bg-[#151523]/80 border border-gray-800 rounded-2xl shadow-[0_0_30px_rgba(255,255,255,0.05)] p-6 md:p-8"
+          className="bg-gray-900 border border-gray-700 rounded-2xl p-6 md:p-8"
         >
-          <h2 className="text-lg font-semibold mb-6 text-gray-300 text-center">
-            Platform Growth Analytics 📈
+          <h2 className="text-lg font-semibold mb-6 text-center text-gray-300">
+            Platform Growth Analytics
           </h2>
           <ResponsiveContainer width="100%" height={400}>
             <BarChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#2f2f3d" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#333" />
               <XAxis dataKey="name" stroke="#bbb" />
               <YAxis stroke="#bbb" />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#11111b",
-                  border: "1px solid #333",
-                  color: "#fff",
-                }}
-              />
-              <Legend />
-              <Bar dataKey="Roadmaps" fill="#3b82f6" radius={[6, 6, 0, 0]} />
-              <Bar dataKey="Questions" fill="#10b981" radius={[6, 6, 0, 0]} />
-              <Line
-                type="monotone"
-                dataKey="Learners"
-                stroke="#facc15"
-                strokeWidth={3}
-                dot={{ r: 4 }}
-                activeDot={{ r: 6 }}
-              />
+              <Tooltip contentStyle={{ backgroundColor: "#111", border: "1px solid #333", color: "#fff" }} />
+              <Legend wrapperStyle={{ color: "#bbb" }} />
+              <Bar dataKey="Roadmaps" fill="#fff" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="Questions" fill="#bbb" radius={[6, 6, 0, 0]} />
+              <Line type="monotone" dataKey="Learners" stroke="#fff" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
             </BarChart>
           </ResponsiveContainer>
         </motion.div>
-      </div>
+      </main>
     </div>
   );
 };
