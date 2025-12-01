@@ -1,0 +1,84 @@
+@keyframes gradient-x {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradient-x 5s ease infinite;
+}
+.grid-bg {
+  background-color: #0f172a; /* Dark navy background */
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 40px 40px; /* Adjust grid size */
+}
+
+/* 🔵 Force white label text */
+.ant-form-item-label > label {
+  color: #e0e0e0 !important;
+  font-weight: 500 !important;
+}
+
+/* 🟣 Force white input text and placeholders */
+.ant-input,
+.ant-input-number-input,
+.ant-input-textarea {
+  color: #ffffff !important;
+  background-color: #1b1b2f !important;
+  border: 1px solid #2e2e4f !important;
+}
+
+.ant-input::placeholder,
+.ant-input-number-input::placeholder,
+.ant-input-textarea::placeholder {
+  color: #888 !important;
+}
+
+/* 🟢 Readonly or disabled inputs */
+.ant-input[disabled],
+.ant-input-disabled {
+  color: #a5a5c3 !important;
+  background-color: #2a2a40 !important;
+  border-color: #3a3a5a !important;
+}
+
+/* 🟠 Upload button styling */
+.ant-upload .ant-btn {
+  background-color: #1b1b2f !important;
+  color: #ffffff !important;
+  border-color: #2e2e4f !important;
+}
+
+.ant-upload .ant-btn:hover {
+  background-color: #2a2a4a !important;
+  border-color: #3a3a6f !important;
+}
+/* dark theme tab and form overrides */
+.custom-tabs .ant-tabs-nav::before {
+  border-color: #1a1a1a !important;
+}
+
+.ant-form-item-label > label {
+  color: #e5e5e5 !important;
+}
+
+.ant-input,
+.ant-input-textarea {
+  background-color: #1a1a1a !important;
+  color: #e5e5e5 !important;
+  border-color: #333 !important;
+}
+
+.ant-input:focus,
+.ant-input:hover {
+  border-color: #f59e0b !important;
+}
