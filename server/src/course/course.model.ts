@@ -41,13 +41,13 @@ const schema = new Schema(
       {
         title: {
           type: String,
-          required: true,
+          // required: true,
         },
         submodules: [
           {
             title: {
               type: String,
-              required: true,
+              // required: true,
             },
             videoUrl: {
               type: String,

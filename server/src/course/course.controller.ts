@@ -24,6 +24,8 @@ export const createCourse = async (req: any, res: Response) => {
       modules,
     } = req.body;
 
+    console.log(req.body);
+
     let parsedModules = JSON.parse(modules);
 
     // Handle uploaded files & assign URLs in submodules
@@ -56,7 +58,7 @@ const [ , moduleIndex, subIndex, type ] = fieldname.split("_");
       difficultyLevel,
       duration,
       instructor,
-      createdBy:req.user._id,
+      createdBy:req.user.id,
       modules: parsedModules,
     });
 
