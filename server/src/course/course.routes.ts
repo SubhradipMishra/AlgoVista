@@ -5,7 +5,6 @@ import {
   createCourse,
   fetchCourses,
   fetchCourse,
-  updateCourse,
   deleteCourse,
 } from "./course.controller";
 
@@ -18,7 +17,7 @@ CourseRouter.post("/create", AdminGuard, uploadMultiple, createCourse);
 
 CourseRouter.get("/", fetchCourses);                         // Get all courses
 CourseRouter.get("/:id", fetchCourse);                       // Get single course by ID
-CourseRouter.put("/:id", updateCourse);                      // Update course
+                    // Update course
 CourseRouter.delete("/:id", deleteCourse);                   // Delete course
 
 export default CourseRouter;

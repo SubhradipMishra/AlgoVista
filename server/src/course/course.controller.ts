@@ -1,107 +1,70 @@
 import { Request, Response } from "express";
 import CourseModel from "./course.model";
-
 import cloudinary from "../../utils/cloudinary";
-// Helper to upload file to Cloudinary
-const uploadToCloudinary = async (filePath: string) => {
+import fs from "fs";
+
+/* Upload Video to Cloudinary */
+const uploadVideoToCloudinary = async (filePath: string) => {
   const result = await cloudinary.uploader.upload(filePath, {
-    resource_type: "auto",
-    folder: "courses",
+    folder: "courses/videos",
+    resource_type: "video",
   });
 
+  fs.unlink(filePath, () => {}); // Delete temp file
   return result.secure_url;
 };
 
-/* ─── CREATE COURSE ───────────────────────────────────────────── */
 export const createCourse = async (req: any, res: Response) => {
   try {
-    const {
-      title,
-      description,
-      difficultyLevel,
-      duration,
-      instructor,
-      modules,
-    } = req.body;
+    const { title, description, difficultyLevel, duration, instructor, modules } =
+      req.body;
 
-    console.log(req.body);
+    let parsedModules = modules ? JSON.parse(modules) : [];
 
-    let parsedModules = JSON.parse(modules);
+    let thumbnail = null;
+    let roadmapImage = null;
 
-    // Handle uploaded files & assign URLs in submodules
-    if (req.files && Array.isArray(req.files)) {
-      for (const file of req.files as Express.Multer.File[]) {
-        const { fieldname, path } = file;
-const [ , moduleIndex, subIndex, type ] = fieldname.split("_");
+    for (const file of req.files as Express.Multer.File[]) {
+      const { fieldname, path: filePath, filename } = file;
 
-		console.log(moduleIndex , " "  ,  subIndex , " " , type);
-        if (
-          parsedModules[moduleIndex] &&
-          parsedModules[moduleIndex].submodules[subIndex]
-        ) {
-          const cloudUrl = await uploadToCloudinary(path);
+      if (fieldname === "thumbnail") {
+        thumbnail = `http://localhost:4000/uploads/courses/${filename}`;
+        continue;
+      }
 
-          if (type === "video") {
-            parsedModules[moduleIndex].submodules[subIndex].videoUrl = cloudUrl;
-          }
+      if (fieldname === "roadmapImage") {
+        roadmapImage = `http://localhost:4000/uploads/courses/${filename}`;
+        continue;
+      }
 
-          if (type === "pdf") {
-            parsedModules[moduleIndex].submodules[subIndex].pdfUrl = cloudUrl;
-          }
-        }
+      // video_0_0 | pdf_1_2 format
+      const [type, moduleIndex, subIndex] = fieldname.split("_");
+      const target = parsedModules[moduleIndex]?.submodules[subIndex];
+      if (!target) continue;
+
+      if (type === "video") {
+        target.videoUrl = await uploadVideoToCloudinary(filePath);``
+      }
+      if (type === "pdf") {
+        target.pdfUrl = `http://localhost:4000/uploads/courses/${filename}`;
       }
     }
 
-    const newCourse = await CourseModel.create({
+    const course = await CourseModel.create({
       title,
       description,
       difficultyLevel,
       duration,
       instructor,
-      createdBy:req.user.id,
+      createdBy: req.user.id,
+      thumbnail,
+      roadmapImage,
       modules: parsedModules,
     });
-
-	console.log(newCourse);
 
     return res.status(201).json({
       success: true,
       message: "Course created successfully",
-      course: newCourse,
-    });
-  } catch (error: any) {
-    console.log(error);
-    return res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-/* ─── FETCH ALL COURSES ───────────────────────────────────────── */
-export const fetchCourses = async (req: Request, res: Response) => {
-  try {
-    const courses = await CourseModel.find();
-
-    return res.status(200).json({
-      success: true,
-      courses,
-    });
-  } catch (error: any) {
-    return res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-/* ─── FETCH SINGLE COURSE ─────────────────────────────────────── */
-export const fetchCourse = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-
-    const course = await CourseModel.findById(id);
-    if (!course)
-      return res
-        .status(404)
-        .json({ success: false, message: "Course not found" });
-
-    return res.status(200).json({
-      success: true,
       course,
     });
   } catch (error: any) {
@@ -109,47 +72,19 @@ export const fetchCourse = async (req: Request, res: Response) => {
   }
 };
 
-/* ─── UPDATE COURSE ───────────────────────────────────────────── */
-export const updateCourse = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-
-    const updatedCourse = await CourseModel.findByIdAndUpdate(id, req.body, {
-      new: true,
-    });
-
-    if (!updatedCourse) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Course not found" });
-    }
-
-    return res.json({
-      success: true,
-      message: "Course updated successfully",
-      updatedCourse,
-    });
-  } catch (error: any) {
-    return res.status(500).json({ success: false, message: error.message });
-  }
+export const fetchCourses = async (_req: Request, res: Response) => {
+  const courses = await CourseModel.find().sort({ createdAt: -1 });
+  res.json({ success: true, courses });
 };
 
-/* ─── DELETE COURSE ───────────────────────────────────────────── */
+export const fetchCourse = async (req: Request, res: Response) => {
+  const course = await CourseModel.findById(req.params.id);
+  if (!course) return res.status(404).json({ success: false, message: "Course not found" });
+  res.json({ success: true, course });
+};
+
 export const deleteCourse = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-
-    const deleted = await CourseModel.findByIdAndDelete(id);
-    if (!deleted)
-      return res
-        .status(404)
-        .json({ success: false, message: "Course not found" });
-
-    return res.json({
-      success: true,
-      message: "Course deleted successfully",
-    });
-  } catch (error: any) {
-    return res.status(500).json({ success: false, message: error.message });
-  }
+  const deleted = await CourseModel.findByIdAndDelete(req.params.id);
+  if (!deleted) return res.status(404).json({ success: false, message: "Course not found" });
+  res.json({ success: true, message: "Course deleted successfully" });
 };

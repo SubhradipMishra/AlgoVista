@@ -27,6 +27,7 @@ import UserSidebar from "./components/UserSidebar";
 import AddProblems from "./components/admin/AddProblems";
 import CodeEditor from "./components/CodeEditor";
 import AddCourse from "./components/admin/AddCourse";
+import Course from "./components/Course";
 
 function App() {
   const [sessionLoading, setSessionLoading] = useState(true);
@@ -61,6 +62,8 @@ function App() {
             path="/dashboard"
             element={<Dashboard/>}
           />
+
+          <Route path="/courses" element={<Course /> } />
           <Route
             path="/problems"
             element={<Problems />}

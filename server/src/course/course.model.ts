@@ -1,19 +1,25 @@
 import { model, Schema } from "mongoose";
 
-const schema = new Schema(
-  {
-    title: {
-      type: String,
-      required: true,
-      lowercase: true,
-      unique: true,
-    },
+const SubmoduleSchema = new Schema({
+  title: String,
+  videoUrl: { type: String, default: null },
+  pdfUrl: { type: String, default: null },
+  description: { type: String, default: "" },
+});
 
-    description: {
-      type: String,
-      required: true,
-      lowercase: true,
-    },
+const ModuleSchema = new Schema({
+  title: String,
+  submodules: [SubmoduleSchema],
+});
+
+const CourseSchema = new Schema(
+  {
+    title: { type: String, required: true, lowercase: true, unique: true },
+
+    thumbnail: { type: String, default: null },
+    roadmapImage: { type: String, default: null },
+
+    description: { type: String, required: true },
 
     difficultyLevel: {
       type: String,
@@ -21,54 +27,14 @@ const schema = new Schema(
       default: "beginner",
     },
 
-    duration: {
-      type: String,
-      required: true,
-    },
+    duration: { type: String, required: true },
+    instructor: [{ type: String, required: true }],
 
-    instructor: {
-      type: [String],
-      required: true,
-    },
+    createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
 
-    createdBy: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-
-    modules: [
-      {
-        title: {
-          type: String,
-          // required: true,
-        },
-        submodules: [
-          {
-            title: {
-              type: String,
-              // required: true,
-            },
-            videoUrl: {
-              type: String,
-              default: null,
-            },
-            pdfUrl: {
-              type: String,
-              default: null,
-            },
-            description: {
-              type: String,
-              default: "",
-            },
-          },
-        ],
-      },
-    ],
+    modules: [ModuleSchema],
   },
   { timestamps: true }
 );
 
-const CourseModel = model("Course", schema);
-
-export default CourseModel;
+export default model("Course", CourseSchema);
