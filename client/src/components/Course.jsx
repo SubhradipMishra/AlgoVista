@@ -1,188 +1,107 @@
 "use client";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Skeleton, Tooltip } from "antd";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-
-// Icons from Ant Design
-import {
-  StarFilled,
-  TeamOutlined,
-  PlayCircleOutlined,
-  FilePdfOutlined,
-} from "@ant-design/icons";
-
-import Context from "../util/context";
-import UserSidebar from "./UserSidebar";
+import { Link } from "react-router-dom";
 
 const Course = () => {
   const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const { session, sessionLoading } = useContext(Context);
-  const [user, setUser] = useState(null);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!session?.id) return;
-    const fetchUser = async () => {
-      try {
-        const res = await axios.get(
-          `http://localhost:4000/auth/user/${session.id}`,
-          { withCredentials: true }
-        );
-        setUser(res.data.user || res.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchUser();
-  }, [session]);
-
-  useEffect(() => {
-    if (!sessionLoading && !session) {
-      navigate("/login");
-    }
-  }, [session, sessionLoading]);
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         const res = await axios.get("http://localhost:4000/course");
-        if (res.data.success) setCourses(res.data.courses);
+        setCourses(res.data.courses);
       } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
+        console.log("Error fetching courses:", error);
       }
     };
+
     fetchCourses();
   }, []);
 
-  if (sessionLoading || loading) {
-    return (
-      <div className="flex min-h-screen bg-black text-white font-mono">
-        <UserSidebar
-          user={user}
-          selectedKey="courses"
-          setSelectedKey={() => {}}
-          navigate={navigate}
-        />
-        <main className="flex-1 p-10 overflow-y-auto">
-          <Skeleton.Input
-            active
-            size="large"
-            style={{ width: "30%", marginBottom: "1.5rem" }}
-          />
-          <div className="grid md:grid-cols-2 gap-8">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div
-                key={i}
-                className="bg-[#111]/80 border border-gray-800 rounded-2xl p-6 shadow-lg"
-              >
-                <Skeleton active paragraph={{ rows: 4 }} />
-              </div>
-            ))}
-          </div>
-        </main>
-      </div>
-    );
-  }
-
-  if (!session) return null;
-
   return (
-    <div className="flex min-h-screen bg-black text-white font-mono">
-      <UserSidebar
-        user={user}
-        selectedKey="courses"
-        setSelectedKey={() => {}}
-        navigate={navigate}
-      />
+    <div className="min-h-screen w-full bg-gradient-to-b from-neutral-900 to-black text-white px-6 py-10">
+      <h1 className="text-4xl font-mono font-bold text-center mb-10">
+        Available Courses
+      </h1>
 
-      <main className="flex-1 px-10 md:px-16 py-10 overflow-y-auto">
-        <div className="flex flex-col gap-2 mb-10">
-          <h1 className="text-3xl font-bold tracking-wide">Courses</h1>
-          <p className="text-gray-400 text-sm">
-            Explore curated courses to level up your skills.
-          </p>
-        </div>
+      {/* Course Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        {courses.map((course) => (
+          <motion.div
+            key={course._id}
+            whileHover={{ scale: 1.03 }}
+            transition={{ type: "spring", stiffness: 250 }}
+            className="rounded-2xl overflow-hidden bg-neutral-800/40 backdrop-blur-lg shadow-xl border border-neutral-700 hover:border-neutral-500 cursor-pointer"
+          >
+            {/* Thumbnail */}
+            <div className="relative w-full h-52">
+              <img
+                src={course.thumbnail}
+                alt={course.title}
+                className="object-cover w-full h-full"
+              />
 
-        <div className="grid md:grid-cols-2 gap-10">
-          {courses.map((course) => (
-            <motion.div
-              whileHover={{
-                scale: 1.04,
-                y: -3,
-                boxShadow: "0px 0px 30px rgba(0, 102, 255, 0.25)",
-              }}
-              transition={{ type: "spring", stiffness: 300 }}
-              key={course._id}
-              className="bg-[#080808] border border-gray-800 rounded-2xl p-6 space-y-4 shadow-xl"
-            >
-              <div className="flex justify-between">
-                <span className="px-2 py-1 text-[11px] rounded-full border border-blue-700 text-blue-400">
-                  Featured
-                </span>
-                <span className="px-2 py-1 text-[11px] rounded-full border border-gray-700 text-gray-300 capitalize">
-                  {course.difficultyLevel}
-                </span>
-              </div>
+              <span className="absolute top-3 left-3 px-3 py-1 text-xs uppercase font-mono bg-purple-600 text-white rounded-full">
+                {course.difficultyLevel}
+              </span>
 
-              <h2 className="text-xl font-semibold">{course.title}</h2>
-              <p className="text-gray-400 text-sm leading-relaxed line-clamp-3">
-                {course.description}
+              <span className="absolute top-3 right-3 px-3 py-1 text-xs bg-black/50 font-mono rounded-full">
+                {course.modules.length} modules
+              </span>
+            </div>
+
+            {/* Bottom Content */}
+            <div className="p-5 space-y-3">
+              <h2 className="text-xl font-mono font-semibold">
+                {course.title}
+              </h2>
+
+              <p className="text-neutral-400 text-sm">
+                {course.description.substring(0, 80)}...
               </p>
 
-              <div className="flex items-center text-xs gap-3 text-gray-400">
-                <span>⏱ {course.duration}</span>
-                <span className="w-1 h-1 bg-gray-600 rounded-full" />
-                <span className="flex items-center gap-1 text-blue-400">
-                  <StarFilled /> 4.8
-                </span>
-                <span className="w-1 h-1 bg-gray-600 rounded-full" />
-                <Tooltip title="Enrolled learners">
-                  <span className="flex items-center gap-1 text-gray-300">
-                    <TeamOutlined /> 0+ Students
+              {/* Tags */}
+              <div className="flex flex-wrap gap-2 mt-3">
+                {course.tags?.map((tag, index) => (
+                  <span
+                    key={index}
+                    className="px-2 py-1 text-xs bg-neutral-700 rounded-full font-mono"
+                  >
+                    {tag}
                   </span>
-                </Tooltip>
+                ))}
               </div>
 
-              {course.modules?.length > 0 && (
-                <p className="text-gray-300 text-sm">
-                  <span className="uppercase text-gray-500 text-[10px]">
-                    First Module:
-                  </span>{" "}
-                  {course.modules[0]?.title}
-                </p>
-              )}
+              {/* Price */}
+              <div className="mt-3 flex justify-between items-center">
+                <div>
+                  {course.courseType === "free" ? (
+                    <p className="text-green-400 font-semibold">Free</p>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <p className="text-gray-300 line-through text-sm">
+                        ₹{course.price}
+                      </p>
+                      <p className="text-purple-400 text-lg font-bold">
+                        ₹{course.discountPrice}
+                      </p>
+                    </div>
+                  )}
+                </div>
 
-              <div className="flex gap-3 pt-2">
-                {course.modules?.[0]?.submodules?.[0]?.videoUrl && (
-                  <button
-                    onClick={() => navigate(`/course/${course._id}/learn`)}
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 font-semibold text-sm transition-all"
-                  >
-                    <PlayCircleOutlined /> Start Learning
-                  </button>
-                )}
-
-                {course.modules?.[0]?.submodules?.[0]?.pdfUrl && (
-                  <a
-                    href={course.modules[0].submodules[0].pdfUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg flex items-center gap-2 font-semibold text-sm"
-                  >
-                    <FilePdfOutlined /> Notes
-                  </a>
-                )}
+                <Link
+                  to={`/courses/${course._id}`}
+                  className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-xl text-sm font-mono"
+                >
+                  View →
+                </Link>
               </div>
-            </motion.div>
-          ))}
-        </div>
-      </main>
+            </div>
+          </motion.div>
+        ))}
+      </div>
     </div>
   );
 };

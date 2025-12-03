@@ -28,6 +28,8 @@ import AddProblems from "./components/admin/AddProblems";
 import CodeEditor from "./components/CodeEditor";
 import AddCourse from "./components/admin/AddCourse";
 import Course from "./components/Course";
+import CourseDetails from "./components/CourseDeatils";
+import CourseLearn from "./components/CourseLearn";
 
 function App() {
   const [sessionLoading, setSessionLoading] = useState(true);
@@ -64,6 +66,8 @@ function App() {
           />
 
           <Route path="/courses" element={<Course /> } />
+          <Route path="/courses/:id" element={<CourseDetails />} />
+          <Route path="/course/:id/learn" element={<CourseLearn />} />
           <Route
             path="/problems"
             element={<Problems />}

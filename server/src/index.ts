@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import path from "path";
 
 // ✅ Import all routes
 import UserRouter from "./user/user.routes";
@@ -32,6 +33,8 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use("/uploads/courses", express.static(path.join(__dirname, "../uploads/courses")));
+
 
 mongoose
   .connect(process.env.DB_URL as string)
@@ -76,4 +79,7 @@ import SubmissionRouter from "./submission/submission.route";
 app.use("/submissions",SubmissionRouter)
 
 import CourseRouter from './course/course.routes'
+
 app.use('/course', CourseRouter)
+
+
