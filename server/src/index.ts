@@ -84,3 +84,7 @@ app.use('/course', CourseRouter)
 
 
 
+
+
+import CourseEnrollmentRouter from './course-enrollment/course-enrollment.routes'
+app.use('/course-enrollment', CourseEnrollmentRouter)

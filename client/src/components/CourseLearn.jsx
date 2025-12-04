@@ -190,10 +190,10 @@ const CourseLearn = () => {
   return (
     <div className="h-screen bg-[#0b0b0d] text-white flex overflow-hidden">
       {/* SIDEBAR WITH MODULE + SUBMODULE TITLES */}
-      <aside className="w-80 bg-[#111111] border-r border-white/10 overflow-y-auto p-5">
+      <aside className="w-80 bg-gray-900 border-r border-white/10 overflow-y-auto p-5">
         {/* Header */}
         <div className="mb-6 pb-4 border-b border-white/10">
-          <h2 className="text-xl font-semibold">Course Contents</h2>
+          <h2 className="text-xl font-semibold capitalize">{course.title}</h2>
           <div className="flex items-center gap-2 text-xs text-white/60">
             <AiOutlineFolderOpen className="text-white" />
             <span>{modules.length} modules</span>
@@ -208,7 +208,7 @@ const CourseLearn = () => {
               <button
                 className={`w-full flex items-center justify-between px-4 py-3 rounded-lg border text-left transition-all ${
                   activeModule === modIndex
-                    ? "bg-white text-black border-white"
+                    ? "bg-purple-500 text-orange-500 border-white"
                     : "bg-black border-white/20 hover:border-white/60"
                 }`}
                 onClick={() => {
@@ -219,7 +219,7 @@ const CourseLearn = () => {
                 <div className="flex items-center gap-3">
                   <AiOutlineFolderOpen
                     className={
-                      activeModule === modIndex ? "text-black" : "text-white"
+                      activeModule === modIndex ? "text-black" : "text-gray-900"
                     }
                   />
                   <div>
@@ -246,7 +246,7 @@ const CourseLearn = () => {
 
               {/* Submodule titles */}
               {activeModule === modIndex && (
-                <div className="mt-2 ml-5 space-y-2">
+                <div className="!mt-2 !ml-5 !space-y-2">
                   {mod.submodules.map((lesson, lessonIndex) => (
                     <Tooltip
                       key={lessonIndex}
@@ -256,15 +256,15 @@ const CourseLearn = () => {
                       <button
                         className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left text-sm border transition-all ${
                           activeLesson === lessonIndex
-                            ? "bg-white text-black border-white"
-                            : "bg-black border-white/20 hover:border-white/60"
+                            ? "bg-gray-500 text-black border-white"
+                            : "bg-gray-900 border-white/20 hover:border-white/60"
                         }`}
                         onClick={() => setActiveLesson(lessonIndex)}
                       >
                         {activeLesson === lessonIndex ? (
                           <AiOutlineCheckCircle className="text-black" />
                         ) : (
-                          <div className="w-2 h-2 rounded-full bg-white/40 text-gray-900" />
+                          <div className="w-2 h-2 rounded-full bg-white/40 text-gray" />
                         )}
                         <span className="truncate flex-1">
                           {lesson.title}

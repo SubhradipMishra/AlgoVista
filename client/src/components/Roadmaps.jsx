@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Context from "../util/context";
 import UserSidebar from "./UserSidebar";
 
-const Course = () => {
+const Roadmaps = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -203,4 +203,4 @@ const Course = () => {
   );
 };
 
-export default Course;
+export default Roadmaps;
