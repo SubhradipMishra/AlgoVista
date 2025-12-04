@@ -9,6 +9,9 @@ import {
   AiOutlineFilePdf,
   AiOutlineExpand,
   AiOutlineShrink,
+  AiOutlineFolderOpen,
+  AiOutlineClockCircle,
+  AiOutlineCheckCircle,
 } from "react-icons/ai";
 
 const CourseLearn = () => {
@@ -61,12 +64,12 @@ const CourseLearn = () => {
     if (!currentLesson || !currentLesson.videoUrl) return;
 
     const handleTimeUpdate = () => {
-      setCurrentTime(video.currentTime);
-      setDuration(video.duration);
+      setCurrentTime(video.currentTime || 0);
+      setDuration(video.duration || 0);
     };
 
     const handleLoadedMetadata = () => {
-      setDuration(video.duration);
+      setDuration(video.duration || 0);
     };
 
     video.addEventListener("timeupdate", handleTimeUpdate);
@@ -93,7 +96,7 @@ const CourseLearn = () => {
   const handleVolumeChange = (e) => {
     const video = videoRef.current;
     if (!video) return;
-    const newVolume = e.target.value;
+    const newVolume = Number(e.target.value);
     video.volume = newVolume;
     setVolume(newVolume);
   };
@@ -101,7 +104,9 @@ const CourseLearn = () => {
   const handleSeekChange = (e) => {
     const video = videoRef.current;
     if (!video) return;
-    video.currentTime = e.target.value;
+    const newTime = Number(e.target.value);
+    video.currentTime = newTime;
+    setCurrentTime(newTime);
   };
 
   const handleFullscreen = () => {
@@ -176,6 +181,7 @@ const CourseLearn = () => {
   const attachments = getLessonAttachments();
 
   const formatTime = (time) => {
+    if (!time || Number.isNaN(time)) return "0:00";
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
@@ -183,149 +189,210 @@ const CourseLearn = () => {
 
   return (
     <div className="h-screen bg-[#0b0b0d] text-white flex overflow-hidden">
-      {/* SIDEBAR */}
-      <aside className="w-72 bg-[#131317] border-r border-white/10 overflow-y-auto p-4">
-        <h2 className="text-lg font-semibold mb-4">Course Contents</h2>
-
-        {modules.map((mod, modIndex) => (
-          <div key={modIndex} className="mb-4">
-            <button
-              className="w-full text-left px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10"
-              onClick={() => {
-                setActiveModule(modIndex);
-                setActiveLesson(0);
-              }}
-            >
-              <p className="font-semibold">{mod.title}</p>
-              <p className="text-xs text-white/50">
-                {mod.submodules.length} lessons
-              </p>
-            </button>
-
-            {activeModule === modIndex && (
-              <div className="ml-3 mt-2 space-y-2">
-                {mod.submodules.map((lesson, lessonIndex) => (
-                  <Tooltip
-                    key={lessonIndex}
-                    title={lesson.description}
-                    placement="right"
-                  >
-                    <button
-                      className={`block w-full text-left px-3 py-2 rounded-lg !ml-4 text-sm ${
-                        activeLesson === lessonIndex
-                          ? "bg-[#ffffff] text-black"
-                          : "bg-white/5 hover:bg-white/10"
-                      }`}
-                      onClick={() => setActiveLesson(lessonIndex)}
-                    >
-                      {lesson.title}
-                    </button>
-                  </Tooltip>
-                ))}
-              </div>
-            )}
+      {/* SIDEBAR WITH MODULE + SUBMODULE TITLES */}
+      <aside className="w-80 bg-[#111111] border-r border-white/10 overflow-y-auto p-5">
+        {/* Header */}
+        <div className="mb-6 pb-4 border-b border-white/10">
+          <h2 className="text-xl font-semibold">Course Contents</h2>
+          <div className="flex items-center gap-2 text-xs text-white/60">
+            <AiOutlineFolderOpen className="text-white" />
+            <span>{modules.length} modules</span>
           </div>
-        ))}
+        </div>
+
+        {/* Modules + submodules */}
+        <div className="space-y-4">
+          {modules.map((mod, modIndex) => (
+            <div key={modIndex}>
+              {/* Module title row */}
+              <button
+                className={`w-full flex items-center justify-between px-4 py-3 rounded-lg border text-left transition-all ${
+                  activeModule === modIndex
+                    ? "bg-white text-black border-white"
+                    : "bg-black border-white/20 hover:border-white/60"
+                }`}
+                onClick={() => {
+                  setActiveModule(modIndex);
+                  setActiveLesson(0);
+                }}
+              >
+                <div className="flex items-center gap-3">
+                  <AiOutlineFolderOpen
+                    className={
+                      activeModule === modIndex ? "text-black" : "text-white"
+                    }
+                  />
+                  <div>
+                    <p
+                      className={
+                        activeModule === modIndex
+                          ? "text-sm font-medium text-black"
+                          : "text-sm font-medium text-white"
+                      }
+                    >
+                      {mod.title}
+                    </p>
+                    <p className="text-[11px] text-white/60">
+                      {mod.submodules.length} lessons
+                    </p>
+                  </div>
+                </div>
+                <span className="flex items-center gap-1 text-[11px] text-white/60">
+                  <AiOutlineClockCircle />
+                  {/* static text here; can swap with real duration if you store it */}
+                  {mod.submodules.length * 5}min
+                </span>
+              </button>
+
+              {/* Submodule titles */}
+              {activeModule === modIndex && (
+                <div className="mt-2 ml-5 space-y-2">
+                  {mod.submodules.map((lesson, lessonIndex) => (
+                    <Tooltip
+                      key={lessonIndex}
+                      title={lesson.description}
+                      placement="right"
+                    >
+                      <button
+                        className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left text-sm border transition-all ${
+                          activeLesson === lessonIndex
+                            ? "bg-white text-black border-white"
+                            : "bg-black border-white/20 hover:border-white/60"
+                        }`}
+                        onClick={() => setActiveLesson(lessonIndex)}
+                      >
+                        {activeLesson === lessonIndex ? (
+                          <AiOutlineCheckCircle className="text-black" />
+                        ) : (
+                          <div className="w-2 h-2 rounded-full bg-white/40 text-gray-900" />
+                        )}
+                        <span className="truncate flex-1">
+                          {lesson.title}
+                        </span>
+                        {lesson.videoUrl && (
+                          <span className="flex items-center gap-1 text-[11px] text-white/60">
+                            <AiOutlineClockCircle />
+                            {formatTime(duration)}
+                          </span>
+                        )}
+                      </button>
+                    </Tooltip>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Progress Footer */}
+        <div className="mt-8 pt-4 border-t border-white/10">
+          <div className="text-xs text-white/60 mb-1 flex justify-between">
+            <span>Progress</span>
+            <span>25%</span>
+          </div>
+          <div className="w-full bg-white/10 rounded-full h-2">
+            <div className="bg-white h-2 rounded-full w-[25%]" />
+          </div>
+        </div>
       </aside>
 
       {/* MAIN CONTENT */}
       <main className="flex-1 p-6 overflow-y-auto">
         {/* Title */}
-        <h1 className="text-3xl font-bold">{currentLesson ? currentLesson.title : "No Lesson"}</h1>
+        <h1 className="text-3xl font-bold">
+          {currentLesson ? currentLesson.title : "No Lesson"}
+        </h1>
 
         {/* Tabs */}
         <div className="flex space-x-6 mt-6 border-b border-white/10 pb-2">
-          {["video", "description", "discussion", "attachments", "ai"].map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`capitalize text-sm pb-2 !mr-6 ${
-                activeTab === tab
-                  ? "text-purple-400 border-b-2 border-purple-400"
-                  : "text-white/60 hover:text-white"
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
+          {["video", "description", "discussion", "attachments", "ai"].map(
+            (tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`capitalize text-sm pb-2 !mr-6 ${
+                  activeTab === tab
+                    ? "text-white border-b-2 border-white"
+                    : "text-white/60 hover:text-white"
+                }`}
+              >
+                {tab}
+              </button>
+            )
+          )}
         </div>
 
         {/* TAB CONTENTS */}
         <div className="mt-6 !ml-4">
-          {/* VIDEO PLAYER - NEW TAB */}
-          {activeTab === "video" && currentLesson && currentLesson.videoUrl && (
-            <div
-              ref={videoContainerRef}
-              className="bg-[#111113] rounded-xl border border-white/10 overflow-hidden"
-            >
-              <video
-                ref={videoRef}
-                src={currentLesson.videoUrl}
-                className="w-full h-96 md:h-[500px] object-contain bg-black"
-                preload="metadata"
-              />
+          {/* VIDEO PLAYER */}
+          {activeTab === "video" &&
+            currentLesson &&
+            currentLesson.videoUrl && (
+              <div
+                ref={videoContainerRef}
+                className="bg-[#111113] rounded-xl border border-white/10 overflow-hidden"
+              >
+                <video
+                  ref={videoRef}
+                  src={currentLesson.videoUrl}
+                  className="w-full h-96 md:h-[500px] object-contain bg-black"
+                  preload="metadata"
+                />
 
-              {/* Custom Controls */}
-              <div className="px-4 py-2 bg-black/80 backdrop-blur-sm">
-                <div className="flex items-center gap-4">
-                  {/* Play/Pause */}
-                  <button
-                    onClick={handlePlayPause}
-                    className="p-2 hover:bg-white/20 rounded-full transition-all"
-                  >
-                    <AiOutlinePlayCircle
-                      className={`w-8 h-8 ${isPlaying ? "text-red-400" : "text-white"}`}
-                    />
-                  </button>
+                {/* Custom Controls */}
+                <div className="px-4 py-2 bg-black/80 backdrop-blur-sm">
+                  <div className="flex items-center gap-4">
+                    {/* Play/Pause */}
+                    <button
+                      onClick={handlePlayPause}
+                      className="p-2 hover:bg-white/20 rounded-full transition-all"
+                    >
+                      <AiOutlinePlayCircle className="w-8 h-8 text-white" />
+                    </button>
 
-                  {/* Progress Bar */}
-                  <div className="flex-1 flex items-center gap-2">
-                    <span className="text-xs text-white/70 min-w-[5rem]">
-                      {formatTime(currentTime)} / {formatTime(duration)}
-                    </span>
-                    <input
-                      type="range"
-                      min={0}
-                      max={duration}
-                      value={currentTime}
-                      onChange={handleSeekChange}
-                      className="flex-1 h-2 bg-white/20 rounded-lg appearance-none cursor-pointer hover:bg-white/30 accent-purple-500"
-                      style={{
-                        background: `linear-gradient(to right, #9333ea 0%, #9333ea ${
-                          (currentTime / duration) * 100
-                        }%, transparent ${(currentTime / duration) * 100}%, transparent 100%)`,
-                      }}
-                    />
+                    {/* Progress Bar */}
+                    <div className="flex-1 flex items-center gap-2">
+                      <span className="text-xs text-white/70 min-w-[5rem]">
+                        {formatTime(currentTime)} / {formatTime(duration)}
+                      </span>
+                      <input
+                        type="range"
+                        min={0}
+                        max={duration || 0}
+                        value={currentTime}
+                        onChange={handleSeekChange}
+                        className="flex-1 h-2 bg-white/20 rounded-lg appearance-none cursor-pointer hover:bg-white/30"
+                      />
+                    </div>
+
+                    {/* Volume */}
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="range"
+                        min={0}
+                        max={1}
+                        step={0.1}
+                        value={volume}
+                        onChange={handleVolumeChange}
+                        className="w-20 h-2 bg-white/20 rounded-lg appearance-none cursor-pointer hover:bg-white/30"
+                      />
+                    </div>
+
+                    {/* Fullscreen */}
+                    <button
+                      onClick={handleFullscreen}
+                      className="p-2 hover:bg-white/20 rounded-full transition-all"
+                    >
+                      {isFullscreen ? (
+                        <AiOutlineShrink className="w-6 h-6" />
+                      ) : (
+                        <AiOutlineExpand className="w-6 h-6" />
+                      )}
+                    </button>
                   </div>
-
-                  {/* Volume */}
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="range"
-                      min={0}
-                      max={1}
-                      step={0.1}
-                      value={volume}
-                      onChange={handleVolumeChange}
-                      className="w-20 h-2 bg-white/20 rounded-lg appearance-none cursor-pointer hover:bg-white/30 accent-purple-500"
-                    />
-                  </div>
-
-                  {/* Fullscreen */}
-                  <button
-                    onClick={handleFullscreen}
-                    className="p-2 hover:bg-white/20 rounded-full transition-all"
-                  >
-                    {isFullscreen ? (
-                      <AiOutlineShrink className="w-6 h-6" />
-                    ) : (
-                      <AiOutlineExpand className="w-6 h-6" />
-                    )}
-                  </button>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
           {/* DESCRIPTION */}
           {activeTab === "description" && (
@@ -342,7 +409,7 @@ const CourseLearn = () => {
                 className="w-full bg-[#111113] border border-white/10 rounded-lg p-3 text-sm"
                 rows={3}
               />
-              <button className="mt-3 px-4 py-2 rounded-lg bg-purple-500 hover:bg-purple-600">
+              <button className="mt-3 px-4 py-2 rounded-lg bg-white text-black text-sm hover:bg-white/90">
                 Post
               </button>
             </div>
@@ -352,7 +419,7 @@ const CourseLearn = () => {
           {activeTab === "attachments" && (
             <div className="bg-[#111113] p-5 rounded-xl border border-white/10">
               <h2 className="text-lg font-semibold flex items-center gap-2">
-                <AiOutlinePaperClip className="text-purple-400 text-xl" />
+                <AiOutlinePaperClip className="text-white text-xl" />
                 Lesson Resources
               </h2>
 
@@ -364,40 +431,33 @@ const CourseLearn = () => {
                       className="flex items-center justify-between bg-[#0d0d10] p-4 rounded-xl border border-white/10"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="p-3 bg-purple-500/10 rounded-lg">
+                        <div className="p-3 bg-black rounded-lg border border-white/20">
                           {res.type === "video" ? (
-                            <AiOutlinePlayCircle className="text-purple-400 text-xl" />
+                            <AiOutlinePlayCircle className="text-white text-xl" />
                           ) : (
-                            <AiOutlineFilePdf className="text-red-500 text-xl" />
+                            <AiOutlineFilePdf className="text-white text-xl" />
                           )}
                         </div>
                         <div>
                           <p className="text-white font-medium">{res.name}</p>
                           <p className="text-xs text-white/50">
-                            {res.type === "video" ? "Video file" : "PDF document"}
+                            {res.type === "video"
+                              ? "Video file"
+                              : isPDF(res.url)
+                              ? "PDF document"
+                              : "File"}
                           </p>
                         </div>
                       </div>
 
-                      {res.type === "video" ? (
-                        <a
-                          href={res.url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="px-5 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-sm whitespace-nowrap"
-                        >
-                          Open Fullscreen
-                        </a>
-                      ) : (
-                        <a
-                          href={res.url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="px-5 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-sm whitespace-nowrap"
-                        >
-                          Open PDF
-                        </a>
-                      )}
+                      <a
+                        href={res.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="px-5 py-2 bg-white text-black rounded-lg text-sm whitespace-nowrap hover:bg-white/90"
+                      >
+                        Open
+                      </a>
                     </div>
                   ))
                 ) : (
@@ -432,7 +492,7 @@ const CourseLearn = () => {
               currentModule &&
               activeLesson === currentModule.submodules.length - 1
             }
-            className="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 rounded-lg bg-white text-black hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Next
           </button>
