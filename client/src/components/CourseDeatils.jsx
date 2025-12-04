@@ -3,7 +3,13 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { StarFilled, UserOutlined, ClockCircleOutlined, BookOutlined, PlayCircleOutlined } from "@ant-design/icons";
+import { 
+  StarFilled, 
+  UserOutlined, 
+  ClockCircleOutlined, 
+  BookOutlined, 
+  PlayCircleOutlined 
+} from "@ant-design/icons";
 
 const CourseDetails = () => {
   const { id } = useParams();
@@ -16,7 +22,9 @@ const CourseDetails = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const { data } = await axios.get(`http://localhost:4000/course/${id}`);
+        const { data } = await axios.get(`http://localhost:4000/course/${id}`, {
+          withCredentials: true,
+        });
         setCourse(data.course || null);
       } catch (error) {
         console.log("Error fetching course:", error);
@@ -27,8 +35,26 @@ const CourseDetails = () => {
     fetchCourse();
   }, [id]);
 
-  const handleAccessContent = () => navigate(`/course/${id}/learn`);
+  // ✅ Enroll user then navigate for FREE course
+  const handleFreeCourseStart = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:4000/course-enrollment",
+        { courseId: id },
+        { withCredentials: true }
+      );
+
+      console.log("Enrolled:", res.data);
+
+      navigate(`/courses/${id}/learn`); 
+    } catch (err) {
+      console.log("Enrollment error:", err);
+    }
+  };
+
+  // Paid course → Checkout page
   const handleBuyNow = () => navigate(`/checkout/${id}`);
+
   const handlePreview = () => navigate(`/course/${id}/preview`);
 
   if (loading) {
@@ -66,11 +92,13 @@ const CourseDetails = () => {
   return (
     <div className="min-h-screen grid-bg text-white font-mono overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 py-12 lg:px-8 lg:py-16">
-        {/* Hero Section */}
+
         <div className="grid lg:grid-cols-[2.2fr_1fr] gap-12 items-start">
-          {/* Main Content */}
+
+          {/* Main Section */}
           <div className="space-y-8">
-            {/* Course Hero Image */}
+
+            {/* Course Hero */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -82,7 +110,7 @@ const CourseDetails = () => {
                 className="w-full h-[280px] lg:h-[360px] object-cover hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-              
+
               {/* Badges */}
               <div className="absolute top-6 left-6 flex flex-wrap gap-2">
                 <span className="px-4 py-2 bg-purple-600/80 text-xs font-bold uppercase tracking-wider rounded-full border border-purple-500/50">
@@ -118,13 +146,18 @@ const CourseDetails = () => {
               <h1 className="text-4xl lg:text-5xl font-black leading-tight text-white">
                 {course.title}
               </h1>
-              <p className="text-lg text-gray-300 leading-relaxed max-w-3xl">{course.description}</p>
+              <p className="text-lg text-gray-300 leading-relaxed max-w-3xl">
+                {course.description}
+              </p>
 
               {/* Tags */}
               {course.tags?.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {course.tags.map((tag, i) => (
-                    <span key={i} className="px-4 py-2 bg-gray-800/50 border border-gray-600 rounded-2xl text-sm font-medium text-purple-300 hover:bg-purple-500/20 transition-all">
+                    <span 
+                      key={i} 
+                      className="px-4 py-2 bg-gray-800/50 border border-gray-600 rounded-2xl text-sm font-medium text-purple-300 hover:bg-purple-500/20 transition-all"
+                    >
                       {tag}
                     </span>
                   ))}
@@ -132,7 +165,7 @@ const CourseDetails = () => {
               )}
             </motion.div>
 
-            {/* Instructor Section */}
+            {/* Instructor */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -165,7 +198,9 @@ const CourseDetails = () => {
                 transition={{ delay: 0.3 }}
                 className="rounded-3xl border border-gray-700/50 bg-[#1a1a1a]/80 p-8 backdrop-blur-sm"
               >
-                <h3 className="text-xl font-bold mb-6 uppercase tracking-wider text-purple-300">Prerequisites</h3>
+                <h3 className="text-xl font-bold mb-6 uppercase tracking-wider text-purple-300">
+                  Prerequisites
+                </h3>
                 <ul className="space-y-3">
                   {prerequisites.map((req, i) => (
                     <li key={i} className="flex items-start gap-3 text-gray-300">
@@ -177,7 +212,7 @@ const CourseDetails = () => {
               </motion.div>
             )}
 
-            {/* What You'll Learn */}
+            {/* Learning Outcomes */}
             {course.outCome?.length > 0 && (
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
@@ -185,7 +220,9 @@ const CourseDetails = () => {
                 transition={{ delay: 0.4 }}
                 className="rounded-3xl border border-gray-700/50 bg-[#1a1a1a]/80 p-8 backdrop-blur-sm"
               >
-                <h3 className="text-xl font-bold mb-6 uppercase tracking-wider text-purple-300">What You'll Learn</h3>
+                <h3 className="text-xl font-bold mb-6 uppercase tracking-wider text-purple-300">
+                  What You'll Learn
+                </h3>
                 <ul className="space-y-3">
                   {course.outCome.map((outcome, i) => (
                     <li key={i} className="flex items-start gap-3 text-gray-300">
@@ -196,22 +233,23 @@ const CourseDetails = () => {
                 </ul>
               </motion.div>
             )}
+
           </div>
 
-          {/* Sidebar */}
+          {/* ───────── SIDEBAR ───────── */}
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             className="lg:sticky lg:top-24 space-y-6"
           >
-            {/* Pricing Card */}
+
+            {/* Price Card */}
             <div className="rounded-3xl border-2 border-gray-700/50 bg-[#1a1a1a]/90 backdrop-blur-sm p-8 shadow-xl">
               <div className="space-y-4 mb-8">
                 <p className="text-xs uppercase tracking-widest text-purple-400">Course Price</p>
+
                 {isFree ? (
-                  <p className="text-5xl lg:text-6xl font-black text-green-400">
-                    FREE
-                  </p>
+                  <p className="text-5xl lg:text-6xl font-black text-green-400">FREE</p>
                 ) : (
                   <div className="space-y-2">
                     <span className="text-2xl line-through text-gray-500">₹{course.price}</span>
@@ -220,12 +258,12 @@ const CourseDetails = () => {
                 )}
               </div>
 
-              {/* Main CTA */}
+              {/* CTA BUTTON */}
               {isFree ? (
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={handleAccessContent}
+                  onClick={handleFreeCourseStart}
                   className="w-full py-5 px-6 rounded-3xl text-xl font-bold uppercase tracking-wider bg-green-600 text-white hover:bg-green-700 border border-green-500/50 shadow-lg hover:shadow-purple-500/20 transition-all duration-300"
                 >
                   Start Learning Free
@@ -252,8 +290,9 @@ const CourseDetails = () => {
                 </motion.button>
               )}
 
-              {/* Quick Stats */}
               <div className="h-px bg-gray-700/50 my-6" />
+
+              {/* Course Stats */}
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 bg-purple-500 rounded-full" />
@@ -273,7 +312,9 @@ const CourseDetails = () => {
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 bg-yellow-500 rounded-full" />
                   <span className="text-gray-500">Students</span>
-                  <span className="font-bold ml-auto text-white">{course.enrolledUsers?.length || 0}</span>
+                  <span className="font-bold ml-auto text-white">
+                    {course.enrolledUsers?.length || 0}
+                  </span>
                 </div>
               </div>
             </div>
@@ -308,7 +349,7 @@ const CourseDetails = () => {
           </motion.div>
         </div>
 
-        {/* Course Content Preview */}
+        {/* ───────── COURSE CONTENT SECTION ───────── */}
         <motion.section 
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
@@ -318,7 +359,7 @@ const CourseDetails = () => {
           <h2 className="text-3xl font-black mb-12 text-center uppercase tracking-wider text-white">
             Course Curriculum
           </h2>
-          
+
           {isFree ? (
             <div className="text-center py-20 rounded-3xl border-2 border-dashed border-purple-500/30 bg-purple-500/5">
               <h3 className="text-2xl font-bold mb-4 text-purple-400">Ready to Start?</h3>
@@ -327,7 +368,7 @@ const CourseDetails = () => {
               </p>
               <motion.button
                 whileHover={{ scale: 1.02 }}
-                onClick={handleAccessContent}
+                onClick={handleFreeCourseStart}
                 className="px-12 py-5 rounded-3xl text-xl font-bold uppercase tracking-wider bg-green-600 text-white hover:bg-green-700 border border-green-500/50 shadow-lg hover:shadow-purple-500/20 transition-all duration-300"
               >
                 Access All Content
@@ -359,14 +400,19 @@ const CourseDetails = () => {
                   </div>
                 </motion.div>
               ))}
+
               {course.modules.length > 6 && (
                 <motion.div
                   whileHover={{ scale: 1.02 }}
                   className="md:col-span-2 lg:col-span-3 p-12 border-2 border-dashed border-gray-600/50 rounded-3xl text-center hover:border-purple-500/50 bg-gray-800/30 transition-all cursor-pointer"
                   onClick={handleBuyNow}
                 >
-                  <p className="text-2xl font-bold mb-4 text-purple-400">+{course.modules.length - 6} More Modules</p>
-                  <p className="text-gray-400 mb-6">Purchase to unlock complete curriculum</p>
+                  <p className="text-2xl font-bold mb-4 text-purple-400">
+                    +{course.modules.length - 6} More Modules
+                  </p>
+                  <p className="text-gray-400 mb-6">
+                    Purchase to unlock complete curriculum
+                  </p>
                   <button className="px-8 py-4 bg-purple-600 text-white font-bold rounded-2xl uppercase tracking-wider hover:bg-purple-700 border border-purple-500/50 shadow-lg hover:shadow-purple-500/30 transition-all">
                     Get Full Access
                   </button>
