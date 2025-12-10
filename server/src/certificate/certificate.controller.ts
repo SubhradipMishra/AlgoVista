@@ -8,12 +8,11 @@ import CertificateModel from "./certificate.model";
 
 export const generateCertificate = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { userId, roadmapId, roadmapName, userName, theme = "blue" } = req.body as {
+    const { userId, roadmapId, roadmapName, userName } = req.body as {
       userId: string;
       roadmapId: string;
       roadmapName: string;
       userName: string;
-      theme?: "blue" | "gold" | "dark";
     };
 
     if (!userId || !roadmapId || !roadmapName || !userName) {
@@ -21,29 +20,14 @@ export const generateCertificate = async (req: Request, res: Response): Promise<
       return;
     }
 
- 
-    const themes = {
-      blue: {
-        accent: "#2563eb",
-        text: "#111827",
-        subText: "#374151",
-        background: "#f8fafc",
-      },
-      gold: {
-        accent: "#d97706",
-        text: "#1c1917",
-        subText: "#57534e",
-        background: "#fef9c3",
-      },
-      dark: {
-        accent: "#facc15",
-        text: "#f8fafc",
-        subText: "#e5e7eb",
-        background: "#0f172a",
-      },
+    // === Monotone Theme (Black/White/Gray) ===
+    const selectedTheme = {
+      accent: "#000000",
+      text: "#111111",
+      subText: "#444444",
+      background: "#f7f7f7",
+      border: "#222222",
     };
-    const selectedTheme = themes[theme] || themes.blue;
-
 
     const existingCert = await CertificateModel.findOne({ userId, roadmapId });
     if (existingCert) {
@@ -64,7 +48,6 @@ export const generateCertificate = async (req: Request, res: Response): Promise<
     const verifyUrl = `https://algovista.com/verify/${certificateId}`;
     const qrCodeData = await QRCode.toDataURL(verifyUrl);
 
-    
     const doc = new PDFDocument({
       size: "A4",
       layout: "landscape",
@@ -76,50 +59,65 @@ export const generateCertificate = async (req: Request, res: Response): Promise<
     const width = doc.page.width;
     const height = doc.page.height;
 
-  
+    /* ──────────────────────────────────────────
+        BACKGROUND + MODERN BORDER
+    ───────────────────────────────────────────*/
     doc.rect(0, 0, width, height).fill(selectedTheme.background);
     doc
-      .lineWidth(4)
-      .strokeColor(selectedTheme.accent)
-      .rect(20, 20, width - 40, height - 40)
+      .lineWidth(6)
+      .strokeColor(selectedTheme.border)
+      .rect(30, 30, width - 60, height - 60)
       .stroke();
 
-   
+    /* ──────────────────────────────────────────
+        TITLE BRANDING
+    ───────────────────────────────────────────*/
     doc
       .fillColor(selectedTheme.text)
       .font("Helvetica-Bold")
-      .fontSize(34)
-      .text("ALGO VISTA", 0, 70, { align: "center" });
+      .fontSize(42)
+      .text("ALGO VISTA", 0, 70, { align: "center", characterSpacing: 1.5 });
 
     doc
-      .fillColor(selectedTheme.accent)
-      .fontSize(22)
-      .text("Certificate of Achievement", 0, 120, { align: "center" });
+      .moveTo(width * 0.32, 130)
+      .lineTo(width * 0.68, 130)
+      .strokeColor(selectedTheme.accent)
+      .lineWidth(2)
+      .stroke();
 
-    // === Congratulations line ===
-    doc
-      .fillColor(selectedTheme.accent)
-      .font("Helvetica-Bold")
-      .fontSize(16)
-      .text("Congratulations!", 0, 165, { align: "center" });
-
-    // === Recipient name ===
     doc
       .fillColor(selectedTheme.text)
       .font("Helvetica-Bold")
-      .fontSize(36)
-      .text(userName, 0, 200, { align: "center" });
+      .fontSize(30)
+      .text("Certificate of Achievement", 0, 145, { align: "center" });
 
-    // === Message ===
+    /* ──────────────────────────────────────────
+        RECEIVER NAME
+    ───────────────────────────────────────────*/
+    doc
+      .fillColor(selectedTheme.accent)
+      .font("Helvetica")
+      .fontSize(18)
+      .text("Awarded To", 0, 190, { align: "center" });
+
+    doc
+      .fillColor(selectedTheme.text)
+      .font("Helvetica-Bold")
+      .fontSize(38)
+      .text(userName, 0, 225, { align: "center" });
+
+    /* ──────────────────────────────────────────
+         MESSAGE
+    ───────────────────────────────────────────*/
     doc
       .font("Helvetica")
       .fontSize(14)
       .fillColor(selectedTheme.subText)
       .text(
-        `for successfully completing the "${roadmapName}" roadmap on AlgoVista — demonstrating outstanding learning commitment, perseverance, and excellence in technology.`,
-        100,
-        260,
-        { width: width - 200, align: "center" }
+        `for successfully completing the "${roadmapName}" roadmap — showcasing dedication and excellence in technology learning.`,
+        120,
+        285,
+        { width: width - 240, align: "center" }
       );
 
     doc
@@ -127,66 +125,79 @@ export const generateCertificate = async (req: Request, res: Response): Promise<
       .fontSize(12)
       .fillColor(selectedTheme.subText)
       .text(
-        "We proudly recognize your hard work and wish you great success in all your future endeavors.",
-        100,
-        315,
-        { width: width - 200, align: "center" }
+        "We proudly recognize your efforts and wish you great success in your tech journey.",
+        120,
+        325,
+        { width: width - 240, align: "center" }
       );
 
-    // === QR Code ===
-    doc.image(qrCodeData, width / 2 - 40, 370, { width: 80 });
+    /* ──────────────────────────────────────────
+        QR VERIFICATION
+    ───────────────────────────────────────────*/
+    doc.image(qrCodeData, width / 2 - 45, 365, { width: 90 });
     doc
       .fontSize(10)
       .fillColor(selectedTheme.subText)
-      .text("Scan to verify certificate", 0, 460, { align: "center" });
+      .text("Scan to Verify", 0, 455, { align: "center" });
 
-    // === Signature Section ===
-    const sigY = 420;
-    const sigWidth = 200;
+    /* ──────────────────────────────────────────
+        SIGNATURES
+    ───────────────────────────────────────────*/
+    const sigY = 400;
+    const sigWidth = 220;
 
-    // Signature Lines
+    // Subhradip
     doc
-      .moveTo(180, sigY + 40)
-      .lineTo(180 + sigWidth, sigY + 40)
       .strokeColor(selectedTheme.subText)
+      .moveTo(width * 0.24, sigY + 50)
+      .lineTo(width * 0.24 + sigWidth, sigY + 50)
       .stroke();
-
-    doc
-      .moveTo(520, sigY + 40)
-      .lineTo(520 + sigWidth, sigY + 40)
-      .strokeColor(selectedTheme.subText)
-      .stroke();
-
-    // Signature Names
-    doc
-      .font("Helvetica-Bold")
-      .fontSize(12)
-      .fillColor(selectedTheme.text)
-      .text("Subhradip Mishra", 180, sigY + 45, { width: sigWidth, align: "center" })
-      .font("Helvetica")
-      .fontSize(10)
-      .fillColor(selectedTheme.subText)
-      .text("Founder, AlgoVista", 180, sigY + 60, { width: sigWidth, align: "center" });
 
     doc
       .font("Helvetica-Bold")
       .fontSize(12)
       .fillColor(selectedTheme.text)
-      .text("Soumyadip Mishra", 520, sigY + 45, { width: sigWidth, align: "center" })
+      .text("Subhradip Mishra", width * 0.24, sigY + 55,
+        { width: sigWidth, align: "center" })
       .font("Helvetica")
       .fontSize(10)
       .fillColor(selectedTheme.subText)
-      .text("CEO, AlgoVista", 520, sigY + 60, { width: sigWidth, align: "center" });
+      .text("Founder, AlgoVista", width * 0.24, sigY + 70,
+        { width: sigWidth, align: "center" });
 
-    // === Footer ===
-    doc.rect(0, height - 50, width, 50).fill(selectedTheme.accent);
+    // Soumyadip
+    doc
+      .strokeColor(selectedTheme.subText)
+      .moveTo(width * 0.60, sigY + 50)
+      .lineTo(width * 0.60 + sigWidth, sigY + 50)
+      .stroke();
+
+    doc
+      .font("Helvetica-Bold")
+      .fontSize(12)
+      .fillColor(selectedTheme.text)
+      .text("Soumyadip Mishra", width * 0.60, sigY + 55,
+        { width: sigWidth, align: "center" })
+      .font("Helvetica")
+      .fontSize(10)
+      .fillColor(selectedTheme.subText)
+      .text("CEO, AlgoVista", width * 0.60, sigY + 70,
+        { width: sigWidth, align: "center" });
+
+    /* ──────────────────────────────────────────
+        FOOTER BAR
+    ───────────────────────────────────────────*/
+    doc.rect(0, height - 40, width, 40).fill(selectedTheme.text);
     doc
       .font("Helvetica")
-      .fontSize(11)
-      .fillColor("#fff")
-      .text(`Certificate ID: ${certificateId}  |  AlgoVista © ${new Date().getFullYear()}`, 0, height - 35, {
-        align: "center",
-      });
+      .fontSize(10)
+      .fillColor("#ffffff")
+      .text(
+        `Certificate ID: ${certificateId}  |  AlgoVista © ${new Date().getFullYear()}`,
+        0,
+        height - 28,
+        { align: "center" }
+      );
 
     doc.end();
     await new Promise<void>((resolve) => stream.on("finish", resolve));

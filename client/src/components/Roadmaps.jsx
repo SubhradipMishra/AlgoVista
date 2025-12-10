@@ -2,23 +2,21 @@ import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { Skeleton, Tooltip } from "antd";
 import { motion } from "framer-motion";
-import { PlayCircleOutlined, FilePdfOutlined, TeamOutlined, StarFilled } from "@ant-design/icons";
+import { StarFilled, TeamOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import Context from "../util/context";
 import UserSidebar from "./UserSidebar";
 
 const Roadmaps = () => {
-  const [courses, setCourses] = useState([]);
+  const [roadmaps, setRoadmaps] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const { session, sessionLoading } = useContext(Context);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  // fetch user for sidebar (same pattern as Roadmaps)
   useEffect(() => {
     if (!session?.id) return;
-
     const fetchUser = async () => {
       try {
         const res = await axios.get(
@@ -31,22 +29,20 @@ const Roadmaps = () => {
         console.error(err);
       }
     };
-
     fetchUser();
   }, [session]);
 
-  // redirect if not logged in
   useEffect(() => {
     if (!sessionLoading && !session) {
       navigate("/login");
     }
   }, [session, sessionLoading, navigate]);
 
-  const fetchCourses = async () => {
+  const fetchRoadmaps = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/course");
+      const res = await axios.get("http://localhost:4000/roadmap");
       if (res.data.success) {
-        setCourses(res.data.courses);
+        setRoadmaps(res.data.data || []); // FIX → only store array
       }
       setLoading(false);
     } catch (error) {
@@ -56,7 +52,7 @@ const Roadmaps = () => {
   };
 
   useEffect(() => {
-    fetchCourses();
+    fetchRoadmaps();
   }, []);
 
   if (sessionLoading || loading) {
@@ -105,47 +101,40 @@ const Roadmaps = () => {
       )}
 
       <main className="flex-1 px-8 md:px-16 py-10 overflow-y-auto">
-        {/* Header + small subtitle */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold mb-1">
-              Courses
-            </h1>
+            <h1 className="text-2xl md:text-3xl font-bold mb-1">Roadmaps</h1>
             <p className="text-sm text-gray-400">
               Learn fearlessly, create endlessly.
             </p>
           </div>
         </div>
 
-        {/* Courses grid */}
         <div className="grid md:grid-cols-2 grid-cols-1 gap-8">
-          {courses.map((course, index) => (
+          {roadmaps.map((roadmap, index) => (
             <motion.div
-              key={course._id || index}
+              key={roadmap._id || index}
               whileHover={{ scale: 1.03, y: -4 }}
               className="bg-[#111]/80 border border-gray-800 rounded-3xl p-6 shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_25px_rgba(255,255,255,0.12)] backdrop-blur-lg transition-all"
             >
-              {/* badges */}
               <div className="flex justify-between items-center mb-3 text-[11px]">
                 <span className="inline-flex items-center gap-1 rounded-full bg-black border border-gray-700 px-3 py-1 text-gray-300 uppercase tracking-wide">
                   Popular
                 </span>
                 <span className="inline-flex items-center rounded-full bg-black border border-gray-700 px-3 py-1 text-gray-300 capitalize">
-                  {course.difficultyLevel}
+                  {roadmap.difficulty || roadmap.difficultyLevel}
                 </span>
               </div>
 
-              {/* title + description */}
               <h2 className="text-xl font-semibold mb-2">
-                {course.title}
+                {roadmap.moduleTitle || roadmap.title}
               </h2>
               <p className="text-sm text-gray-400 mb-4">
-                {course.description}
+                {roadmap.description}
               </p>
 
-              {/* meta */}
               <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 mb-4">
-                <span>⏱ {course.duration}</span>
+                <span>⏱ {roadmap.duration || "3-6 months"}</span>
                 <span className="h-1 w-1 rounded-full bg-gray-600" />
                 <span className="flex items-center gap-1 text-gray-300">
                   <StarFilled className="text-yellow-400" /> 4.8
@@ -153,48 +142,17 @@ const Roadmaps = () => {
                 <span className="h-1 w-1 rounded-full bg-gray-600" />
                 <Tooltip title="Enrolled learners">
                   <span className="flex items-center gap-1 text-gray-300">
-                    <TeamOutlined /> 0+ Students
+                    <TeamOutlined /> {roadmap.learners || 0}+ Students
                   </span>
                 </Tooltip>
               </div>
 
-              {/* first module preview (if exists) */}
-              {course.modules?.[0] && (
-                <div className="mb-4">
-                  <p className="text-[11px] uppercase text-gray-500 mb-1">
-                    First module
-                  </p>
-                  <p className="text-sm text-gray-200">
-                    {course.modules[0].title}
-                  </p>
-                </div>
-              )}
-
-              {/* actions: open first video/pdf */}
-              {course.modules?.[0]?.submodules?.[0] && (
-                <div className="flex flex-wrap gap-3 mt-4">
-                  {course.modules[0].submodules[0].videoUrl && (
-                    <a
-                      href={course.modules[0].submodules[0].videoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 text-black text-sm font-semibold hover:bg-white transition-colors"
-                    >
-                      <PlayCircleOutlined /> Watch Intro
-                    </a>
-                  )}
-                  {course.modules[0].submodules[0].pdfUrl && (
-                    <a
-                      href={course.modules[0].submodules[0].pdfUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-800 text-gray-100 text-sm font-semibold hover:bg-gray-700 transition-colors"
-                    >
-                      <FilePdfOutlined /> View Notes
-                    </a>
-                  )}
-                </div>
-              )}
+              <button
+                onClick={() => navigate(`/roadmaps/${roadmap._id}`)}
+                className="inline-flex underline items-center gap-2 px-4 py-2 rounded-lg bg-gray-900 text-black text-sm font-semibold hover:bg-gray-500 transition-colors"
+              >
+                Explore Roadmap →
+              </button>
             </motion.div>
           ))}
         </div>
