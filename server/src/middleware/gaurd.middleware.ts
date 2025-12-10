@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import * as crypto from "crypto";
 
 const expireSession = async (res: Response) => {
   res.cookie("accessToken", null, {
@@ -208,5 +209,33 @@ export const RefreshTokenGaurd = async ( req: any,res: Response,next: NextFuncti
   } catch (error) {
     console.error(" RefreshTokenGaurd Error:", error);
     return expireSession(res);
+  }
+};
+
+
+
+export const RazorpayGaurd = async (req:any, res:any, next:NextFunction) => {
+  try {
+    const signature = req.headers["x-razorpay-signature"];
+
+  
+    const payload = req.body.toString();
+
+    const expectedSignature = crypto
+      .createHmac("sha256", process.env.RZP_WEBHOOK_SECRET as string)
+      .update(payload)
+      .digest("hex");
+
+    // console.log("Received:", signature);
+    // console.log("Expected:", expectedSignature);
+
+    if (signature !== expectedSignature) {
+      return res.status(401).json({ message: "BAD REQUEST!" });
+    }
+
+    next();
+  } 
+  catch (err) {
+    return res.status(401).json({ message: "Invalid Token" });
   }
 };

@@ -10,16 +10,25 @@ import {
   BookOutlined, 
   PlayCircleOutlined 
 } from "@ant-design/icons";
+import { useContext } from "react";
+import Context from "../util/context";
 
+import {useRazorpay} from "react-razorpay" ;
 const CourseDetails = () => {
+
+   const {Razorpay} = useRazorpay();
   const { id } = useParams();
   const navigate = useNavigate();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
-
+ const { session, sessionLoading } = useContext(Context);
   const isPDF = (url) => url?.toLowerCase().endsWith(".pdf");
 
+
+
+  console.log("session",session);
   useEffect(() => {
+
     const fetchCourse = async () => {
       try {
         const { data } = await axios.get(`http://localhost:4000/course/${id}`, {
@@ -53,7 +62,67 @@ const CourseDetails = () => {
   };
 
   // Paid course → Checkout page
-  const handleBuyNow = () => navigate(`/checkout/${id}`);
+  const handleBuyNow = async(course) =>{
+   
+
+    try{
+
+       const {data} = await axios.post(
+        "http://localhost:4000/payment/order",
+        { productId: course._id },
+        { withCredentials: true }
+      );
+
+      console.log(data);
+
+      const options = {
+        key:"rzp_test_RpG7PsiR24EZK5",
+        amount:data.amount ,
+        currency:"INR",
+      name:"AlgoVista",
+      description:course.title,
+       order_id:data.id,
+      handler:(response)=>{
+        alert("Payment Successfull");
+      },
+      prefill:{ 
+        name:session.fullname,
+        email:session.email,
+        contact:"5647484939"
+      },
+      theme:{
+         color:"#f37254"
+      },
+
+      notes:{
+        name:session.fullname,
+        user:session.id,
+        product:course._id,
+        discount:course.discountPrice,
+      }
+      }
+
+       const rzp =  new Razorpay(options) ;
+   rzp.open() ;
+
+
+    rzp.on("payment.failed",()=>{
+    alert("Payment Failed!")
+   })
+
+    }
+
+
+    catch (err) {
+    console.log(err);
+    if(err.status === 401)
+      return navigate("/login");
+    console.error("Payment order failed:", err);
+  }
+
+
+
+  };
 
   const handlePreview = () => navigate(`/course/${id}/preview`);
 
@@ -272,7 +341,8 @@ const CourseDetails = () => {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={handleBuyNow}
+                  onClick={() => handleBuyNow(course)}
+
                   className="w-full py-5 px-6 rounded-3xl text-xl font-bold uppercase tracking-wider bg-purple-600 text-white hover:bg-purple-700 border border-purple-500/50 shadow-lg hover:shadow-purple-500/30 transition-all duration-300"
                 >
                   Buy Now - ₹{course.discountPrice}

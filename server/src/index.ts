@@ -29,6 +29,8 @@ app.use(
   })
 );
 
+app.use("/payment/webhook", express.raw({ type: "application/json" }));
+
 // Enable body parser and cookies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -88,3 +90,9 @@ app.use('/course', CourseRouter)
 
 import CourseEnrollmentRouter from './course-enrollment/course-enrollment.routes'
 app.use('/course-enrollment', CourseEnrollmentRouter)
+
+import PaymentRouter from './payment/payment.routes'
+app.use('/payment', PaymentRouter)
+
+import OrderRouter from './order/order.routes'
+app.use('/order', OrderRouter)

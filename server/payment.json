@@ -1,0 +1,58 @@
+{
+  "entity": "event",
+  "account_id": "acc_QUebrH5CAILoLj",
+  "event": "payment.captured",
+  "contains": [
+    "payment"
+  ],
+  "payload": {
+    "payment": {
+      "entity": {
+        "id": "pay_Rq3Rn3NXAAp142",
+        "entity": "payment",
+        "amount": 49900,
+        "currency": "INR",
+        "status": "captured",
+        "order_id": "order_Rq3RacuGESLgqK",
+        "invoice_id": null,
+        "international": false,
+        "method": "upi",
+        "amount_refunded": 0,
+        "refund_status": null,
+        "captured": true,
+        "description": "devops enginner",
+        "card_id": null,
+        "bank": null,
+        "wallet": null,
+        "vpa": "success@razorpay",
+        "email": "suman@gmail.com",
+        "contact": "+919382209453",
+        "notes": {
+          "name": "Suman",
+          "user": "693901ff83d3d10bc9d85e07",
+          "product": "693075bf6b0258e86701b841",
+          "discount": "499"
+        },
+        "fee": 1178,
+        "tax": 180,
+        "error_code": null,
+        "error_description": null,
+        "error_source": null,
+        "error_step": null,
+        "error_reason": null,
+        "acquirer_data": {
+          "rrn": "291424261664",
+          "upi_transaction_id": "57635BF16A08612C57E6415FE5B3DEEB"
+        },
+        "created_at": 1765401566,
+        "reward": null,
+        "upi": {
+          "vpa": "success@razorpay",
+          "flow": "collect"
+        },
+        "base_amount": 49900
+      }
+    }
+  },
+  "created_at": 1765401567
+}
