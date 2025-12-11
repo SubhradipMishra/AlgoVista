@@ -27,22 +27,47 @@ const CourseDetails = () => {
 
 
   console.log("session",session);
-  useEffect(() => {
+  const checkEnrollment = async () => {
+  try {
+    const res = await axios.get(
+      "http://localhost:4000/course-enrollment/course",
+      { withCredentials: true }
+    );
 
-    const fetchCourse = async () => {
-      try {
-        const { data } = await axios.get(`http://localhost:4000/course/${id}`, {
-          withCredentials: true,
-        });
-        setCourse(data.course || null);
-      } catch (error) {
-        console.log("Error fetching course:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCourse();
-  }, [id]);
+    const enrolledCourses = res.data.courses || [];
+
+    const isEnrolled = enrolledCourses.some((c) => c.courseId === id);
+
+    if (isEnrolled) {
+      navigate(`/courses/${id}/learn`);
+    }
+  } catch (err) {
+    console.log("Enrollment check failed:", err);
+  }
+};
+
+ useEffect(() => {
+  const init = async () => {
+    try {
+      // fetch course
+      const { data } = await axios.get(`http://localhost:4000/course/${id}`, {
+        withCredentials: true,
+      });
+      setCourse(data.course || null);
+
+      // check enrollment status
+      await checkEnrollment();
+
+    } catch (error) {
+      console.log("Error fetching course:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  init();
+}, [id]);
+
 
   // ✅ Enroll user then navigate for FREE course
   const handleFreeCourseStart = async () => {
