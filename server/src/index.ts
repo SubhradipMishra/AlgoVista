@@ -96,3 +96,6 @@ app.use('/payment', PaymentRouter)
 
 import OrderRouter from './order/order.routes'
 app.use('/order', OrderRouter)
+
+import MentorDeatilsRouter from './mentor-deatils/mentor-deatils.routes'
+app.use('/mentor-deatils', MentorDeatilsRouter)

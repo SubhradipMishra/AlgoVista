@@ -1,0 +1,146 @@
+import { Request, Response } from "express";
+import MentorDetailsModel from "./mentor-deatils.model";
+
+// ---------------------- CREATE ----------------------
+export const createMentorDetails = async (req: Request, res: Response) => {
+  try {
+	console.log("create mentor details hits..")
+    const { mentorId, maximumNoOfMentees, features, bio, specializations, socialLinks } = req.body;
+
+    const existing = await MentorDetailsModel.findOne({ mentorId });
+    if (existing) {
+      return res.status(400).json({ message: "Mentor details already exist" });
+    }
+
+    const newMentor = new MentorDetailsModel({
+      mentorId,
+      maximumNoOfMentees: maximumNoOfMentees || 10,
+      features: features || [],
+      bio: bio || "",
+      specializations: specializations || [],
+      socialLinks: socialLinks || {},
+    });
+
+    await newMentor.save();
+    res.status(201).json(newMentor);
+  } catch (err: any) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// ---------------------- READ ALL ----------------------
+export const getAllMentors = async (_req: Request, res: Response) => {
+  try {
+    const mentors = await MentorDetailsModel.find()
+      .populate("mentorId", "fullname email profileImage")
+      .exec();
+    res.status(200).json(mentors);
+  } catch (err: any) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// ---------------------- READ SINGLE ----------------------
+export const getMentorById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const mentor = await MentorDetailsModel.findById(id)
+      .populate("mentorId", "fullname email profileImage")
+      .exec();
+
+    if (!mentor) return res.status(404).json({ message: "Mentor not found" });
+    res.status(200).json(mentor);
+  } catch (err: any) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// ---------------------- UPDATE ----------------------
+export const updateMentorDetails = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+
+    const updated = await MentorDetailsModel.findByIdAndUpdate(id, updates, { new: true });
+    if (!updated) return res.status(404).json({ message: "Mentor not found" });
+
+    res.status(200).json(updated);
+  } catch (err: any) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// ---------------------- DELETE ----------------------
+export const deleteMentorDetails = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const deleted = await MentorDetailsModel.findByIdAndDelete(id);
+    if (!deleted) return res.status(404).json({ message: "Mentor not found" });
+
+    res.status(200).json({ message: "Mentor details deleted successfully" });
+  } catch (err: any) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// ---------------------- ADD MENTEE ----------------------
+export const addMentee = async (req: Request, res: Response) => {
+  try {
+    const { mentorId, menteeId } = req.body;
+
+    const mentor = await MentorDetailsModel.findById(mentorId);
+    if (!mentor) return res.status(404).json({ message: "Mentor not found" });
+
+    if (mentor.noOfMentees >= mentor.maximumNoOfMentees) {
+      return res.status(400).json({ message: "Mentor has reached maximum mentees" });
+    }
+
+    mentor.mentees.push(menteeId);
+    mentor.noOfMentees = mentor.mentees.length;
+
+    await mentor.save();
+    res.status(200).json(mentor);
+  } catch (err: any) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// ---------------------- REMOVE MENTEE ----------------------
+export const removeMentee = async (req: Request, res: Response) => {
+  try {
+    const { mentorId, menteeId } = req.body;
+
+    const mentor = await MentorDetailsModel.findById(mentorId);
+    if (!mentor) return res.status(404).json({ message: "Mentor not found" });
+
+    mentor.mentees = mentor.mentees.filter((id: any) => id.toString() !== menteeId);
+    mentor.noOfMentees = mentor.mentees.length;
+
+    await mentor.save();
+    res.status(200).json(mentor);
+  } catch (err: any) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// ---------------------- ADD FEEDBACK ----------------------
+export const addFeedback = async (req: Request, res: Response) => {
+  try {
+    const { mentorId, menteeId, comment, rating } = req.body;
+
+    const mentor = await MentorDetailsModel.findById(mentorId);
+    if (!mentor) return res.status(404).json({ message: "Mentor not found" });
+
+    mentor.feedbacks.push({ mentee: menteeId, comment, rating });
+    mentor.ratings.push(rating);
+
+    mentor.averageRating =
+      mentor.ratings.reduce((acc, cur) => acc + cur, 0) / mentor.ratings.length;
+
+    await mentor.save();
+    res.status(200).json(mentor);
+  } catch (err: any) {
+    res.status(500).json({ message: err.message });
+  }
+};
