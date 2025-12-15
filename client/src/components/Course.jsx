@@ -10,20 +10,20 @@ import UserSidebar from "./UserSidebar";
 
 const Course = () => {
   const [courses, setCourses] = useState([]);
-  const [enrolled, setEnrolled] = useState([]); // ← user's enrolled courses
+  const [enrolled, setEnrolled] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const { session, sessionLoading } = useContext(Context);
   const navigate = useNavigate();
 
-  // Redirect if not logged in
+  // ----------------- Redirect if NOT logged in -----------------
   useEffect(() => {
     if (!sessionLoading && !session) {
       navigate("/login");
     }
   }, [session, sessionLoading]);
 
-  // Fetch all courses
+  // ----------------- Fetch courses + enrollments -----------------
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -36,11 +36,11 @@ const Course = () => {
 
     const fetchEnrolled = async () => {
       try {
-        const res = await axios.get("http://localhost:4000/course-enrollment/course", {
-          withCredentials: true,
-        });
+        const res = await axios.get(
+          "http://localhost:4000/course-enrollment/course",
+          { withCredentials: true }
+        );
 
-        // store only enrolled courseIds
         setEnrolled(res.data.courses.map((c) => c.courseId));
       } catch (error) {
         console.log(error);
@@ -54,7 +54,7 @@ const Course = () => {
     }
   }, [session]);
 
-  // Loading UI
+  // ----------------- Loading UI -----------------
   if (sessionLoading || loading) {
     return (
       <div className="flex min-h-screen grid-bg text-white overflow-hidden font-mono">
@@ -84,14 +84,26 @@ const Course = () => {
         <div className="grid md:grid-cols-2 gap-8">
           {courses.map((course) => {
             const isPremium = course.courseType === "premium";
-            const isEnrolled = enrolled.includes(course._id); // check enrollment
+            const isEnrolled = enrolled.includes(course._id);
 
             return (
               <motion.div
                 key={course._id}
                 whileHover={{ scale: 1.03, y: -4 }}
-                className="bg-[#1a1a1a]/80 p-6 rounded-3xl border border-gray-800 shadow-xl"
+                className={
+                  isPremium
+                    ? "relative bg-[#111]/90 p-6 rounded-3xl border border-[#3a3a3a] shadow-[0px_0px_15px_rgba(255,215,0,0.15)]"
+                    : "relative bg-[#1a1a1a]/80 p-6 rounded-3xl border border-gray-800 shadow-xl"
+                }
               >
+                {/* -------- PREMIUM BADGE -------- */}
+                {isPremium && (
+                  <div className="absolute top-4 right-4 px-3 py-1 text-xs font-semibold bg-[#2a2a2a] border border-[#555] rounded-full">
+                    PREMIUM
+                  </div>
+                )}
+
+                {/* -------- Thumbnail -------- */}
                 <div className="relative w-full h-48 mb-4 rounded-2xl overflow-hidden">
                   <img
                     src={course.thumbnail}
@@ -101,9 +113,13 @@ const Course = () => {
                   />
                 </div>
 
+                {/* -------- Title -------- */}
                 <h2 className="text-xl font-bold mb-2 truncate">{course.title}</h2>
-                <p className="text-sm text-gray-400 mb-4 line-clamp-2">{course.description}</p>
+                <p className="text-sm text-gray-400 mb-4 line-clamp-2">
+                  {course.description}
+                </p>
 
+                {/* -------- Stats -------- */}
                 <div className="flex items-center gap-3 text-xs mb-6">
                   <span>⏱ {course.duration || "N/A"}</span>
                   <span className="h-1 w-1 rounded-full bg-gray-600" />
@@ -112,7 +128,7 @@ const Course = () => {
                   </span>
                 </div>
 
-                {/* ---------------- BUTTON LOGIC ---------------- */}
+                {/* -------- BUTTON LOGIC (UNCHANGED) -------- */}
                 <div className="mt-4">
                   {isEnrolled ? (
                     <Link
@@ -124,7 +140,7 @@ const Course = () => {
                   ) : isPremium ? (
                     <Link
                       to={`/courses/${course._id}`}
-                      className="block text-center py-4 rounded-2xl font-semibold bg-yellow-500 text-black hover:bg-yellow-600"
+                      className="block text-center py-4 rounded-2xl font-semibold bg-[#d4af37] text-black hover:bg-[#b8962e]"
                     >
                       Buy Now – ₹{course.discountPrice}
                     </Link>
@@ -137,7 +153,6 @@ const Course = () => {
                     </Link>
                   )}
                 </div>
-
               </motion.div>
             );
           })}

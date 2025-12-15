@@ -73,7 +73,7 @@ const ProfileManager = () => {
 
   useEffect(() => {
     if (!session?.id) return;
-    if (session.role !== "user") navigate("/");
+    if (session.role !== "user" && session.role !== "admin") navigate("/");
   }, [session, navigate]);
 
   useEffect(() => {

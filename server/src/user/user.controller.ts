@@ -300,12 +300,18 @@ export const refreshToken = async (req: any, res: Response) => {
 // -------------------- UPDATE USER INFO --------------------
 export const updateUser = async (req: any, res: Response) => {
   try {
+
+  
     const userId = req.params.id;
     const user = await UserModel.findById(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    if (user.role === "user" && req.user.id !== userId)
-      return res.status(403).json({ message: "Cannot update other users" });
+    
+
+    // if (user.role === "user" || user.role === "admin" && req.user.id !== userId)
+    //   return res.status(403).json({ message: "Cannot update other users" });
+
+    console.log(user);
 
     const updateFields: any = {};
     const allowedFields = [

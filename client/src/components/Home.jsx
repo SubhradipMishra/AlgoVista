@@ -290,95 +290,67 @@ const [openDropdown, setOpenDropdown] = useState(null);
 
 
       {/* Hero Section */}
-<section className="relative flex flex-col md:flex-row items-center justify-between px-4 sm:px-8 md:px-16 py-20 md:py-28 gap-8 md:gap-12 mt-20 font-mono text-gray-200 bg-black overflow-hidden">
+<section className="relative flex items-center justify-center px-4 sm:px-8 md:px-16 py-28 md:py-36 mt-20 bg-black overflow-hidden text-center">
 
   {/* Background Grid */}
-  <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
+  <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
 
-  {/* Corner soft white glows */}
-  <div className="absolute top-0 left-0 w-32 h-32 bg-white/10 rounded-full animate-bloat-slow blur-2xl pointer-events-none"></div>
-  <div className="absolute bottom-0 right-0 w-40 h-40 bg-white/10 rounded-full animate-bloat-slow blur-3xl pointer-events-none"></div>
-  <div className="absolute top-1/2 right-0 w-24 h-24 bg-white/5 rounded-full animate-bloat-slower blur-2xl pointer-events-none"></div>
+  {/* Soft Glows */}
+  <div className="absolute top-0 left-0 w-36 h-36 bg-white/10 rounded-full animate-bloat-slow blur-3xl pointer-events-none"></div>
+  <div className="absolute bottom-0 right-0 w-44 h-44 bg-white/10 rounded-full animate-bloat-slow blur-3xl pointer-events-none"></div>
+  <div className="absolute top-1/2 right-1/4 w-28 h-28 bg-white/5 rounded-full animate-bloat-slower blur-2xl pointer-events-none"></div>
 
-  {/* Text Section */}
+  {/* Content */}
   <motion.div
-    className="flex-1 w-full relative z-10"
+    className="relative z-10 max-w-4xl"
     initial={{ opacity: 0, y: 40 }}
     whileInView={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.8 }}
+    transition={{ duration: 0.9 }}
   >
-
-    {/* Tag Badge */}
-    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gray-600 bg-gray-900/60 text-gray-300 text-sm font-medium mb-6 shadow-sm">
-      <span className="text-base">✨</span>
-      <span>Our mission — free knowledge and advanced learning with great mentors.</span>
+    {/* Tag */}
+    <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-gray-700 bg-gray-900/70 text-gray-300 text-sm sm:text-base font-medium mb-10 shadow-sm backdrop-blur">
+      <span>✨</span>
+      <span>Free knowledge · Advanced learning · Trusted mentors</span>
     </div>
 
     {/* Heading */}
-    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-snug tracking-tight text-gray-100 mb-6">
-      {displayedHeading} <br />
-      <span className="text-gray-400">The Smarter Way</span>
+    <h1 className="font-display font-extrabold tracking-tight leading-[1.1] text-gray-100 mb-8
+      text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
+      {displayedHeading}
+      <br />
+      <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-500">
+        The Smarter Way
+      </span>
     </h1>
 
-    <p className="text-gray-300 text-base sm:text-lg mb-6 max-w-full sm:max-w-md">
-      Master complex algorithms through step-by-step visualizations that bring each logic to life.
+    {/* Description */}
+    <p className="text-gray-300 text-lg sm:text-xl mb-5 leading-relaxed">
+      Master complex algorithms through step-by-step visualizations that bring
+      every concept to life.
     </p>
 
-    <p className="text-gray-500 text-sm sm:text-base mb-8 max-w-full sm:max-w-md">
-      From sorting and searching to graph traversal and dynamic programming — explore, visualize, and strengthen your DSA foundation like never before.
+    <p className="text-gray-500 text-base sm:text-lg mb-12 leading-relaxed">
+      Sorting, searching, graphs, dynamic programming — explore algorithms visually,
+      build intuition, and prepare confidently with AlgoVista.
     </p>
 
     {/* Buttons */}
-    <div className="flex flex-wrap gap-3 sm:gap-4">
+    <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
       <Link
         to="/problems"
-        className="flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-700 text-white font-semibold px-5 py-2 rounded-lg text-base sm:text-lg transition w-full sm:w-auto border border-gray-700"
+        className="flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-700 text-white font-semibold px-8 py-3.5 rounded-xl text-lg transition border border-gray-700 shadow-lg hover:shadow-white/10 w-full sm:w-auto"
       >
-        <PlayCircleOutlined className="text-lg" />
+        <PlayCircleOutlined className="text-xl" />
         Start Exploring
       </Link>
 
       <Link
-        to="/problems"
-        className="flex items-center justify-center gap-2 bg-white text-black hover:bg-gray-200 hover:text-black font-semibold px-6 py-2.5 rounded-lg text-base sm:text-lg transition-all border border-gray-400 w-full sm:w-auto"
+        to="/about"
+        className="flex items-center justify-center gap-2 bg-white text-black hover:bg-gray-200 font-semibold px-8 py-3.5 rounded-xl text-lg transition border border-gray-300 shadow-lg w-full sm:w-auto"
       >
-        <PlayCircleOutlined className="text-lg" />
         Learn More
       </Link>
     </div>
-  </motion.div>
-
-  {/* Coding Commands Section */}
-  <motion.div
-    className="flex-1 w-full grid grid-cols-1 gap-4 relative z-10"
-    initial={{ opacity: 0, y: 40 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{ duration: 1, delay: 0.2 }}
-  >
-    <pre className="bg-gray-900 border border-gray-700 rounded-2xl p-6 text-gray-200 font-mono shadow-lg overflow-x-auto hover:shadow-white/20 transition-all">
-      <code>
-        <span className="text-blue-400">npm</span> install algovista-cli<br/>
-        <span className="text-green-400">git</span> clone https://github.com/AlgoVista/DSA-Visualizer<br/>
-        <span className="text-yellow-400">node</span> run visualizer.js --start<br/>
-        <span className="text-purple-400">yarn</span> challenge daily-problem
-      </code>
-    </pre>
-
-    <pre className="bg-gray-900 border border-gray-700 rounded-2xl p-6 text-gray-200 font-mono shadow-lg overflow-x-auto hover:shadow-white/20 transition-all">
-      <code>
-        <span className="text-green-400">$</span> mkdir ~/DSA_Projects<br/>
-        <span className="text-green-400">$</span> cd ~/DSA_Projects<br/>
-        <span className="text-blue-400">python</span> visualizer.py --algo sorting --step 1
-      </code>
-    </pre>
-
-    <pre className="bg-gray-900 border border-gray-700 rounded-2xl p-6 text-gray-200 font-mono shadow-lg overflow-x-auto hover:shadow-white/20 transition-all">
-      <code>
-        <span className="text-purple-400">#</span> Explore algorithms interactively<br/>
-        <span className="text-purple-400">#</span> Track your daily progress<br/>
-        <span className="text-purple-400">#</span> Join the community & solve challenges
-      </code>
-    </pre>
   </motion.div>
 
   {/* Animations */}
@@ -393,6 +365,8 @@ const [openDropdown, setOpenDropdown] = useState(null);
     `}
   </style>
 </section>
+
+
 
 
 
