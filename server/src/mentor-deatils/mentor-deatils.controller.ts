@@ -5,6 +5,7 @@ import MentorDetailsModel from "./mentor-deatils.model";
 export const createMentorDetails = async (req: Request, res: Response) => {
   try {
 	console.log("create mentor details hits..")
+  console.log(req);
     const { mentorId, maximumNoOfMentees, features, bio, specializations, socialLinks } = req.body;
 
     const existing = await MentorDetailsModel.findOne({ mentorId });

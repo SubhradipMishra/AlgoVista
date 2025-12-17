@@ -131,7 +131,9 @@ export const SuperAdminGaurd = async (
   res: Response,
   next: NextFunction
 ) => {
+   
   try {
+
     const { accessToken } = req.cookies;
     if (!accessToken) return expireSession(res);
 
@@ -143,6 +145,8 @@ export const SuperAdminGaurd = async (
     if (payload.role !== "super-admin") { 
       return expireSession(res);
     }
+
+  
 
     req.user = payload;
     next();
