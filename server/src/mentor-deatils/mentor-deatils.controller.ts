@@ -4,9 +4,26 @@ import MentorDetailsModel from "./mentor-deatils.model";
 // ---------------------- CREATE ----------------------
 export const createMentorDetails = async (req: Request, res: Response) => {
   try {
-	console.log("create mentor details hits..")
-  console.log(req);
-    const { mentorId, maximumNoOfMentees, features, bio, specializations, socialLinks } = req.body;
+    console.log("create mentor details hit");
+
+    const {
+      mentorId,
+      mentees,
+      noOfMentees,
+      maximumNoOfMentees,
+      features,
+      specializations,
+      bio,
+      isAvailable,
+      status,
+      meetingLinks,
+      socialLinks,
+      plans,
+    } = req.body;
+
+    if (!mentorId) {
+      return res.status(400).json({ message: "mentorId is required" });
+    }
 
     const existing = await MentorDetailsModel.findOne({ mentorId });
     if (existing) {
@@ -15,16 +32,32 @@ export const createMentorDetails = async (req: Request, res: Response) => {
 
     const newMentor = new MentorDetailsModel({
       mentorId,
-      maximumNoOfMentees: maximumNoOfMentees || 10,
+
+      mentees: mentees || [],
+      noOfMentees: noOfMentees || mentees?.length || 0,
+      maximumNoOfMentees: maximumNoOfMentees ?? 10,
+
       features: features || [],
-      bio: bio || "",
       specializations: specializations || [],
+      bio: bio || "",
+
+      isAvailable: isAvailable ?? true,
+      status: status || "active",
+
+      meetingLinks: meetingLinks || [],
       socialLinks: socialLinks || {},
+
+      plans: plans || [],
     });
 
     await newMentor.save();
-    res.status(201).json(newMentor);
+
+    res.status(201).json({
+      message: "Mentor details created successfully",
+      data: newMentor,
+    });
   } catch (err: any) {
+    console.error(err);
     res.status(500).json({ message: err.message });
   }
 };

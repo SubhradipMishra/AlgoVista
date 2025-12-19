@@ -193,95 +193,68 @@ const MentorProfile = () => {
       )}
 
       {/* ================= OFFERINGS ================= */}
-      {activeTab === "offerings" && (
-        <div className="max-w-6xl mx-auto mt-10 grid md:grid-cols-3 gap-8">
-          {[
-            {
-              name: "Starter",
-              duration: "1 Month",
-              price: "₹999",
-              popular: false,
-              features: [
-                ["Weekly 1:1 Sessions", true],
-                ["Career Roadmap", true],
-                ["Resume Review", false],
-                ["Mock Interviews", false],
-                ["Priority Support", false],
-              ],
-            },
-            {
-              name: "Professional",
-              duration: "3 Months",
-              price: "₹2,999",
-              popular: true,
-              features: [
-                ["Weekly 1:1 Sessions", true],
-                ["Career Roadmap", true],
-                ["Resume Review", true],
-                ["Mock Interviews", true],
-                ["Priority Support", false],
-              ],
-            },
-            {
-              name: "Elite",
-              duration: "6 Months",
-              price: "₹5,999",
-              popular: false,
-              features: [
-                ["Weekly 1:1 Sessions", true],
-                ["Career Roadmap", true],
-                ["Resume Review", true],
-                ["Mock Interviews", true],
-                ["Priority Support", true],
-              ],
-            },
-          ].map((plan, i) => (
-            <div
-              key={i}
-              className={`relative bg-gray-900 border rounded-2xl p-6 ${
-                plan.popular ? "border-white" : "border-gray-800"
-              }`}
-            >
-              {plan.popular && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white text-black text-xs font-bold px-3 py-1 rounded-full">
-                  MOST POPULAR
-                </span>
-              )}
+      
+{activeTab === "offerings" && (
+  <div className="max-w-6xl mx-auto mt-10 grid md:grid-cols-3 gap-8">
+    {mentor.plans.map((plan, i) => {
+      const maxPrice = Math.max(...mentor.plans.map(p => p.price));
+      const isPopular = plan.price === maxPrice;
 
-              <h3 className="text-xl font-bold">{plan.name}</h3>
-              <p className="text-gray-400 text-sm">{plan.duration}</p>
+      return (
+        <div
+          key={plan._id || i}
+          className={`relative bg-gray-900 border rounded-2xl p-6 ${
+            isPopular ? "border-white" : "border-gray-800"
+          }`}
+        >
+          {isPopular && (
+            <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white text-black text-xs font-bold px-3 py-1 rounded-full">
+              MOST POPULAR
+            </span>
+          )}
 
-              <p className="text-3xl font-extrabold mt-4">{plan.price}</p>
+          <h3 className="text-xl font-bold">{plan.title}</h3>
+          <p className="text-gray-400 text-sm">
+            {plan.duration / 30} Month{plan.duration > 30 ? "s" : ""}
+          </p>
 
-              <div className="h-px bg-gray-800 my-6" />
+          <p className="text-3xl font-extrabold mt-4">
+            ₹{plan.price}
+          </p>
 
-              <ul className="space-y-3 text-sm">
-                {plan.features.map(([label, ok], idx) => (
-                  <li
-                    key={idx}
-                    className={`flex items-center gap-3 ${
-                      ok ? "text-gray-200" : "text-gray-500"
-                    }`}
-                  >
-                    <span>{ok ? "✓" : "✕"}</span>
-                    {label}
-                  </li>
-                ))}
-              </ul>
+          <div className="h-px bg-gray-800 my-6" />
 
-              <Button
-                className={`mt-8 w-full font-semibold ${
-                  plan.popular
-                    ? "bg-white text-black hover:bg-gray-200"
-                    : "border border-gray-600 text-white hover:bg-white hover:text-black"
-                }`}
-              >
-                Choose Plan
-              </Button>
-            </div>
-          ))}
+          <ul className="space-y-3 text-sm">
+            {plan.whatCanDo.map((item, idx) => (
+              <li key={`can-${idx}`} className="flex items-center gap-3 text-gray-200">
+                <span>✓</span>
+                {item}
+              </li>
+            ))}
+
+            {plan.whatCannotDo.map((item, idx) => (
+              <li key={`cannot-${idx}`} className="flex items-center gap-3 text-gray-500">
+                <span>✕</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+
+          <Button
+            className={`mt-8 w-full font-semibold ${
+              isPopular
+                ? "bg-white text-black hover:bg-gray-200"
+                : "border border-gray-600 text-white hover:bg-white hover:text-black"
+            }`}
+          >
+            Choose Plan
+          </Button>
         </div>
-      )}
+      );
+    })}
+  </div>
+)}
+
 
       {/* ================= REVIEWS ================= */}
       {activeTab === "reviews" && (

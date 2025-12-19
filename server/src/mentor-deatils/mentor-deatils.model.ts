@@ -8,30 +8,32 @@ const mentorSchema = new Schema(
       ref: "User",
     },
 
-  
     mentees: {
       type: [Schema.Types.ObjectId],
       ref: "User",
       default: [],
     },
+
     noOfMentees: {
       type: Number,
       default: 0,
     },
+
     maximumNoOfMentees: {
       type: Number,
       default: 10,
     },
 
-    
     features: {
       type: [String],
       default: [],
     },
+
     specializations: {
       type: [String],
       default: [],
     },
+
     bio: {
       type: String,
       default: "",
@@ -42,6 +44,7 @@ const mentorSchema = new Schema(
       type: Boolean,
       default: true,
     },
+
     status: {
       type: String,
       enum: ["active", "inactive", "on-leave"],
@@ -52,10 +55,12 @@ const mentorSchema = new Schema(
       type: [Number],
       default: [],
     },
+
     averageRating: {
       type: Number,
       default: 0,
     },
+
     feedbacks: {
       type: [
         {
@@ -73,6 +78,7 @@ const mentorSchema = new Schema(
       type: [String],
       default: [],
     },
+
     socialLinks: {
       linkedin: { type: String, default: "" },
       github: { type: String, default: "" },
@@ -86,7 +92,40 @@ const mentorSchema = new Schema(
           mentee: { type: Schema.Types.ObjectId, ref: "User" },
           startDate: { type: Date, default: Date.now },
           endDate: { type: Date },
-          status: { type: String, enum: ["active", "completed", "terminated"], default: "active" },
+          status: {
+            type: String,
+            enum: ["active", "completed", "terminated"],
+            default: "active",
+          },
+        },
+      ],
+      default: [],
+    },
+
+   
+    plans: {
+      type: [
+        {
+          title:{
+            type:String,
+            required:true
+          },
+          price: {
+            type: Number,
+            default: 0,
+          },
+          whatCanDo: {
+            type: [String],
+            default: [],
+          },
+          whatCannotDo: {
+            type: [String],
+            default: [],
+          },
+          duration: {
+            type: Number, // days
+            default: 30,
+          },
         },
       ],
       default: [],
@@ -95,11 +134,10 @@ const mentorSchema = new Schema(
   { timestamps: true }
 );
 
-
+// Virtual: capacity check
 mentorSchema.virtual("hasCapacity").get(function () {
   return this.noOfMentees < this.maximumNoOfMentees;
 });
 
 const MentorDetailsModel = model("MentorDetails", mentorSchema);
-
 export default MentorDetailsModel;
