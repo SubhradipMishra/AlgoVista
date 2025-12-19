@@ -30,11 +30,11 @@ export const createMentorDetails = async (req: Request, res: Response) => {
 };
 
 // ---------------------- READ ALL ----------------------
-export const getAllMentors = async (_req: Request, res: Response) => {
+export const getAllMentors = async (req: Request, res: Response) => {
   try {
-    const mentors = await MentorDetailsModel.find()
-      .populate("mentorId", "fullname email profileImage")
-      .exec();
+    console.log("HIT")
+    const mentors = await MentorDetailsModel.find();
+    console.log(mentors);
     res.status(200).json(mentors);
   } catch (err: any) {
     res.status(500).json({ message: err.message });

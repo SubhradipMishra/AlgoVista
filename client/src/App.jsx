@@ -31,6 +31,7 @@ import Course from "./components/Course";
 import CourseDetails from "./components/CourseDeatils";
 import CourseLearn from "./components/CourseLearn";
 import ManageMentors from "./components/super-admin/ManageMentors";
+import MentorProfile from "./components/MentorProfile";
 
 function App() {
   const [sessionLoading, setSessionLoading] = useState(true);
@@ -120,6 +121,7 @@ function App() {
           {/* // mentor */}
 
       <Route  path="/mentorship" element={<Mentorship />}/>
+      <Route path="/mentor/:id" element={<MentorProfile />}/> 
       <Route path="/profile/:id" element={<ProfileManger />} />
 
 
