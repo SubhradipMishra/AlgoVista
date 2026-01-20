@@ -224,6 +224,7 @@ const generateToken = (user: UserInterface) => {
 export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
+
     const user = await UserModel.findOne({ email });
     if (!user) return res.status(404).json({ message: "User not found" });
 
@@ -232,6 +233,7 @@ export const login = async (req: Request, res: Response) => {
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
+    console.log(isMatch);
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
     const { accessToken, refreshToken } = generateToken(user);

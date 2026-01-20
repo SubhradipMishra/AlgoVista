@@ -183,65 +183,96 @@ const MentorProfile = () => {
             <p className="text-gray-400">{mentor.education}</p>
           </div>
 
-          <div className="md:col-span-2 bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <h3 className="font-semibold mb-2">About</h3>
-            <p className="text-gray-400 leading-relaxed">
-              {mentor.description}
-            </p>
-          </div>
+         
         </div>
       )}
 
       {/* ================= OFFERINGS ================= */}
       
+{/* ================= OFFERINGS ================= */}
 {activeTab === "offerings" && (
-  <div className="max-w-6xl mx-auto mt-10 grid md:grid-cols-3 gap-8">
+  <div className="max-w-6xl mx-auto mt-12 grid md:grid-cols-3 gap-8">
     {mentor.plans.map((plan, i) => {
       const maxPrice = Math.max(...mentor.plans.map(p => p.price));
-      const isPopular = plan.price === maxPrice;
+
+      // ⭐ RECOMMENDED LOGIC
+      const isPro = plan.title?.toLowerCase() === "pro";
+      const isPopular = isPro || plan.price === maxPrice;
+
+      // 🔹 Convert comma-separated text into points
+      const canDo = Array.isArray(plan.whatCanDo)
+        ? plan.whatCanDo.flatMap(item => item.split(","))
+        : [];
+
+      const cannotDo = Array.isArray(plan.whatCannotDo)
+        ? plan.whatCannotDo.flatMap(item => item.split(","))
+        : [];
 
       return (
         <div
           key={plan._id || i}
-          className={`relative bg-gray-900 border rounded-2xl p-6 ${
-            isPopular ? "border-white" : "border-gray-800"
-          }`}
+          className={`relative rounded-2xl p-7 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl
+            ${
+              isPopular
+                ? "border border-white bg-gradient-to-b from-gray-800 to-black shadow-[0_0_40px_rgba(255,255,255,0.15)]"
+                : "border border-gray-800 bg-gray-900"
+            }`}
         >
+          {/* ⭐ BADGES */}
           {isPopular && (
-            <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white text-black text-xs font-bold px-3 py-1 rounded-full">
+            <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white text-black text-xs font-bold px-4 py-1 rounded-full tracking-wide">
               MOST POPULAR
             </span>
           )}
 
-          <h3 className="text-xl font-bold">{plan.title}</h3>
-          <p className="text-gray-400 text-sm">
+          {isPro && (
+            <span className="absolute top-4 right-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+              PRO
+            </span>
+          )}
+
+          {/* HEADER */}
+          <h3 className="text-xl font-bold tracking-wide">
+            {plan.title}
+          </h3>
+
+          <p className="text-gray-400 text-sm mt-1">
             {plan.duration / 30} Month{plan.duration > 30 ? "s" : ""}
           </p>
 
-          <p className="text-3xl font-extrabold mt-4">
+          {/* PRICE */}
+          <p className="text-4xl font-extrabold mt-5">
             ₹{plan.price}
           </p>
 
           <div className="h-px bg-gray-800 my-6" />
 
+          {/* FEATURES */}
           <ul className="space-y-3 text-sm">
-            {plan.whatCanDo.map((item, idx) => (
-              <li key={`can-${idx}`} className="flex items-center gap-3 text-gray-200">
-                <span>✓</span>
-                {item}
+            {canDo.map((item, idx) => (
+              <li
+                key={`can-${idx}`}
+                className="flex items-start gap-3 text-gray-200"
+              >
+                <span className="text-green-400 mt-[2px]">✔</span>
+                <span>{item.trim()}</span>
               </li>
             ))}
 
-            {plan.whatCannotDo.map((item, idx) => (
-              <li key={`cannot-${idx}`} className="flex items-center gap-3 text-gray-500">
-                <span>✕</span>
-                {item}
+            {cannotDo.map((item, idx) => (
+              <li
+                key={`cannot-${idx}`}
+                className="flex items-start gap-3 text-gray-500"
+              >
+                <span className="text-red-400 mt-[2px]">✖</span>
+                <span>{item.trim()}</span>
               </li>
             ))}
           </ul>
 
+          {/* CTA */}
           <Button
-            className={`mt-8 w-full font-semibold ${
+            className={`mt-8 w-full font-semibold tracking-wide ${
               isPopular
                 ? "bg-white text-black hover:bg-gray-200"
                 : "border border-gray-600 text-white hover:bg-white hover:text-black"
@@ -254,6 +285,8 @@ const MentorProfile = () => {
     })}
   </div>
 )}
+
+
 
 
       {/* ================= REVIEWS ================= */}

@@ -99,6 +99,3 @@ app.use('/order', OrderRouter)
 
 import MentorDeatilsRouter from './mentor-deatils/mentor-deatils.routes'
 app.use('/mentor-details', MentorDeatilsRouter)
-
-import MentorshipRouter from './mentorship/mentorship.routes'
-app.use('/mentorship', MentorshipRouter)
