@@ -9,17 +9,33 @@ import {
   MoreOutlined,
 } from "@ant-design/icons";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { useRazorpay } from "react-razorpay";
+
+import { useContext } from "react";
+import Context from "../util/context";
 
 const MentorProfile = () => {
+  const { Razorpay } = useRazorpay();
+  const navigate = useNavigate();
   const { id } = useParams();
   const [mentor, setMentor] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { session, sessionLoading } = useContext(Context);
   const [activeTab, setActiveTab] = useState("profile");
+  console.log(session);
+  useEffect(() => {
+    if (!session && !sessionLoading) navigate("/login");
+  }, [session, sessionLoading, navigate]);
+
 
   useEffect(() => {
+
     fetchMentor();
-  }, []);
+  }, [session]);
+
+
+
 
   const fetchMentor = async () => {
     try {
@@ -58,6 +74,71 @@ const MentorProfile = () => {
     { key: "2", label: "Share Profile" },
     { key: "3", label: "Report" },
   ];
+
+
+  const handleBuyNow = async(plan) =>{
+   
+
+    try{
+
+       const {data} = await axios.post(
+        "http://localhost:4000/payment/mentorship/order",
+        { productId: plan._id,mentorId:mentor.mentorId,userId:session.id },
+        { withCredentials: true }
+      );
+
+      console.log(data);
+
+      const options = {
+        key:"rzp_test_RpG7PsiR24EZK5",
+        amount:data.order.amount ,
+        currency:"INR",
+      name:"AlgoVista",
+      description:plan.title,
+       order_id:data.order.id,
+      handler:(response)=>{
+        alert("Payment Successfull");
+      },
+      prefill:{ 
+        name:session.fullname,
+        email:session.email,
+        contact:"5647484939"
+      },
+      theme:{
+         color:"#f37254"
+      },
+
+      notes:{
+        name:session.fullname,
+        user:session.id,
+        product:plan._id,
+        mentor:mentor.mentorId,
+        discount:0,
+
+      }
+      }
+
+       const rzp =  new Razorpay(options) ;
+   rzp.open() ;
+
+
+    rzp.on("payment.failed",()=>{
+    alert("Payment Failed!")
+   })
+
+    }
+
+
+    catch (err) {
+    console.log(err);
+    if(err.status === 401)
+      return navigate("/login");
+    console.error("Payment order failed:", err);
+  }
+
+
+
+  };
 
   return (
     <div className="min-h-screen bg-black text-white font-mono px-6 py-10">
@@ -159,11 +240,10 @@ const MentorProfile = () => {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`pb-3 capitalize transition ${
-              activeTab === tab
+            className={`pb-3 capitalize transition ${activeTab === tab
                 ? "border-b-2 border-white text-white"
                 : "hover:text-white"
-            }`}
+              }`}
           >
             {tab}
           </button>
@@ -183,108 +263,107 @@ const MentorProfile = () => {
             <p className="text-gray-400">{mentor.education}</p>
           </div>
 
-         
+
         </div>
       )}
 
+
+
       {/* ================= OFFERINGS ================= */}
-      
-{/* ================= OFFERINGS ================= */}
-{activeTab === "offerings" && (
-  <div className="max-w-6xl mx-auto mt-12 grid md:grid-cols-3 gap-8">
-    {mentor.plans.map((plan, i) => {
-      const maxPrice = Math.max(...mentor.plans.map(p => p.price));
+      {activeTab === "offerings" && (
+        <div className="max-w-6xl mx-auto mt-12 grid md:grid-cols-3 gap-8">
+          {mentor.plans.map((plan, i) => {
+            const maxPrice = Math.max(...mentor.plans.map(p => p.price));
 
-      // ⭐ RECOMMENDED LOGIC
-      const isPro = plan.title?.toLowerCase() === "pro";
-      const isPopular = isPro || plan.price === maxPrice;
+            // ⭐ RECOMMENDED LOGIC
+            const isPro = plan.title?.toLowerCase() === "pro";
+            const isPopular = isPro || plan.price === maxPrice;
 
-      // 🔹 Convert comma-separated text into points
-      const canDo = Array.isArray(plan.whatCanDo)
-        ? plan.whatCanDo.flatMap(item => item.split(","))
-        : [];
+            // 🔹 Convert comma-separated text into points
+            const canDo = Array.isArray(plan.whatCanDo)
+              ? plan.whatCanDo.flatMap(item => item.split(","))
+              : [];
 
-      const cannotDo = Array.isArray(plan.whatCannotDo)
-        ? plan.whatCannotDo.flatMap(item => item.split(","))
-        : [];
+            const cannotDo = Array.isArray(plan.whatCannotDo)
+              ? plan.whatCannotDo.flatMap(item => item.split(","))
+              : [];
 
-      return (
-        <div
-          key={plan._id || i}
-          className={`relative rounded-2xl p-7 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl
-            ${
-              isPopular
-                ? "border border-white bg-gradient-to-b from-gray-800 to-black shadow-[0_0_40px_rgba(255,255,255,0.15)]"
-                : "border border-gray-800 bg-gray-900"
-            }`}
-        >
-          {/* ⭐ BADGES */}
-          {isPopular && (
-            <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white text-black text-xs font-bold px-4 py-1 rounded-full tracking-wide">
-              MOST POPULAR
-            </span>
-          )}
-
-          {isPro && (
-            <span className="absolute top-4 right-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-bold px-3 py-1 rounded-full">
-              PRO
-            </span>
-          )}
-
-          {/* HEADER */}
-          <h3 className="text-xl font-bold tracking-wide">
-            {plan.title}
-          </h3>
-
-          <p className="text-gray-400 text-sm mt-1">
-            {plan.duration / 30} Month{plan.duration > 30 ? "s" : ""}
-          </p>
-
-          {/* PRICE */}
-          <p className="text-4xl font-extrabold mt-5">
-            ₹{plan.price}
-          </p>
-
-          <div className="h-px bg-gray-800 my-6" />
-
-          {/* FEATURES */}
-          <ul className="space-y-3 text-sm">
-            {canDo.map((item, idx) => (
-              <li
-                key={`can-${idx}`}
-                className="flex items-start gap-3 text-gray-200"
+            return (
+              <div
+                key={plan._id || i}
+                className={`relative rounded-2xl p-7 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl
+            ${isPopular
+                    ? "border border-white bg-gradient-to-b from-gray-800 to-black shadow-[0_0_40px_rgba(255,255,255,0.15)]"
+                    : "border border-gray-800 bg-gray-900"
+                  }`}
               >
-                <span className="text-green-400 mt-[2px]">✔</span>
-                <span>{item.trim()}</span>
-              </li>
-            ))}
+                {/* ⭐ BADGES */}
+                {isPopular && (
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white text-black text-xs font-bold px-4 py-1 rounded-full tracking-wide">
+                    MOST POPULAR
+                  </span>
+                )}
 
-            {cannotDo.map((item, idx) => (
-              <li
-                key={`cannot-${idx}`}
-                className="flex items-start gap-3 text-gray-500"
-              >
-                <span className="text-red-400 mt-[2px]">✖</span>
-                <span>{item.trim()}</span>
-              </li>
-            ))}
-          </ul>
+                {isPro && (
+                  <span className="absolute top-4 right-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                    PRO
+                  </span>
+                )}
 
-          {/* CTA */}
-          <Button
-            className={`mt-8 w-full font-semibold tracking-wide ${
-              isPopular
-                ? "bg-white text-black hover:bg-gray-200"
-                : "border border-gray-600 text-white hover:bg-white hover:text-black"
-            }`}
-          >
-            Choose Plan
-          </Button>
+                {/* HEADER */}
+                <h3 className="text-xl font-bold tracking-wide">
+                  {plan.title}
+                </h3>
+
+                <p className="text-gray-400 text-sm mt-1">
+                  {plan.duration / 30} Month{plan.duration > 30 ? "s" : ""}
+                </p>
+
+                {/* PRICE */}
+                <p className="text-4xl font-extrabold mt-5">
+                  ₹{plan.price}
+                </p>
+
+                <div className="h-px bg-gray-800 my-6" />
+
+                {/* FEATURES */}
+                <ul className="space-y-3 text-sm">
+                  {canDo.map((item, idx) => (
+                    <li
+                      key={`can-${idx}`}
+                      className="flex items-start gap-3 text-gray-200"
+                    >
+                      <span className="text-green-400 mt-[2px]">✔</span>
+                      <span>{item.trim()}</span>
+                    </li>
+                  ))}
+
+                  {cannotDo.map((item, idx) => (
+                    <li
+                      key={`cannot-${idx}`}
+                      className="flex items-start gap-3 text-gray-500"
+                    >
+                      <span className="text-red-400 mt-[2px]">✖</span>
+                      <span>{item.trim()}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                {/* CTA */}
+                <Button
+                  className={`mt-8 w-full font-semibold tracking-wide ${isPopular
+                      ? "bg-white text-black hover:bg-gray-200"
+                      : "border border-gray-600 text-white hover:bg-white hover:text-black"
+                    }`}
+                  onClick={() => handleBuyNow(plan)}
+                >
+                  Choose Plan
+                </Button>
+              </div>
+            );
+          })}
         </div>
-      );
-    })}
-  </div>
-)}
+      )}
 
 
 

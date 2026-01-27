@@ -163,16 +163,18 @@ export const AdminUserSuperAdminGuard = async (
 ) => {
   try {
 
-    // console.log("Hit su")
+    console.log("Hit super")
     
     const { accessToken } = req.cookies;
-    // console.log("Access Token " , req.cookies);
+    console.log("Access Token ",req.cookies);
     if (!accessToken) return expireSession(res);
 
-    const payload: any = jwt.verify(
+    const payload: any = await jwt.verify(
       accessToken,
       process.env.AUTH_SECRET as string
     );
+
+    console.log("payload" , payload);
 
     if (
       payload.role !== "admin" &&
@@ -222,6 +224,7 @@ export const RazorpayGaurd = async (req:any, res:any, next:NextFunction) => {
   try {
     const signature = req.headers["x-razorpay-signature"];
 
+    console.log("RZP HIT")
   
     const payload = req.body.toString();
 

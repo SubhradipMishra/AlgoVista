@@ -2,13 +2,13 @@ import express from "express";
 import bodyParser from "body-parser";
 
 import { RazorpayGaurd, UserGuard } from "../middleware/gaurd.middleware";
-import { generateOrder, webhook } from "./payment.controller";
+import {  generateOrderCourse, generateOrderMentor, webhook } from "./payment.controller";
 
 
 const PaymentRouter = express.Router();
 
 // Create Order (User authenticated)
-PaymentRouter.post("/order", UserGuard, generateOrder);
-
+PaymentRouter.post("/course/order", UserGuard, generateOrderCourse);
+PaymentRouter.post("/mentorship/order",UserGuard,generateOrderMentor) ;
 PaymentRouter.post("/webhook",RazorpayGaurd,webhook);
 export default PaymentRouter;

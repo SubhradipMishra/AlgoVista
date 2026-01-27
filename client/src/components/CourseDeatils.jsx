@@ -93,7 +93,7 @@ const CourseDetails = () => {
     try{
 
        const {data} = await axios.post(
-        "http://localhost:4000/payment/order",
+        "http://localhost:4000/payment/course/order",
         { productId: course._id },
         { withCredentials: true }
       );

@@ -2,10 +2,14 @@ import courseModel from '../course/course.model';
 import PaymentModel from './payment.model'
 import Razorpay from "razorpay";
 import fs from "fs";
+import { Types } from "mongoose";
+import MentorshipModel from "../mentorship/mentorship.model";
 //controller
 
-import { Request, Response } from "express"
+import { raw, Request, Response } from "express"
 import { createOrder } from '../order/order.controller';
+import MentorDetailsModel from '../mentor-deatils/mentor-deatils.model';
+import { createMentorship } from '../mentorship/mentorship.controller';
 
 
 const instance = new Razorpay({
@@ -14,7 +18,7 @@ const instance = new Razorpay({
 });
 
 
-export const generateOrder = async(req:Request, res:Response)=>{
+export const generateOrderCourse = async(req:Request, res:Response)=>{
 
 	try{
 
@@ -64,23 +68,180 @@ const paymentFailed = async () => {
   console.log("failed!");
 };
 
+const calculateEndingDate = (start: Date, duration: number) => {
+  const end = new Date(start);
+  end.setDate(end.getDate() + duration); // DAYS
+  return end;
+};
 
-export const webhook = async (req:any,res:any) => {
+
+
+
+
+const mentorEnrollment = async (req: any) => {
+  const rawBody = req.body.toString();
+  const data = JSON.parse(rawBody);
+
+  const payment = data.payload.payment.entity;
+  const notes = payment.notes;
+
+  /* ---------- Idempotency check (VERY IMPORTANT) ---------- */
+  const existing = await MentorshipModel.findOne({
+    paymentId: payment.id,
+  });
+
+  if (existing) return existing;
+
+  /* ---------- Fetch mentor & plan ---------- */
+  const mentor = await MentorDetailsModel.findOne(
+    {
+      mentorId: new Types.ObjectId(notes.mentor),
+      "plans._id": new Types.ObjectId(notes.product),
+    },
+    {
+      plans: { $elemMatch: { _id: new Types.ObjectId(notes.product) } },
+    }
+  );
+
+  if (!mentor || !mentor.plans?.length) {
+    throw new Error("Mentorship plan not found");
+  }
+
+  const plan = mentor.plans[0];
+
+  /* ---------- Dates ---------- */
+  const startingDate = new Date();
+  const endingDate = calculateEndingDate(startingDate, plan.duration);
+
+  /* ---------- Create mentorship ---------- */
+  const mentorship = await createMentorship({
+    user: notes.user,
+    mentor: notes.mentor,
+    planId: plan._id,
+
+    startingDate,
+    endingDate,
+
+    paymentId: payment.id,
+
+    planSnapshot: {
+      title: plan.title,
+      price: plan.price,
+      duration: plan.duration,
+    },
+  });
+
+  /* ---------- Increment mentor seat count ---------- */
+  const result = await MentorDetailsModel.updateOne(
+    {
+      mentorId: new Types.ObjectId(notes.mentor),
+      $expr: { $lt: ["$noOfMentees", "$maximumNoOfMentees"] },
+    },
+    {
+      $inc: { noOfMentees: 1 },
+    }
+  );
+
+  if (result.modifiedCount === 0) {
+    throw new Error("Mentor seat limit reached");
+  }
+
+  return mentorship;
+};
+
+
+
+
+export const webhook = async (req: any, res: any) => {
   try {
     const rawBody = req.body.toString();
-    const data = JSON.parse(rawBody);
+    const payload = JSON.parse(rawBody);
 
-    fs.writeFileSync("payment.json", JSON.stringify(data, null, 2));
+    if (payload.event === "payment.captured") {
+      if (payload.payload.payment.entity.notes.mentor) {
+        await mentorEnrollment(req);
+      } else {
+        await payementSuccess(req);
+      }
+    }
 
-    const payload = data;
+    if (payload.event === "payment.failed") {
+      await paymentFailed();
+    }
 
-    if (payload.event === "payment.captured")
-      return payementSuccess(req);
-
-    if (payload.event === "payment.failed")
-      return paymentFailed();
-  } catch (err:any) {
-    console.log(err);
+    return res.status(200).json({ success: true });
+  } catch (err) {
+    console.error(err);
     return res.status(500).json({ message: "Webhook error" });
+  }
+};
+
+
+
+
+export const generateOrderMentor = async (req: Request, res: Response) => {
+  try {
+    const { productId, mentorId,userId } = req.body;
+
+    /* ---------- Validation ---------- */
+    if (!productId || !mentorId) {
+      return res.status(400).json({
+        success: false,
+        message: "productId and mentorId are required",
+      });
+    }
+
+    if (!Types.ObjectId.isValid(productId) || !Types.ObjectId.isValid(mentorId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid productId or mentorId",
+      });
+    }
+
+    /* ---------- Fetch matching plan only ---------- */
+    const mentor = await MentorDetailsModel.findOne(
+      {
+        mentorId: new Types.ObjectId(mentorId),
+        "plans._id": new Types.ObjectId(productId),
+      },
+      {
+        plans: { $elemMatch: { _id: new Types.ObjectId(productId) } },
+      }
+    );
+
+    if (!mentor || !mentor.plans || mentor.plans.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Mentorship plan not found",
+      });
+    }
+
+    const selectedPlan = mentor.plans[0];
+
+    /* ---------- Create Razorpay Order ---------- */
+    const order = await instance.orders.create({
+  amount: selectedPlan.price * 100,
+  currency: "INR",
+  receipt: `AlgoVista_${Date.now()}`,
+  notes: {
+    user: userId,      // 👈 REQUIRED
+    mentor: mentorId,        // 👈 REQUIRED
+    product: productId,      // 👈 REQUIRED
+  },
+});
+
+
+    
+    return res.status(200).json({
+      success: true,
+      order,
+    });
+  } catch (error) {
+    console.error("Generate mentorship order error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong while creating order",
+    });
   }
 };

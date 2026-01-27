@@ -1,0 +1,59 @@
+{
+  "entity": "event",
+  "account_id": "acc_QUebrH5CAILoLj",
+  "event": "payment.captured",
+  "contains": [
+    "payment"
+  ],
+  "payload": {
+    "payment": {
+      "entity": {
+        "id": "pay_S8vRdiRuROxv6v",
+        "entity": "payment",
+        "amount": 250000,
+        "currency": "INR",
+        "status": "captured",
+        "order_id": "order_S8vRSaJNdCQH3l",
+        "invoice_id": null,
+        "international": false,
+        "method": "upi",
+        "amount_refunded": 0,
+        "refund_status": null,
+        "captured": true,
+        "description": "PRO",
+        "card_id": null,
+        "bank": null,
+        "wallet": null,
+        "vpa": "success@razorpay",
+        "email": "mishrasubhradip2005@gmail.com",
+        "contact": "+919732594577",
+        "notes": {
+          "name": "Subhradip Mishra",
+          "user": "696e611f170de0717b104afa",
+          "product": "696f83cccb954c07e142ba62",
+          "mentor": "696e640ad1839372fa975492",
+          "discount": "0"
+        },
+        "fee": 5900,
+        "tax": 900,
+        "error_code": null,
+        "error_description": null,
+        "error_source": null,
+        "error_step": null,
+        "error_reason": null,
+        "acquirer_data": {
+          "rrn": "314464147781",
+          "upi_transaction_id": "F06F00A0ECC3F54B50173708EE2FF519"
+        },
+        "created_at": 1769521846,
+        "reward": null,
+        "upi": {
+          "vpa": "success@razorpay",
+          "flow": "collect"
+        },
+        "base_amount": 250000
+      }
+    }
+  },
+  "created_at": 1769521847
+}
