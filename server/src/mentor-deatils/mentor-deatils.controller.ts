@@ -56,7 +56,8 @@ export const createMentorDetails = async (req: Request, res: Response) => {
 // ---------------------- READ ALL ----------------------
 export const getAllMentors = async (req: Request, res: Response) => {
   try {
-    console.log("HIT");
+    // console.log("HIT");
+    // console.log("REQ:" , req)
     const mentors = await MentorDetailsModel.find();
     res.status(200).json(mentors);
   } catch (err: any) {
@@ -67,11 +68,14 @@ export const getAllMentors = async (req: Request, res: Response) => {
 // ---------------------- READ SINGLE ----------------------
 export const getMentorById = async (req: Request, res: Response) => {
   try {
+    console.log("HIT MENTOR BY ID.....")
+    
     const { id } = req.params;
-    const mentor = await MentorDetailsModel.findById(id)
-      .populate("mentorId", "fullname email profileImage")
-      .exec();
+     console.log("REQ:" ,id)
+    const mentor = await MentorDetailsModel.find({mentorId:id});
+      
 
+      console.log("mentor",mentor);
     if (!mentor) return res.status(404).json({ message: "Mentor not found" });
     res.status(200).json(mentor);
   } catch (err: any) {

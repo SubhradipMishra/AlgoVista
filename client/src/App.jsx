@@ -33,6 +33,7 @@ import CourseLearn from "./components/CourseLearn";
 
 import MentorProfile from "./components/MentorProfile";
 import { ManageMentors } from "./components/super-admin/ManageMentors";
+import MentorshipDetails from "./components/MentorShipDetails";
 
 function App() {
   const [sessionLoading, setSessionLoading] = useState(true);
@@ -124,6 +125,8 @@ function App() {
       <Route  path="/mentorship" element={<Mentorship />}/>
       <Route path="/mentor/:id" element={<MentorProfile />}/> 
       <Route path="/profile/:id" element={<ProfileManger />} />
+      <Route path="/mentorship/:mentorId/:planId" element={<MentorshipDetails />} />
+
 
 
 

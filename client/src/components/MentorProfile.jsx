@@ -23,19 +23,19 @@ const MentorProfile = () => {
   const [loading, setLoading] = useState(true);
   const { session, sessionLoading } = useContext(Context);
   const [activeTab, setActiveTab] = useState("profile");
+  const [activeMentorships, setActiveMentorships] = useState([]);
+
   console.log(session);
   useEffect(() => {
     if (!session && !sessionLoading) navigate("/login");
   }, [session, sessionLoading, navigate]);
 
-
   useEffect(() => {
-
-    fetchMentor();
+    if (session) {
+      fetchMentor();
+      fetchMentorships();
+    }
   }, [session]);
-
-
-
 
   const fetchMentor = async () => {
     try {
@@ -61,6 +61,18 @@ const MentorProfile = () => {
     }
   };
 
+  const fetchMentorships = async () => {
+    try {
+      const { data } = await axios.get(
+        `http://localhost:4000/mentorship?userId=${session.id}&mentorId=${id}&status=active`,
+        { withCredentials: true }
+      );
+      setActiveMentorships(data || []);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   if (loading || !mentor) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
@@ -75,70 +87,57 @@ const MentorProfile = () => {
     { key: "3", label: "Report" },
   ];
 
-
-  const handleBuyNow = async(plan) =>{
-   
-
-    try{
-
-       const {data} = await axios.post(
+  const handleBuyNow = async (plan) => {
+    try {
+      const { data } = await axios.post(
         "http://localhost:4000/payment/mentorship/order",
-        { productId: plan._id,mentorId:mentor.mentorId,userId:session.id },
+        { productId: plan._id, mentorId: mentor.mentorId, userId: session.id },
         { withCredentials: true }
       );
 
       console.log(data);
 
       const options = {
-        key:"rzp_test_RpG7PsiR24EZK5",
-        amount:data.order.amount ,
-        currency:"INR",
-      name:"AlgoVista",
-      description:plan.title,
-       order_id:data.order.id,
-      handler:(response)=>{
-        alert("Payment Successfull");
-      },
-      prefill:{ 
-        name:session.fullname,
-        email:session.email,
-        contact:"5647484939"
-      },
-      theme:{
-         color:"#f37254"
-      },
+        key: "rzp_test_RpG7PsiR24EZK5",
+        amount: data.order.amount,
+        currency: "INR",
+        name: "AlgoVista",
+        description: plan.title,
+        order_id: data.order.id,
+        handler: (response) => {
+          alert("Payment Successfull");
+        },
+        prefill: {
+          name: session.fullname,
+          email: session.email,
+          contact: "5647484939",
+        },
+        theme: {
+          color: "#f37254",
+        },
+        notes: {
+          name: session.fullname,
+          user: session.id,
+          product: plan._id,
+          mentor: mentor.mentorId,
+          discount: 0,
+        },
+      };
 
-      notes:{
-        name:session.fullname,
-        user:session.id,
-        product:plan._id,
-        mentor:mentor.mentorId,
-        discount:0,
+      const rzp = new Razorpay(options);
+      rzp.open();
 
-      }
-      }
-
-       const rzp =  new Razorpay(options) ;
-   rzp.open() ;
-
-
-    rzp.on("payment.failed",()=>{
-    alert("Payment Failed!")
-   })
-
+      rzp.on("payment.failed", () => {
+        alert("Payment Failed!");
+      });
+    } catch (err) {
+      console.log(err);
+      if (err.status === 401) return navigate("/login");
+      console.error("Payment order failed:", err);
     }
-
-
-    catch (err) {
-    console.log(err);
-    if(err.status === 401)
-      return navigate("/login");
-    console.error("Payment order failed:", err);
-  }
-
-
-
   };
+
+  const hasAnyActivePlan = activeMentorships.length > 0;
 
   return (
     <div className="min-h-screen bg-black text-white font-mono px-6 py-10">
@@ -240,10 +239,11 @@ const MentorProfile = () => {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`pb-3 capitalize transition ${activeTab === tab
+            className={`pb-3 capitalize transition ${
+              activeTab === tab
                 ? "border-b-2 border-white text-white"
                 : "hover:text-white"
-              }`}
+            }`}
           >
             {tab}
           </button>
@@ -262,18 +262,14 @@ const MentorProfile = () => {
             <h3 className="font-semibold mb-2">Education</h3>
             <p className="text-gray-400">{mentor.education}</p>
           </div>
-
-
         </div>
       )}
-
-
 
       {/* ================= OFFERINGS ================= */}
       {activeTab === "offerings" && (
         <div className="max-w-6xl mx-auto mt-12 grid md:grid-cols-3 gap-8">
           {mentor.plans.map((plan, i) => {
-            const maxPrice = Math.max(...mentor.plans.map(p => p.price));
+            const maxPrice = Math.max(...mentor.plans.map((p) => p.price));
 
             // ⭐ RECOMMENDED LOGIC
             const isPro = plan.title?.toLowerCase() === "pro";
@@ -281,21 +277,29 @@ const MentorProfile = () => {
 
             // 🔹 Convert comma-separated text into points
             const canDo = Array.isArray(plan.whatCanDo)
-              ? plan.whatCanDo.flatMap(item => item.split(","))
+              ? plan.whatCanDo.flatMap((item) => item.split(","))
               : [];
 
             const cannotDo = Array.isArray(plan.whatCannotDo)
-              ? plan.whatCannotDo.flatMap(item => item.split(","))
+              ? plan.whatCannotDo.flatMap((item) => item.split(","))
               : [];
+
+            const activePlan = activeMentorships.find(
+              (m) => m.planId === plan._id
+            );
+
+            const isActivePlan = !!activePlan;
+            const shouldDisable = hasAnyActivePlan && !isActivePlan;
 
             return (
               <div
                 key={plan._id || i}
                 className={`relative rounded-2xl p-7 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl
-            ${isPopular
-                    ? "border border-white bg-gradient-to-b from-gray-800 to-black shadow-[0_0_40px_rgba(255,255,255,0.15)]"
-                    : "border border-gray-800 bg-gray-900"
-                  }`}
+            ${
+              isPopular
+                ? "border border-white bg-gradient-to-b from-gray-800 to-black shadow-[0_0_40px_rgba(255,255,255,0.15)]"
+                : "border border-gray-800 bg-gray-900"
+            }`}
               >
                 {/* ⭐ BADGES */}
                 {isPopular && (
@@ -351,22 +355,27 @@ const MentorProfile = () => {
 
                 {/* CTA */}
                 <Button
-                  className={`mt-8 w-full font-semibold tracking-wide ${isPopular
-                      ? "bg-white text-black hover:bg-gray-200"
-                      : "border border-gray-600 text-white hover:bg-white hover:text-black"
-                    }`}
-                  onClick={() => handleBuyNow(plan)}
+                  disabled={!isActivePlan}
+                  className={`mt-8 w-full font-semibold tracking-wide ${
+                    isActivePlan
+                      ? isPopular
+                        ? "bg-white text-black hover:bg-gray-200"
+                        : "border border-gray-600 text-white hover:bg-white hover:text-black"
+                      : "bg-gray-800 text-gray-400 cursor-not-allowed"
+                  }`}
+                  onClick={() =>
+                    isActivePlan &&
+                  navigate(`/mentorship/${mentor.mentorId}/${plan._id}`)
+
+                  }
                 >
-                  Choose Plan
+                  {isActivePlan ? "Explore" : "Choose Plan"}
                 </Button>
               </div>
             );
           })}
         </div>
       )}
-
-
-
 
       {/* ================= REVIEWS ================= */}
       {activeTab === "reviews" && (

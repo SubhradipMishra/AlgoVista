@@ -179,7 +179,7 @@ export const webhook = async (req: any, res: any) => {
 
 
 
-export const generateOrderMentor = async (req: Request, res: Response) => {
+export const generateOrderMentor = async (req: any, res: Response) => {
   try {
     const { productId, mentorId,userId } = req.body;
 
@@ -224,7 +224,7 @@ export const generateOrderMentor = async (req: Request, res: Response) => {
   currency: "INR",
   receipt: `AlgoVista_${Date.now()}`,
   notes: {
-    user: userId,      // 👈 REQUIRED
+    user: req.user._id,      // 👈 REQUIRED
     mentor: mentorId,        // 👈 REQUIRED
     product: productId,      // 👈 REQUIRED
   },
