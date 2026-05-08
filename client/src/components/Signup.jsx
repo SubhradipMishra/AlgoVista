@@ -30,11 +30,8 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black relative overflow-hidden text-gray-200 font-mono">
-      {/* Background Grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
-
-      <div className="w-full max-w-md bg-gray-900/90 backdrop-blur-xl shadow-2xl rounded-3xl p-8 relative z-10 border border-gray-700">
+    <div className="min-h-screen flex items-center justify-center grid-bg relative overflow-hidden text-[var(--text-main)] font-mono">
+      <div className="w-full max-w-md glass-card p-8 relative z-10">
         {/* Website Name */}
         <h1 className="text-4xl font-extrabold text-center mb-4 tracking-widest text-gray-100">
           AlgoVista
@@ -61,7 +58,7 @@ const Signup = () => {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-700 rounded-lg bg-black text-gray-200 focus:ring-2 focus:ring-gray-500 focus:outline-none placeholder-gray-500"
+              className="w-full px-4 py-2 border border-[var(--glass-border)] rounded-lg bg-[rgba(0,0,0,0.6)] text-[var(--primary-yellow)] focus:ring-2 focus:ring-[var(--primary-yellow)] focus:outline-none placeholder-gray-500"
               placeholder="Enter your name"
             />
           </div>
@@ -72,7 +69,7 @@ const Signup = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-700 rounded-lg bg-black text-gray-200 focus:ring-2 focus:ring-gray-500 focus:outline-none placeholder-gray-500"
+              className="w-full px-4 py-2 border border-[var(--glass-border)] rounded-lg bg-[rgba(0,0,0,0.6)] text-[var(--primary-yellow)] focus:ring-2 focus:ring-[var(--primary-yellow)] focus:outline-none placeholder-gray-500"
               placeholder="Enter your email"
             />
           </div>
@@ -83,14 +80,14 @@ const Signup = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-700 rounded-lg bg-black text-gray-200 focus:ring-2 focus:ring-gray-500 focus:outline-none placeholder-gray-500"
+              className="w-full px-4 py-2 border border-[var(--glass-border)] rounded-lg bg-[rgba(0,0,0,0.6)] text-[var(--primary-yellow)] focus:ring-2 focus:ring-[var(--primary-yellow)] focus:outline-none placeholder-gray-500"
               placeholder="Create a password"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-gray-800 hover:bg-gray-700 text-white font-semibold py-2 rounded-lg transition-all border border-gray-600 shadow-md hover:shadow-gray-600/20 uppercase tracking-wide"
+            className="w-full btn-yellow"
           >
             Sign Up
           </button>
@@ -104,7 +101,7 @@ const Signup = () => {
         </div>
 
         {/* Google Signup Button */}
-        <button className="w-full flex items-center justify-center gap-2 border border-gray-700 py-2 rounded-lg hover:bg-gray-800 transition text-gray-300 tracking-wide">
+        <button className="w-full flex items-center justify-center gap-2 btn-outline hover-tech-yellow">
           <img
             src="https://www.svgrepo.com/show/475656/google-color.svg"
             alt="Google"
@@ -115,7 +112,7 @@ const Signup = () => {
 
         <p className="text-center text-gray-500 mt-6 text-sm">
           Already have an account?{" "}
-          <Link to="/login" className="text-gray-300 hover:text-white underline">
+          <Link to="/login" className="text-[var(--primary-yellow)] hover-tech-yellow underline">
             Log in
           </Link>
         </p>

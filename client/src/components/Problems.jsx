@@ -108,16 +108,14 @@ export default function Problems() {
   return (
     <div
       className={`min-h-screen font-mono transition duration-300 ${
-        viewDark ? "bg-black text-white" : "bg-white text-black"
+        viewDark ? "grid-bg text-[var(--text-main)]" : "bg-white text-black"
       } relative`}
     >
-      {/* GRID BG */}
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:40px_40px] opacity-10 pointer-events-none"></div>
 
       {/* HEADER */}
       <div
-        className={`px-6 py-4 flex items-center justify-between sticky top-0 z-50 border-b border-white/10 backdrop-blur-md ${
-          viewDark ? "bg-black/70" : "bg-white/70"
+        className={`px-6 py-4 flex items-center justify-between sticky top-0 z-50 ${
+          viewDark ? "glass-panel" : "bg-white/70 backdrop-blur-md"
         }`}
       >
         {/* Filters */}
@@ -126,7 +124,7 @@ export default function Problems() {
           <div
             className={`flex items-center gap-2 px-3 py-2 rounded-xl border shadow-sm ${
               viewDark
-                ? "bg-[#0c0c0c] border-white/10"
+                ? "bg-[rgba(0,0,0,0.5)] border-[var(--glass-border)]"
                 : "bg-gray-100 border-black/20"
             }`}
           >
@@ -188,13 +186,13 @@ export default function Problems() {
               {shown.map((p) => (
                 <div
                   key={p._id}
-                  className={`group rounded-xl px-6 py-5 border shadow-sm transition-all cursor-pointer
+                  className={`group rounded-xl px-6 py-5 transition-all cursor-pointer
                   ${
                     viewDark
-                      ? "bg-[#0d0d0d] border-white/10 hover:bg-[#151515]"
-                      : "bg-[#f4f4f4] border-black/10 hover:bg-[#eee]"
+                      ? "glass-card hover:border-[var(--primary-yellow)]"
+                      : "bg-[#f4f4f4] border border-black/10 hover:bg-[#eee]"
                   }
-                  hover:-translate-y-1 hover:shadow-md`}
+                  hover:-translate-y-1`}
                   onClick={() => navigate(`/problems/${p._id}`)}
                 >
                   <div className="flex items-center justify-between">
@@ -215,11 +213,11 @@ export default function Problems() {
 
                     <Button
                       type="default"
-                      className={`font-mono flex items-center gap-2 border px-3 py-2 transition-all rounded-lg 
+                      className={`font-mono flex items-center gap-2 transition-all 
                       ${
                         viewDark
-                          ? "bg-transparent border-white/30 text-white hover:bg-white/10"
-                          : "bg-transparent border-black/40 text-black hover:bg-black/5"
+                          ? "btn-outline group-hover:btn-yellow"
+                          : "bg-transparent border border-black/40 text-black hover:bg-black/5 rounded-lg px-3 py-2"
                       }`}
                       onClick={(e) => {
                         e.stopPropagation();

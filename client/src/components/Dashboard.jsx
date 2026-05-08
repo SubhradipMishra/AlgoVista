@@ -223,7 +223,7 @@ const Dashboard = () => {
   const xpProgress = Math.min(100, Math.round(((user.xp - xpForLevel) / 1000) * 100));
 
   return (
-    <div className="min-h-screen flex bg-black text-white font-mono overflow-hidden">
+    <div className="min-h-screen flex grid-bg font-mono overflow-hidden">
       <UserSidebar
         user={user}
         selectedKey={selectedKey}
@@ -239,7 +239,7 @@ const Dashboard = () => {
           className="flex items-center justify-between mb-6"
         >
           <div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-white">
+            <h1 className="text-3xl font-extrabold tracking-tight text-[var(--text-main)]">
               Arena • Welcome back, {user.fullname.split(" ")[0]}
             </h1>
             <p className="text-gray-400 text-sm mt-1">
@@ -268,7 +268,7 @@ const Dashboard = () => {
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-8 rounded-2xl border border-gray-700 bg-gray-900 shadow-xl w-full max-w-3xl mx-auto"
+              className="p-8 glass-card w-full max-w-3xl mx-auto"
             >
               <div className="flex flex-wrap items-center gap-6">
                 <ProgressRing size={120} progress={xpProgress} level={level} />
@@ -289,12 +289,12 @@ const Dashboard = () => {
                   {/* Progress bar */}
                   <div className="mt-5">
                     <div className="text-xs text-gray-400 mb-2">Level Progress</div>
-                    <div className="w-full bg-gray-800 rounded-full h-3 overflow-hidden border border-gray-700">
+                    <div className="w-full bg-[rgba(0,0,0,0.5)] rounded-full h-3 overflow-hidden border border-[var(--glass-border)]">
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${xpProgress}%` }}
                         transition={{ duration: 0.6 }}
-                        className="h-3 bg-white"
+                        className="h-3 bg-[var(--primary-yellow)]"
                       />
                     </div>
                     <div className="text-xs text-gray-500 mt-1">
@@ -313,8 +313,8 @@ const Dashboard = () => {
                   }}
                   className={`flex-1 min-w-[100px] py-2 rounded-lg text-sm font-medium transition-all ${
                     activePanel === "overview"
-                      ? "bg-white text-black"
-                      : "bg-gray-800 text-gray-300 border border-gray-700"
+                      ? "btn-yellow"
+                      : "btn-outline"
                   }`}
                 >
                   Overview
@@ -327,8 +327,8 @@ const Dashboard = () => {
                   }}
                   className={`flex-1 min-w-[100px] py-2 rounded-lg text-sm font-medium transition-all ${
                     activePanel === "performance"
-                      ? "bg-white text-black"
-                      : "bg-gray-800 text-gray-300 border border-gray-700"
+                      ? "btn-yellow"
+                      : "btn-outline"
                   }`}
                 >
                   Performance
@@ -341,8 +341,8 @@ const Dashboard = () => {
                   }}
                   className={`flex-1 min-w-[100px] py-2 rounded-lg text-sm font-medium transition-all ${
                     activePanel === "certs"
-                      ? "bg-white text-black"
-                      : "bg-gray-800 text-gray-300 border border-gray-700"
+                      ? "btn-yellow"
+                      : "btn-outline"
                   }`}
                 >
                   Certs
@@ -354,8 +354,8 @@ const Dashboard = () => {
                   }}
                   className={`flex-1 min-w-[100px] py-2 rounded-lg text-sm font-medium transition-all ${
                     activePanel === "classroom"
-                      ? "bg-white text-black"
-                      : "bg-gray-800 text-gray-300 border border-gray-700"
+                      ? "btn-yellow"
+                      : "btn-outline"
                   }`}
                 >
                   Classroom
@@ -368,7 +368,7 @@ const Dashboard = () => {
               <motion.div
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mt-8 p-6 rounded-2xl border border-gray-700 bg-gray-900 shadow-lg w-full max-w-3xl mx-auto"
+                className="mt-8 p-6 glass-card w-full max-w-3xl mx-auto"
               >
                 <h4 className="text-sm text-gray-300 mb-4">Achievements</h4>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -407,7 +407,7 @@ const Dashboard = () => {
 
             <button
               onClick={() => navigate(`/courses/${course._id}`)}
-              className="px-4 py-2 rounded-md bg-white text-black text-sm hover:bg-gray-300 transition"
+              className="px-4 py-2 rounded-md btn-yellow text-sm"
             >
               Go to Course
             </button>
@@ -461,7 +461,7 @@ const ProgressRing = ({ size = 100, progress = 40, level = 1 }) => {
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke="#fff"
+          stroke="#FFE100"
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeDasharray={`${dash} ${circumference - dash}`}

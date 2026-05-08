@@ -65,18 +65,19 @@ const UserSidebar = ({ user, selectedKey, setSelectedKey, navigate }) => {
       collapsed={collapsed}
       onCollapse={setCollapsed}
       trigger={null}
+      className="glass-panel"
       style={{
         height: "100vh",
         position: "sticky",
         top: 0,
         left: 0,
-        backgroundColor: "#000",
-        borderRight: "1px solid #111",
+        backgroundColor: "rgba(9, 9, 11, 0.8)",
+        borderRight: "1px solid var(--glass-border)",
         paddingTop: 20,
         display: "flex",
         flexDirection: "column",
         fontFamily: "monospace",
-        color: "#f1f5f9",
+        color: "var(--text-main)",
       }}
     >
       {/* Collapse/Expand Button */}
@@ -109,8 +110,8 @@ const UserSidebar = ({ user, selectedKey, setSelectedKey, navigate }) => {
               {user.fullname}
             </div>
             <div style={{ marginTop: 4, display: "flex", gap: 8, flexWrap: "wrap" }}>
-              <Tag style={{ fontWeight: 600, fontSize: 12, backgroundColor: "#111", color: "#f1f5f9" }}>{user.rank}</Tag>
-              <Tag style={{ fontWeight: 600, fontSize: 12, backgroundColor: "#111", color: "#f1f5f9" }}>XP {user.xp}</Tag>
+              <Tag style={{ fontWeight: 600, fontSize: 12, backgroundColor: "rgba(255,215,0,0.1)", color: "var(--primary-yellow)", border: "1px solid var(--glass-border)" }}>{user.rank}</Tag>
+              <Tag style={{ fontWeight: 600, fontSize: 12, backgroundColor: "rgba(255,215,0,0.1)", color: "var(--primary-yellow)", border: "1px solid var(--glass-border)" }}>XP {user.xp}</Tag>
             </div>
             <div style={{ marginTop: 6, fontSize: 12, display: "flex", alignItems: "center", gap: 6, color: "#f1f5f9" }}>
               <FireOutlined />
@@ -126,7 +127,8 @@ const UserSidebar = ({ user, selectedKey, setSelectedKey, navigate }) => {
           <Button
             type="primary"
             block
-            style={{ backgroundColor: "#111", borderColor: "#111", fontWeight: "bold", color: "#f1f5f9", fontFamily: "monospace" }}
+            className="btn-outline hover-tech-yellow"
+            style={{ fontWeight: "bold", fontFamily: "monospace", background: "transparent" }}
             onClick={() => user._id && navigate(`/profile/${user._id}`)}
           >
             Edit Profile
@@ -160,8 +162,9 @@ const UserSidebar = ({ user, selectedKey, setSelectedKey, navigate }) => {
                 <span
                   key={i}
                   style={{
-                    backgroundColor: "#111",
-                    color: "#f1f5f9",
+                    backgroundColor: "rgba(255,215,0,0.05)",
+                    border: "1px solid var(--glass-border)",
+                    color: "var(--primary-yellow)",
                     fontSize: 12,
                     fontWeight: 600,
                     padding: "4px 12px",

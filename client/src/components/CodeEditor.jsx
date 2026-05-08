@@ -203,28 +203,20 @@ export default function CodeEditor() {
     (d || "").toLowerCase() === "easy"
       ? "#FFFFFF"
       : (d || "").toLowerCase() === "medium"
-      ? "#FFFFFF"
-      : "#CCCCCC";
+        ? "#FFFFFF"
+        : "#CCCCCC";
 
   // main render
   return (
-    <div className="min-h-screen flex w-full bg-black text-white font-mono">
+    <div className="min-h-screen flex w-full grid-bg text-[var(--text-main)] font-mono">
       <ToastContainer position="top-right" newestOnTop theme="colored" />
 
       {/* LEFT PANEL */}
       <aside
-        className="w-[34%] h-screen sticky top-0 overflow-y-auto p-5"
-        style={{ background: "#000000", borderRight: "1px solid #333333" }}
+        className="w-[34%] h-screen sticky top-0 overflow-y-auto p-5 border-r border-[var(--glass-border)]"
       >
         {/* header card */}
-        <div
-          className="rounded-2xl p-4 mb-4"
-          style={{
-            background: "#111111",
-            border: "1px solid #333333",
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05)",
-          }}
-        >
+        <div className="glass-card p-4 mb-4">
           <div className="flex justify-between items-start gap-4">
             <div className="flex-1">
               <h1 className="text-2xl font-bold text-white leading-tight">
@@ -253,7 +245,7 @@ export default function CodeEditor() {
               <Button
                 size="small"
                 onClick={() => toggleFavoriteLocal(problem._id)}
-                className="!bg-[#222222] !border !border-[#555555] !text-white !rounded-md"
+                className="btn-outline !py-1 !px-2 flex items-center"
               >
                 <Star size={14} />&nbsp;Fav
               </Button>
@@ -266,13 +258,7 @@ export default function CodeEditor() {
         </div>
 
         {/* tags & companies & hints */}
-        <div
-          className="rounded-2xl p-4"
-          style={{
-            background: "#111111",
-            border: "1px solid #333333",
-          }}
-        >
+        <div className="glass-card p-4">
           <h4 className="text-sm text-white font-semibold mb-2">Tags</h4>
           <div className="flex gap-2 flex-wrap">
             {(problem.tags && problem.tags.length ? problem.tags : ["General"]).map((t) => (
@@ -332,19 +318,13 @@ export default function CodeEditor() {
             centered={false}
           >
             <TabPane tab="Description" key="description">
-              <div
-                className="rounded-xl p-4"
-                style={{ background: "#111111", border: "1px solid #333333" }}
-              >
+              <div className="glass-card p-4">
                 <div className="prose prose-sm text-gray-200 whitespace-pre-wrap">
                   {problem.description || "No description available."}
                 </div>
               </div>
 
-              <div
-                className="rounded-xl p-4 mt-4"
-                style={{ background: "#111111", border: "1px solid #333333" }}
-              >
+              <div className="glass-card p-4 mt-4">
                 <h4 className="text-sm text-white font-semibold">Constraints</h4>
                 <div className="text-sm text-gray-200 mt-2 whitespace-pre-wrap">
                   {problem.constraints || "No constraints specified."}
@@ -355,22 +335,17 @@ export default function CodeEditor() {
             <TabPane tab="Submissions" key="submissions">
               <div>
                 {userSubmissions.length === 0 ? (
-                  <div
-                    className="rounded-xl p-4 text-center text-gray-400"
-                    style={{ background: "#111111", border: "1px solid #333333" }}
-                  >
+                  <div className="glass-card p-4 text-center text-gray-400">
                     No submissions yet.
                   </div>
                 ) : (
                   userSubmissions.map((sub) => (
                     <div
                       key={sub._id}
-                      className="rounded-xl p-3 mb-3"
+                      className="glass-card p-3 mb-3"
                       style={{
-                        background: "#111111",
-                        borderLeft: `4px solid ${
-                          (sub.verdict || "").toLowerCase() === "accepted" ? "#FFFFFF" : "#CCCCCC"
-                        }`,
+                        borderLeft: `4px solid ${(sub.verdict || "").toLowerCase() === "accepted" ? "#FFFFFF" : "#CCCCCC"
+                          }`,
                       }}
                     >
                       <div className="flex justify-between items-center">
@@ -385,7 +360,7 @@ export default function CodeEditor() {
                             onClick={() =>
                               setExpandedSubmission((prev) => (prev === sub._id ? null : sub._id))
                             }
-                            className="!bg-[#222222] !text-white !rounded-md"
+                            className="btn-outline !py-0 !px-2"
                           >
                             {expandedSubmission === sub._id ? "Hide" : "View"}
                           </Button>
@@ -396,7 +371,7 @@ export default function CodeEditor() {
                               navigator.clipboard.writeText(sub.source_code || "");
                               toast.success("Copied submission");
                             }}
-                            className="!bg-[#222222] !text-gray-200 !rounded-md"
+                            className="btn-outline !py-0 !px-2"
                           >
                             Copy
                           </Button>
@@ -407,7 +382,7 @@ export default function CodeEditor() {
                               setCode(sub.source_code || "");
                               toast.success("Loaded submission into editor");
                             }}
-                            className="!bg-[#222222] !text-white !rounded-md"
+                            className="btn-outline !py-0 !px-2"
                           >
                             Load
                           </Button>
@@ -439,9 +414,8 @@ export default function CodeEditor() {
                   output.map((res) => (
                     <div
                       key={res.id}
-                      className="rounded-lg p-3"
+                      className="glass-card p-3"
                       style={{
-                        background: "#111111",
                         borderLeft: `6px solid ${res.color || "#FFFFFF"}`,
                       }}
                     >
@@ -476,7 +450,7 @@ export default function CodeEditor() {
           <div className="flex items-center gap-3">
             <Button
               onClick={handleSubmit}
-              className="!bg-white !text-black !font-semibold !rounded-lg !px-5"
+              className="btn-yellow"
             >
               🚀 Run & Submit (C++)
             </Button>
@@ -486,12 +460,12 @@ export default function CodeEditor() {
                 navigator.clipboard.writeText(code);
                 toast.success("Code copied");
               }}
-              className="!bg-[#222222] !text-white !rounded-lg"
+              className="btn-outline !py-1 !px-3"
             >
               📋 Copy
             </Button>
 
-            <Button onClick={downloadCode} className="!bg-[#222222] !text-white !rounded-lg">
+            <Button onClick={downloadCode} className="btn-outline !py-1 !px-3">
               ⬇ Download
             </Button>
 
@@ -500,7 +474,7 @@ export default function CodeEditor() {
                 setCode(problem.starterCode || "");
                 toast.info("Reset to starter code");
               }}
-              className="!bg-[#222222] !text-gray-400 !rounded-lg"
+              className="btn-outline !py-1 !px-3"
             >
               🔄 Reset
             </Button>
@@ -519,10 +493,8 @@ export default function CodeEditor() {
 
         {/* editor card */}
         <div
-          className="rounded-2xl overflow-hidden"
+          className="glass-card overflow-hidden"
           style={{
-            background: "#111111",
-            border: "1px solid #333333",
             minHeight: 520,
           }}
         >
@@ -547,37 +519,25 @@ export default function CodeEditor() {
         <div className="mt-6">
           <Row gutter={16}>
             <Col span={6}>
-              <Card
-                className="rounded-xl"
-                style={{ background: "#111111", border: "1px solid #333333" }}
-              >
+              <Card className="glass-card">
                 <Statistic title="Total Tests" value={summaryStats.total} valueStyle={{ color: "#FFFFFF" }} />
               </Card>
             </Col>
 
             <Col span={6}>
-              <Card
-                className="rounded-xl"
-                style={{ background: "#111111", border: "1px solid #333333" }}
-              >
+              <Card className="glass-card">
                 <Statistic title="Accepted" value={summaryStats.accepted} valueStyle={{ color: "#FFFFFF" }} />
               </Card>
             </Col>
 
             <Col span={6}>
-              <Card
-                className="rounded-xl"
-                style={{ background: "#111111", border: "1px solid #333333" }}
-              >
+              <Card className="glass-card">
                 <Statistic title="Failed" value={summaryStats.failed} valueStyle={{ color: "#CCCCCC" }} />
               </Card>
             </Col>
 
             <Col span={6}>
-              <Card
-                className="rounded-xl"
-                style={{ background: "#111111", border: "1px solid #333333" }}
-              >
+              <Card className="glass-card">
                 <Statistic title="Fastest (ms)" value={summaryStats.fastest} valueStyle={{ color: "#FFFFFF" }} />
               </Card>
             </Col>

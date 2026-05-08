@@ -57,7 +57,7 @@ const Roadmaps = () => {
 
   if (sessionLoading || loading) {
     return (
-      <div className="flex min-h-screen bg-black text-white overflow-hidden font-mono">
+      <div className="flex min-h-screen grid-bg text-[var(--text-main)] overflow-hidden font-mono">
         <UserSidebar
           user={user}
           selectedKey="courses"
@@ -74,7 +74,7 @@ const Roadmaps = () => {
             {[...Array(4)].map((_, i) => (
               <div
                 key={i}
-                className="bg-[#111]/80 border border-gray-800 rounded-2xl p-6 shadow-xl backdrop-blur-lg"
+                className="glass-card p-6"
               >
                 <Skeleton active paragraph={{ rows: 5 }} />
               </div>
@@ -88,7 +88,7 @@ const Roadmaps = () => {
   if (!session) return null;
 
   return (
-    <div className="flex min-h-screen bg-black text-white overflow-hidden font-mono">
+    <div className="flex min-h-screen grid-bg text-[var(--text-main)] overflow-hidden font-mono">
       {user ? (
         <UserSidebar
           user={user}
@@ -115,10 +115,10 @@ const Roadmaps = () => {
             <motion.div
               key={roadmap._id || index}
               whileHover={{ scale: 1.03, y: -4 }}
-              className="bg-[#111]/80 border border-gray-800 rounded-3xl p-6 shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_25px_rgba(255,255,255,0.12)] backdrop-blur-lg transition-all"
+              className="glass-card p-6 hover:shadow-[0_0_20px_rgba(255,215,0,0.15)] transition-all hover:border-[var(--primary-yellow)]"
             >
               <div className="flex justify-between items-center mb-3 text-[11px]">
-                <span className="inline-flex items-center gap-1 rounded-full bg-black border border-gray-700 px-3 py-1 text-gray-300 uppercase tracking-wide">
+                <span className="inline-flex items-center gap-1 rounded-full bg-[rgba(255,215,0,0.1)] border border-[var(--primary-yellow)] px-3 py-1 text-[var(--primary-yellow)] uppercase tracking-wide">
                   Popular
                 </span>
                 <span className="inline-flex items-center rounded-full bg-black border border-gray-700 px-3 py-1 text-gray-300 capitalize">
@@ -149,7 +149,7 @@ const Roadmaps = () => {
 
               <button
                 onClick={() => navigate(`/roadmaps/${roadmap._id}`)}
-                className="inline-flex underline items-center gap-2 px-4 py-2 rounded-lg bg-gray-900 text-black text-sm font-semibold hover:bg-gray-500 transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg btn-outline text-sm font-semibold hover-tech-yellow transition-colors"
               >
                 Explore Roadmap →
               </button>

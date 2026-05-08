@@ -56,6 +56,75 @@ const featureTabs = [
   },
 ];
 
+const testimonials = [
+  {
+    name: "Aarav Patel",
+    role: "SDE Intern",
+    review: "The visual breakdowns finally made graph and DP problems click for me.",
+    rating: 5,
+    avatar: "https://i.pravatar.cc/100?img=11",
+  },
+  {
+    name: "Neha Sharma",
+    role: "Frontend Engineer",
+    review: "I stopped memorizing patterns and started understanding why each step works.",
+    rating: 5,
+    avatar: "https://i.pravatar.cc/100?img=32",
+  },
+  {
+    name: "Rohan Mehta",
+    role: "Backend Developer",
+    review: "The guided practice flow made interview prep feel structured instead of chaotic.",
+    rating: 4,
+    avatar: "https://i.pravatar.cc/100?img=14",
+  },
+  {
+    name: "Priya Nair",
+    role: "CS Student",
+    review: "The roadmap and mentor-first approach kept me consistent for the first time.",
+    rating: 5,
+    avatar: "https://i.pravatar.cc/100?img=44",
+  },
+  {
+    name: "Kabir Singh",
+    role: "Full Stack Learner",
+    review: "I loved how the UI feels like a developer workspace instead of a boring course page.",
+    rating: 5,
+    avatar: "https://i.pravatar.cc/100?img=25",
+  },
+  {
+    name: "Isha Verma",
+    role: "Placement Candidate",
+    review: "The platform helped me turn weak topics into repeatable practice before interviews.",
+    rating: 4,
+    avatar: "https://i.pravatar.cc/100?img=47",
+  },
+];
+
+const testimonialColumns = [
+  testimonials.slice(0, 3),
+  testimonials.slice(3),
+];
+
+const footerNavigation = [
+  { label: "Roadmaps", to: "/roadmaps" },
+  { label: "Problems", to: "/problems" },
+  { label: "Mentorship", to: "/mentorship" },
+  { label: "Dev Tools", to: "/devtools" },
+];
+
+const footerResources = [
+  { label: "Student Reviews", href: "#reviews" },
+  { label: "Community", href: "#community" },
+  { label: "Learning Roadmap", href: "#roadmap" },
+  { label: "FAQ", href: "#faq" },
+];
+
+const revealUp = {
+  hidden: { opacity: 0, y: 28 },
+  visible: { opacity: 1, y: 0 },
+};
+
 const Home = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [displayedLines, setDisplayedLines] = useState([]);
@@ -93,19 +162,8 @@ const [openDropdown, setOpenDropdown] = useState(null);
     if (inView) setStartCount(true);
   }, [inView]);
 
-  // Simulate typing code
-  useEffect(() => {
-    let i = 0;
-    const interval = setInterval(() => {
-      if (i < typingCode.length) {
-        setDisplayedLines((prev) => [...prev, typingCode[i]]);
-        i++;
-      } else {
-        clearInterval(interval);
-      }
-    }, 500);
-    return () => clearInterval(interval);
-  }, []);
+  // Static code for terminal
+  const staticLines = typingCode;
 
   // Typing heading animation
   const words = ["Visualize Algorithms", "Core Subjects", "System Design", "Ace DSA"];
@@ -132,13 +190,23 @@ const [openDropdown, setOpenDropdown] = useState(null);
   }, [charIndex, wordIndex]);
 
   return (
-    <div className="min-h-screen flex flex-col text-gray-200 grid-bg overflow-x-hidden">
+    <motion.div
+      className="page-shell min-h-screen flex flex-col text-gray-200 overflow-x-hidden"
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, ease: "easeOut" }}
+    >
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute left-[-8rem] top-24 h-72 w-72 rounded-full bg-[rgba(255,215,0,0.09)] blur-3xl" />
+        <div className="absolute right-[-10rem] top-[32rem] h-96 w-96 rounded-full bg-[rgba(255,140,0,0.08)] blur-3xl" />
+        <div className="absolute bottom-[-10rem] left-1/3 h-80 w-80 rounded-full bg-[rgba(255,255,255,0.04)] blur-3xl" />
+      </div>
       {/* Navbar */}
   
 
 <nav
-  className={`fixed top-0 z-50 w-full transition-all duration-300 font-mono border-b border-gray-800
-    ${isScrolled ? "backdrop-blur-xl bg-black/70 py-3" : "bg-black py-5"}
+  className={`fixed top-0 z-50 w-full transition-all duration-300 font-mono
+    ${isScrolled ? "glass-panel py-3" : "bg-transparent py-5"}
   `}
 >
   <div className="max-w-7xl mx-auto flex justify-between items-center px-4 sm:px-8">
@@ -151,18 +219,18 @@ const [openDropdown, setOpenDropdown] = useState(null);
     <div className="hidden md:flex space-x-8 items-center text-base font-semibold relative text-gray-300">
       <Link
         to="/"
-        className="relative hover:text-white transition-all group"
+        className="relative hover-tech-yellow transition-all group"
       >
         Home
-        <span className="absolute left-0 -bottom-1 w-0 h-[1.5px] bg-gray-400 transition-all duration-300 group-hover:w-full"></span>
+        <span className="absolute left-0 -bottom-1 w-0 h-[1.5px] bg-[#FFFF00] transition-all duration-300 group-hover:w-full"></span>
       </Link>
 
       {/* Resources Dropdown */}
       <div className="relative group">
-        <button className="flex items-center gap-1 hover:text-white transition-all">
+        <button className="flex items-center gap-1 hover:text-[#FFE100] transition-all">
           Resources <span className="ml-1 group-hover:rotate-180 transition-transform">▼</span>
         </button>
-        <div className="absolute left-0 mt-3 w-60 bg-black/95 border border-gray-700 rounded-xl opacity-0 scale-95 invisible group-hover:opacity-100 group-hover:visible group-hover:scale-100 transition-all duration-300 shadow-xl">
+        <div className="absolute left-0 mt-3 w-60 glass-card opacity-0 scale-95 invisible group-hover:opacity-100 group-hover:visible group-hover:scale-100 transition-all duration-300">
           <div className="p-3 space-y-2">
             {[{ name: "SDE Sheet", icon: "📝" }, { name: "System Design", icon: "⚙️" }, { name: "Core Subjects", icon: "📚" }, { name: "Interview Story", icon: "💬" }].map((item, i) => (
               <div key={i} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-800 cursor-pointer">
@@ -173,29 +241,29 @@ const [openDropdown, setOpenDropdown] = useState(null);
         </div>
       </div>
 
-      <Link to="/roadmaps" className="relative hover:text-white transition-all group">
+      <Link to="/roadmaps" className="relative hover-tech-yellow transition-all group">
         Roadmap
-        <span className="absolute left-0 -bottom-1 w-0 h-[1.5px] bg-gray-400 transition-all duration-300 group-hover:w-full"></span>
+        <span className="absolute left-0 -bottom-1 w-0 h-[1.5px] bg-[#FFFF00] transition-all duration-300 group-hover:w-full"></span>
       </Link>
 
-      <Link to="/problems" className="relative hover:text-white transition-all group">
+      <Link to="/problems" className="relative hover-tech-yellow transition-all group">
         Problems
-        <span className="absolute left-0 -bottom-1 w-0 h-[1.5px] bg-gray-400 transition-all duration-300 group-hover:w-full"></span>
+        <span className="absolute left-0 -bottom-1 w-0 h-[1.5px] bg-[#FFFF00] transition-all duration-300 group-hover:w-full"></span>
       </Link>
 
-      <Link to="/mentorship" className="relative hover:text-white transition-all group">
+      <Link to="/mentorship" className="relative hover-tech-yellow transition-all group">
         Mentorship
-        <span className="absolute left-0 -bottom-1 w-0 h-[1.5px] bg-gray-400 transition-all duration-300 group-hover:w-full"></span>
+        <span className="absolute left-0 -bottom-1 w-0 h-[1.5px] bg-[#FFFF00] transition-all duration-300 group-hover:w-full"></span>
       </Link>
 
-      <Link to="success-stories" className="relative hover:text-white transition-all group">
+      <Link to="success-stories" className="relative hover-tech-yellow transition-all group">
         Success Stories
-        <span className="absolute left-0 -bottom-1 w-0 h-[1.5px] bg-gray-400 transition-all duration-300 group-hover:w-full"></span>
+        <span className="absolute left-0 -bottom-1 w-0 h-[1.5px] bg-[#FFFF00] transition-all duration-300 group-hover:w-full"></span>
       </Link>
 
-      <Link to="devtools" className="relative hover:text-white transition-all group">
+      <Link to="devtools" className="relative hover-tech-yellow transition-all group">
         Dev Tools
-        <span className="absolute left-0 -bottom-1 w-0 h-[1.5px] bg-gray-400 transition-all duration-300 group-hover:w-full"></span>
+        <span className="absolute left-0 -bottom-1 w-0 h-[1.5px] bg-[#FFFF00] transition-all duration-300 group-hover:w-full"></span>
       </Link>
 
       {/* USER SESSION */}
@@ -241,8 +309,8 @@ const [openDropdown, setOpenDropdown] = useState(null);
         </div>
       ) : (
         <>
-          <Link to="/login"><button className="px-4 py-1 border border-gray-600 text-gray-300 hover:bg-gray-800">Login</button></Link>
-          <Link to="/signup"><button className="px-4 py-1 bg-gray-200 text-black font-bold hover:bg-white">Sign Up</button></Link>
+          <Link to="/login"><button className="btn-outline text-sm py-1.5 px-4">Login</button></Link>
+          <Link to="/signup"><button className="btn-yellow text-sm py-1.5 px-4">Sign Up</button></Link>
         </>
       )}
     </div>
@@ -257,7 +325,7 @@ const [openDropdown, setOpenDropdown] = useState(null);
 
   {/* Mobile Menu */}
   {menuOpen && (
-    <div className="md:hidden bg-black/95 border-t border-gray-800 shadow-xl w-full absolute top-full left-0 flex flex-col items-center py-4 space-y-3 animate-slide-down text-gray-300 font-mono">
+    <div className="md:hidden glass-card w-full absolute top-full left-0 flex flex-col items-center py-6 space-y-4 animate-slide-down text-[var(--text-main)] font-mono border-t-0 mt-2">
       {[
         { name: "Home", link: "/" },
         { name: "Resources", link: "/resources" },
@@ -269,19 +337,19 @@ const [openDropdown, setOpenDropdown] = useState(null);
           key={i}
           to={item.link}
           onClick={() => setMenuOpen(false)}
-          className="text-lg hover:text-white"
+          className="text-lg hover:text-[var(--primary-yellow)] transition-colors"
         >
           {item.name}
         </Link>
       ))}
 
       {session ? (
-        <button onClick={handleLogout} className="px-4 py-2 bg-red-600 text-white rounded-md w-32">Logout</button>
+        <button onClick={handleLogout} className="px-4 py-2 bg-red-600/80 text-white rounded-md w-32 hover:bg-red-500 transition-colors">Logout</button>
       ) : (
-        <>
-          <Link to="/login"><button className="px-4 py-2 border border-gray-600 text-gray-300 w-32">Login</button></Link>
-          <Link to="/signup"><button className="px-4 py-2 bg-gray-200 text-black font-bold w-32">Sign Up</button></Link>
-        </>
+        <div className="flex flex-col gap-3 w-32 mt-4">
+          <Link to="/login" className="w-full"><button className="btn-outline w-full py-2">Login</button></Link>
+          <Link to="/signup" className="w-full"><button className="btn-yellow w-full py-2">Sign Up</button></Link>
+        </div>
       )}
     </div>
   )}
@@ -290,68 +358,109 @@ const [openDropdown, setOpenDropdown] = useState(null);
 
 
       {/* Hero Section */}
-<section className="relative flex items-center justify-center px-4 sm:px-8 md:px-16 py-28 md:py-36 mt-20 bg-black overflow-hidden text-center">
+<section className="relative flex items-center justify-center px-4 sm:px-8 md:px-16 py-28 md:py-36 mt-20 bg-transparent overflow-hidden">
 
   {/* Background Grid */}
   <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
 
-  {/* Soft Glows */}
-  <div className="absolute top-0 left-0 w-36 h-36 bg-white/10 rounded-full animate-bloat-slow blur-3xl pointer-events-none"></div>
-  <div className="absolute bottom-0 right-0 w-44 h-44 bg-white/10 rounded-full animate-bloat-slow blur-3xl pointer-events-none"></div>
-  <div className="absolute top-1/2 right-1/4 w-28 h-28 bg-white/5 rounded-full animate-bloat-slower blur-2xl pointer-events-none"></div>
+  {/* Soft Glows - Repositioned for better visual balance */}
+  <div className="absolute -top-24 -left-24 w-96 h-96 bg-[var(--primary-yellow)]/10 rounded-full blur-[120px] pointer-events-none animate-pulse"></div>
+  <div className="absolute top-1/2 -right-24 w-80 h-80 bg-[#FF8C00]/10 rounded-full blur-[100px] pointer-events-none animate-bloat-slow"></div>
+  <div className="absolute -bottom-24 left-1/4 w-72 h-72 bg-[var(--primary-yellow)]/5 rounded-full blur-[80px] pointer-events-none animate-bloat-slower"></div>
 
-  {/* Content */}
-  <motion.div
-    className="relative z-10 max-w-4xl"
-    initial={{ opacity: 0, y: 40 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.9 }}
-  >
-    {/* Tag */}
-    <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-gray-700 bg-gray-900/70 text-gray-300 text-sm sm:text-base font-medium mb-10 shadow-sm backdrop-blur">
-      <span>✨</span>
-      <span>Free knowledge · Advanced learning · Trusted mentors</span>
-    </div>
+  <div className="relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+    {/* Left Content */}
+    <motion.div
+      className="flex-1 text-left"
+      initial={{ opacity: 0, x: -40 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.9 }}
+    >
+      {/* Tag */}
+      <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-[var(--primary-yellow)] bg-[rgba(0,0,0,0.6)] text-[var(--primary-yellow)] text-sm sm:text-base font-medium mb-8 shadow-[0_0_15px_rgba(255,215,0,0.2)] backdrop-blur animate-pulse">
+        <span>sys.status()</span>
+        <span>&gt; systems online &amp; ready</span>
+      </div>
 
-    {/* Heading */}
-    <h1 className="font-display font-extrabold tracking-tight leading-[1.1] text-gray-100 mb-8
-      text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
-      {displayedHeading}
-      <br />
-      <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-500">
-        The Smarter Way
-      </span>
-    </h1>
+      {/* Heading */}
+      <h1 className="font-display font-extrabold tracking-tight leading-[1.1] text-gray-100 mb-6
+        text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
+        <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-yellow)] to-[#FF8C00] animate-text-glow">
+          Execute.
+        </span><br />
+        Your Career.<br />
+        {displayedHeading}<span className="animate-pulse text-[var(--primary-yellow)]">_</span>
+      </h1>
 
-    {/* Description */}
-    <p className="text-gray-300 text-lg sm:text-xl mb-5 leading-relaxed">
-      Master complex algorithms through step-by-step visualizations that bring
-      every concept to life.
-    </p>
+      {/* Description */}
+      <p className="text-gray-300 text-lg sm:text-xl mb-4 leading-relaxed font-mono">
+        &gt; Master algorithms through step-by-step visualizations.
+      </p>
 
-    <p className="text-gray-500 text-base sm:text-lg mb-12 leading-relaxed">
-      Sorting, searching, graphs, dynamic programming — explore algorithms visually,
-      build intuition, and prepare confidently with AlgoVista.
-    </p>
+      <p className="text-gray-500 text-base sm:text-lg mb-10 leading-relaxed font-mono">
+        &gt; // Build intuition, prepare confidently, ace the interview.
+      </p>
 
-    {/* Buttons */}
-    <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
-      <Link
-        to="/problems"
-        className="flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-700 text-white font-semibold px-8 py-3.5 rounded-xl text-lg transition border border-gray-700 shadow-lg hover:shadow-white/10 w-full sm:w-auto"
-      >
-        <PlayCircleOutlined className="text-xl" />
-        Start Exploring
-      </Link>
+      {/* Buttons - Improved placement and responsiveness */}
+      <div className="flex flex-col sm:flex-row items-center justify-start gap-6 mt-4">
+        <Link
+          to="/problems"
+          className="flex items-center justify-center gap-3 btn-yellow w-full sm:w-auto font-mono text-lg px-10 py-4 shadow-[0_0_20px_rgba(255,215,0,0.2)] hover:shadow-[0_0_30px_rgba(255,215,0,0.4)] transition-all"
+        >
+          &lt;START_CODING /&gt;
+        </Link>
 
-      <Link
-        to="/about"
-        className="flex items-center justify-center gap-2 bg-white text-black hover:bg-gray-200 font-semibold px-8 py-3.5 rounded-xl text-lg transition border border-gray-300 shadow-lg w-full sm:w-auto"
-      >
-        Learn More
-      </Link>
-    </div>
-  </motion.div>
+        <Link
+          to="/about"
+          className="flex items-center justify-center gap-3 btn-outline hover-tech-yellow w-full sm:w-auto font-mono text-lg px-10 py-4 backdrop-blur-sm"
+        >
+          SUDO LEARN_MORE
+        </Link>
+      </div>
+    </motion.div>
+
+    {/* Right Content - Mock Terminal */}
+    <motion.div
+      className="flex-1 w-full max-w-lg lg:max-w-xl"
+      initial={{ opacity: 0, x: 40 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.9, delay: 0.2 }}
+
+
+    >
+      <div className="glass-card overflow-hidden rounded-xl border border-[var(--glass-border)] shadow-[0_0_30px_rgba(255,215,0,0.15)] bg-[#0A0A0A]/90 backdrop-blur-md">
+        {/* Terminal Header */}
+        <div className="flex items-center px-4 py-3 border-b border-gray-800 bg-[#111]">
+          <div className="flex gap-2">
+            <div className="w-3 h-3 rounded-full bg-red-500"></div>
+            <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+            <div className="w-3 h-3 rounded-full bg-green-500"></div>
+          </div>
+          <div className="mx-auto text-xs text-gray-500 font-mono">algovista@root:~</div>
+        </div>
+        {/* Terminal Body */}
+        <div className="p-6 font-mono text-sm sm:text-base leading-relaxed text-gray-300 min-h-[300px]">
+          <div className="text-green-400 mb-2">$ ./init_algovista.sh</div>
+          <div className="text-gray-400 mb-4">[INFO] Loading data structures... DONE</div>
+          <div className="text-gray-400 mb-4">[INFO] Compiling system design modules... DONE</div>
+          <div className="text-[var(--primary-yellow)] mb-4 animate-pulse">&gt; Warning: Coffee levels critical. Proceeding anyway...</div>
+          
+          {staticLines.map((line, index) => {
+            const safeLine = typeof line === "string" ? line : "";
+
+            return (
+              <div key={index} className="text-gray-100">
+                {safeLine.includes("//") ? <span className="text-gray-500">{safeLine}</span> : 
+                 safeLine.includes("function") || safeLine.includes("return") ? <span className="text-blue-400">{safeLine}</span> :
+                 <span className="text-gray-100">{safeLine}</span>}
+              </div>
+            );
+          })}
+          <div className="mt-2 text-[var(--primary-yellow)] animate-pulse">_</div>
+        </div>
+      </div>
+    </motion.div>
+  </div>
 
   {/* Animations */}
   <style>
@@ -359,6 +468,10 @@ const [openDropdown, setOpenDropdown] = useState(null);
       @keyframes bloat {
         0%, 100% { transform: scale(1); opacity: 0.2; }
         50% { transform: scale(1.35); opacity: 0.35; }
+      }
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-15px); }
       }
       .animate-bloat-slow { animation: bloat 8s infinite ease-in-out; }
       .animate-bloat-slower { animation: bloat 12s infinite ease-in-out; }
@@ -376,18 +489,18 @@ const [openDropdown, setOpenDropdown] = useState(null);
       {/* Stats Section */}
     <section
   ref={ref}
-  className="relative py-24 bg-black text-gray-200 overflow-hidden font-mono"
+  className="relative py-24 grid-bg text-gray-200 overflow-hidden font-mono"
 >
   <div className="max-w-6xl mx-auto text-center relative z-10">
 
     {/* Title */}
-    <h2 className="text-5xl font-extrabold text-center text-white mb-20 tracking-wide 
-      drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+    <h2 className="text-5xl font-extrabold text-center text-[var(--primary-yellow)] mb-20 tracking-wide 
+      animate-text-glow drop-shadow-[0_0_15px_rgba(255,215,0,0.3)]">
       Stats That Define AlgoVista
     </h2>
 
  
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 mb-5">
+    <div className="glass-card w-full py-8 md:py-12 px-6 flex flex-col md:flex-row justify-around items-center divide-y md:divide-y-0 md:divide-x divide-[var(--glass-border)] border border-[var(--primary-yellow)] shadow-[0_0_20px_rgba(255,215,0,0.1)]">
       {[
         { label: "Active Users", value: 12000 },
         { label: "Algorithms Visualized", value: 480 },
@@ -395,17 +508,14 @@ const [openDropdown, setOpenDropdown] = useState(null);
       ].map((stat, i) => (
         <motion.div
           key={i}
-          className="group relative p-8 sm:p-12 rounded-xl 
-            bg-[#111] border border-gray-700 shadow-[0_0_10px_rgba(255,255,255,0.05)]
-            hover:shadow-[0_0_20px_rgba(255,255,255,0.15)]
-            transition-all duration-500 flex flex-col items-center justify-center"
+          className="group relative px-8 py-6 flex flex-col items-center justify-center w-full md:w-1/3 hover:bg-[rgba(255,215,0,0.02)] transition-colors duration-300"
           initial={{ opacity: 0, y: 60 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: i * 0.2 }}
         >
           {/* Value */}
           <div className="relative z-10 text-center">
-            <h3 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white mb-4">
+            <h3 className="text-4xl sm:text-5xl font-extrabold text-[var(--primary-yellow)] mb-2 font-display">
               {startCount ? (
                 <CountUp start={0} end={stat.value} duration={2.5} />
               ) : (
@@ -415,8 +525,8 @@ const [openDropdown, setOpenDropdown] = useState(null);
             </h3>
 
             {/* Label */}
-            <p className="text-gray-400 font-semibold text-lg tracking-widest uppercase">
-              {stat.label}
+            <p className="text-gray-400 font-semibold text-sm md:text-base tracking-widest uppercase mt-2">
+              &gt; {stat.label} _
             </p>
           </div>
         </motion.div>
@@ -427,203 +537,231 @@ const [openDropdown, setOpenDropdown] = useState(null);
 
 
       {/* Features Section */}
-      <section
-  className="py-24 bg-black text-gray-200 relative overflow-hidden grid-bg font-mono"
+      <motion.section
+  className="relative overflow-hidden grid-bg py-24 font-mono text-gray-200"
   id="features"
+  variants={revealUp}
+  initial="hidden"
+  whileInView="visible"
+  viewport={{ once: true, amount: 0.12 }}
+  transition={{ duration: 0.7, ease: "easeOut" }}
 >
+  <div className="absolute left-0 top-24 h-64 w-64 rounded-full bg-[rgba(255,215,0,0.08)] blur-3xl pointer-events-none"></div>
+  <div className="absolute right-[-6rem] bottom-8 h-72 w-72 rounded-full bg-[rgba(255,140,0,0.08)] blur-3xl pointer-events-none"></div>
+
   <div className="max-w-7xl mx-auto px-4 sm:px-6">
+    <div className="mb-14 grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
+      <div>
+        <div className="section-kicker mb-4">Learning engine</div>
+        <h2 className="max-w-3xl text-4xl font-extrabold leading-tight text-white md:text-5xl">
+          Revolutionize the Way You Learn
+        </h2>
+        <p className="mt-5 max-w-2xl text-base leading-8 text-gray-400">
+          Move from passive reading to visual understanding. Each track is designed to feel like a focused developer workspace, not a generic course catalog.
+        </p>
+      </div>
 
-    {/* Title */}
-    <h2
-      className="text-5xl font-extrabold text-center text-white mb-20 
-      tracking-wide drop-shadow-[0_0_15px_rgba(255,255,255,0.25)]"
-    >
-      Revolutionize the Way You Learn
-    </h2>
+      <div className="feature-panel rounded-[28px] p-6">
+        <p className="text-xs uppercase tracking-[0.3em] text-[var(--primary-yellow)]">Active path</p>
+        <p className="mt-3 text-2xl font-bold text-white">{featureTabs[activeTab].title}</p>
+        <p className="mt-3 text-sm leading-7 text-gray-400">
+          Switch tracks to reveal curated cards for practice, concepts, and real interview momentum.
+        </p>
+      </div>
+    </div>
 
-    {/* Tabs */}
-    <div className="flex justify-center gap-4 sm:gap-6 mb-12 flex-wrap">
+    <div className="mb-12 flex flex-wrap justify-center gap-3 sm:gap-4">
       {featureTabs.map((tab, index) => (
         <button
           key={index}
           onClick={() => setActiveTab(index)}
-          className={`px-5 sm:px-7 py-2.5 rounded-full font-semibold 
-            transition-all duration-300 border shadow-md
-            ${
-              activeTab === index
-                ? "bg-white text-black border-white shadow-[0_0_18px_rgba(255,255,255,0.4)]"
-                : "bg-[#111] text-gray-200 border-gray-700 hover:bg-[#1a1a1a] hover:shadow-[0_0_12px_rgba(255,255,255,0.2)]"
-            }`}
+          className={`rounded-full px-5 py-3 text-sm font-semibold uppercase tracking-[0.18em] transition-all duration-300 border ${
+            activeTab === index
+              ? "border-[var(--primary-yellow)] bg-[linear-gradient(135deg,rgba(255,215,0,0.2),rgba(255,140,0,0.12))] text-[var(--primary-yellow)] shadow-[0_0_24px_rgba(255,215,0,0.16)]"
+              : "border-[var(--glass-border)] bg-black/30 text-gray-300 hover:border-[var(--primary-yellow)] hover:text-[var(--primary-yellow)]"
+          }`}
         >
           {tab.title}
         </button>
       ))}
     </div>
 
-    {/* Feature Cards */}
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
       {featureTabs[activeTab].cards?.map((card, i) => (
         <motion.div
           key={i}
-          className="relative bg-[#0d0d0d] p-6 sm:p-8 rounded-2xl 
-            border border-gray-700 shadow-[0_0_10px_rgba(255,255,255,0.07)]
-            hover:shadow-[0_0_20px_rgba(255,255,255,0.15)]
-            transition-all duration-500 hover:scale-105 group"
+          className="feature-card group relative overflow-hidden rounded-[28px] p-7 sm:p-8"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: i * 0.2 }}
+          transition={{ duration: 0.6, delay: i * 0.15 }}
         >
-          {/* Icon */}
-          <div className="text-4xl mb-4 text-white transition-transform duration-500 
-            group-hover:scale-125 group-hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.5)]">
-            {card.icon}
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--primary-yellow)] to-transparent opacity-70"></div>
+          <div className="mb-6 flex items-center justify-between">
+            <div className="text-4xl transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6">
+              {card.icon}
+            </div>
+            <span className="rounded-full border border-[var(--glass-border)] px-3 py-1 text-[10px] uppercase tracking-[0.24em] text-gray-500">
+              Module 0{i + 1}
+            </span>
           </div>
 
-          {/* Title */}
-          <h3 className="text-2xl font-bold mb-3 text-white drop-shadow-[0_0_6px_rgba(255,255,255,0.3)]">
-            {card.title}
-          </h3>
+          <h3 className="mb-3 text-2xl font-bold text-white">{card.title}</h3>
+          <p className="mb-8 text-sm leading-7 text-gray-400">{card.description}</p>
 
-          {/* Description */}
-          <p className="text-gray-400 mb-6">
-            {card.description}
-          </p>
-
-          {/* Button */}
-          <button
-            className="text-white font-semibold hover:underline 
-              hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)] transition"
-          >
-            Get Started →
-          </button>
+          <div className="flex items-center justify-between">
+            <button className="text-[var(--primary-yellow)] font-semibold transition group-hover:translate-x-1">
+              Launch Track
+            </button>
+            <span className="text-xs uppercase tracking-[0.24em] text-gray-600">Ready</span>
+          </div>
         </motion.div>
       ))}
     </div>
   </div>
-</section>
+</motion.section>
 
 {/* REVIEW SECTION */}
 
-<section className="relative py-24 bg-black text-gray-200 overflow-hidden font-mono" id="reviews">
-  <h2 className="text-5xl font-extrabold text-center text-gray-100 mb-20 tracking-wide">
-    What Our Students Say
-  </h2>
-
-  <div className="relative w-full overflow-hidden">
+<motion.section
+  id="reviews"
+  className="relative py-24 grid-bg text-[var(--text-main)] overflow-hidden font-mono"
+  variants={revealUp}
+  initial="hidden"
+  whileInView="visible"
+  viewport={{ once: true, amount: 0.15 }}
+  transition={{ duration: 0.7, ease: "easeOut" }}
+>
+  <div className="max-w-6xl mx-auto px-6">
     <motion.div
-      className="flex gap-6 w-max"
-      animate={{ x: ["0%", "-50%"] }}
-      transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+      className="mb-12 max-w-2xl"
+      variants={revealUp}
+      transition={{ duration: 0.7, delay: 0.1 }}
     >
-      {[...[ // Duplicate to make infinite loop
-        {
-          name: "John Doe",
-          role: "Frontend Developer",
-          review: "This platform made algorithms so much easier to understand!",
-          rating: 5,
-          avatar: "https://i.pravatar.cc/100?img=1",
-        },
-        {
-          name: "Jane Smith",
-          role: "Backend Developer",
-          review: "Step-by-step visualizations helped me ace my interviews!",
-          rating: 4,
-          avatar: "https://i.pravatar.cc/100?img=2",
-        },
-        {
-          name: "Alice Johnson",
-          role: "Fullstack Developer",
-          review: "Amazing learning experience. Highly recommended!",
-          rating: 3,
-          avatar: "https://i.pravatar.cc/100?img=3",
-        },
-        {
-          name: "Bob Williams",
-          role: "MERN Stack Developer",
-          review: "The DSA visualizer is extremely interactive and intuitive.",
-          rating: 5,
-          avatar: "https://i.pravatar.cc/100?img=4",
-        }
-      ], ...[
-        {
-          name: "John Doe",
-          role: "Frontend Developer",
-          review: "This platform made algorithms so much easier to understand!",
-          rating: 5,
-          avatar: "https://i.pravatar.cc/100?img=1",
-        },
-        {
-          name: "Jane Smith",
-          role: "Backend Developer",
-          review: "Step-by-step visualizations helped me ace my interviews!",
-          rating: 4,
-          avatar: "https://i.pravatar.cc/100?img=2",
-        },
-        {
-          name: "Alice Johnson",
-          role: "Fullstack Developer",
-          review: "Amazing learning experience. Highly recommended!",
-          rating: 3,
-          avatar: "https://i.pravatar.cc/100?img=3",
-        },
-        {
-          name: "Bob Williams",
-          role: "MERN Stack Developer",
-          review: "The DSA visualizer is extremely interactive and intuitive.",
-          rating: 5,
-          avatar: "https://i.pravatar.cc/100?img=4",
-        }
-      ]].map((review, i) => (
-        <div
-          key={i}
-          className="bg-gray-900/90 p-6 shadow-[0_0_25px_rgba(0,0,0,0.7)] flex-shrink-0 w-80 h-80 border border-gray-800 hover:border-gray-400 hover:shadow-[0_0_40px_rgba(255,255,255,0.1)] transition-all duration-500 relative overflow-hidden flex flex-col justify-between rounded-3xl backdrop-blur-sm"
-        >
-          {/* Overlay */}
-          <div className="absolute inset-0 bg-white/5 pointer-events-none rounded-3xl"></div>
+      <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--glass-border)] bg-[rgba(255,215,0,0.08)] px-4 py-2 text-xs uppercase tracking-[0.32em] text-[var(--primary-yellow)]">
+        Live feedback lane
+      </div>
+      <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--primary-yellow)] animate-text-glow tracking-wide drop-shadow-[0_0_15px_rgba(255,215,0,0.25)]">
+        What Our Students Say
+      </h2>
+      <p className="mt-5 max-w-xl text-base leading-7 text-gray-400">
+        The review section now fades in and uses opposite vertical motion so the page feels more alive without turning noisy.
+      </p>
+    </motion.div>
 
-          <div className="flex items-center gap-4 mb-4">
-            <img
-              src={review.avatar}
-              alt={review.name}
-              className="w-16 h-16 rounded-full border-2 border-gray-600 shadow-md"
-            />
-            <div>
-              <h3 className="text-gray-100 font-semibold">{review.name}</h3>
-              <p className="text-gray-400 text-sm">{review.role}</p>
-            </div>
+    <div className="grid items-start gap-8 lg:grid-cols-[0.88fr_1.12fr]">
+      <motion.div
+        className="glass-card relative overflow-hidden rounded-[28px] p-8"
+        variants={revealUp}
+        transition={{ duration: 0.7, delay: 0.15 }}
+      >
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--primary-yellow)] to-transparent opacity-60" />
+        <p className="text-sm uppercase tracking-[0.28em] text-gray-500">Trust signal</p>
+        <div className="mt-6 grid grid-cols-2 gap-4">
+          <div className="rounded-2xl border border-[var(--glass-border)] bg-black/30 p-4">
+            <p className="text-3xl font-bold text-[var(--primary-yellow)]">10k+</p>
+            <p className="mt-2 text-sm text-gray-400">Learners exploring structured prep every month.</p>
           </div>
-
-          <p className="text-gray-300 mb-4">{review.review}</p>
-
-          <div className="flex items-center gap-1 mt-auto">
-            {[...Array(review.rating)].map((_, idx) => (
-              <FaStar key={idx} className="text-gray-100" />
-            ))}
-            {[...Array(5 - review.rating)].map((_, idx) => (
-              <FaStar key={idx} className="text-gray-600" />
-            ))}
+          <div className="rounded-2xl border border-[var(--glass-border)] bg-black/30 p-4">
+            <p className="text-3xl font-bold text-[var(--primary-yellow)]">4.9/5</p>
+            <p className="mt-2 text-sm text-gray-400">Average satisfaction from guided DSA learning paths.</p>
           </div>
         </div>
-      ))}
-    </motion.div>
+        <div className="mt-6 rounded-3xl border border-[var(--glass-border)] bg-[linear-gradient(145deg,rgba(255,215,0,0.1),rgba(255,255,255,0.03))] p-6">
+          <p className="text-sm uppercase tracking-[0.28em] text-gray-500">Why it works</p>
+          <p className="mt-4 text-lg leading-8 text-gray-200">
+            AlgoVista blends visual intuition, curated practice, and mentor-backed structure so progress feels visible every week.
+          </p>
+        </div>
+      </motion.div>
+
+      <motion.div
+        className="testimonial-fade grid h-[34rem] gap-6 overflow-hidden rounded-[32px] md:h-[40rem] md:grid-cols-2"
+        variants={revealUp}
+        transition={{ duration: 0.8, delay: 0.2 }}
+      >
+        {testimonialColumns.map((column, columnIndex) => (
+          <motion.div
+            key={columnIndex}
+            className="flex flex-col gap-6"
+            animate={columnIndex === 0 ? { y: ["0%", "-50%"] } : { y: ["-50%", "0%"] }}
+            transition={{
+              repeat: Infinity,
+              repeatType: "loop",
+              duration: columnIndex === 0 ? 18 : 20,
+              ease: "linear",
+            }}
+          >
+            {[...column, ...column].map((review, i) => (
+              <div
+                key={`${review.name}-${i}`}
+                className="glass-card flex min-h-[16rem] flex-col justify-between rounded-[28px] p-6"
+              >
+                <div>
+                  <div className="mb-5 flex items-center gap-4">
+                    <img
+                      src={review.avatar}
+                      alt={review.name}
+                      className="h-14 w-14 rounded-2xl border border-[var(--glass-border)] object-cover shadow-[0_0_16px_rgba(255,215,0,0.12)]"
+                    />
+                    <div>
+                      <h3 className="text-base font-semibold text-gray-100">{review.name}</h3>
+                      <p className="text-sm text-gray-400">{review.role}</p>
+                    </div>
+                  </div>
+                  <p className="text-sm leading-7 text-gray-300">"{review.review}"</p>
+                </div>
+
+                <div className="mt-6 flex items-center justify-between">
+                  <div className="flex items-center gap-1">
+                    {[...Array(review.rating)].map((_, idx) => (
+                      <FaStar key={idx} className="text-[var(--primary-yellow)] drop-shadow-[0_0_5px_rgba(255,215,0,0.5)]" />
+                    ))}
+                    {[...Array(5 - review.rating)].map((_, idx) => (
+                      <FaStar key={idx} className="text-gray-600" />
+                    ))}
+                  </div>
+                  <span className="rounded-full border border-[var(--glass-border)] px-3 py-1 text-xs uppercase tracking-[0.24em] text-gray-500">
+                    Verified
+                  </span>
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        ))}
+      </motion.div>
+    </div>
   </div>
 
   {/* Background subtle bubbles */}
   <div className="absolute top-10 left-0 w-32 h-32 bg-white/10 rounded-full animate-bloat-slow blur-xl pointer-events-none"></div>
   <div className="absolute bottom-10 right-0 w-40 h-40 bg-white/10 rounded-full animate-bloat-slow blur-2xl pointer-events-none"></div>
   <div className="absolute top-1/2 right-10 w-24 h-24 bg-white/5 rounded-full animate-bloat-slower blur-xl pointer-events-none"></div>
-</section>
+</motion.section>
 
 
 
 {/* FIX SECTION */}
-<section className="relative py-28 bg-black text-gray-200 overflow-hidden font-mono grid-bg" id="solutions">
-  <div className="max-w-6xl mx-auto px-6">
-    <h2 className="text-5xl font-extrabold text-center text-gray-100 mb-20 tracking-wide">
-      AlgoVista Has You Covered
-    </h2>
+<section className="relative py-28 text-[var(--text-main)] overflow-hidden font-mono grid-bg" id="solutions">
+  <div className="absolute top-20 right-20 w-64 h-64 bg-white/5 rounded-full blur-3xl animate-pulse-slow pointer-events-none"></div>
+  <div className="absolute bottom-10 left-10 w-80 h-80 bg-white/5 rounded-full blur-3xl animate-pulse-slow pointer-events-none"></div>
 
-    <div className="relative border-l-2 border-gray-700/50 ml-8 space-y-16">
+  <div className="max-w-6xl mx-auto px-6">
+    <div className="mb-14 grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+      <div>
+        <div className="section-kicker mb-4">Pain to progress</div>
+        <h2 className="text-4xl font-extrabold leading-tight text-white md:text-5xl">
+          AlgoVista Has You Covered
+        </h2>
+      </div>
+
+      <div className="feature-panel rounded-[28px] p-6">
+        <p className="text-sm leading-7 text-gray-300">
+          Every learner gets stuck somewhere: visual intuition, problem application, structure, or consistency. This section now reads like a guided diagnosis with a clear path forward.
+        </p>
+      </div>
+    </div>
+
+    <div className="grid gap-6">
       {[
         {
           emoji: "😩",
@@ -650,27 +788,38 @@ const [openDropdown, setOpenDropdown] = useState(null);
             "With streak tracking, leaderboards, and a friendly community, AlgoVista keeps your motivation high and progress measurable.",
         },
       ].map((item, i) => (
-        <div key={i} className="relative group pl-10">
-          {/* Connector Dot */}
-          <div className="absolute -left-[22px] top-3 w-4 h-4 rounded-full bg-gray-700 border-2 border-black"></div>
-
-          {/* Card */}
-          <div className="backdrop-blur-sm bg-gray-900/80 border border-gray-800 hover:border-gray-600 transition-all duration-500 rounded-2xl p-8 shadow-[0_0_20px_rgba(0,0,0,0.6)] hover:shadow-[0_0_25px_rgba(255,255,255,0.1)]">
-            <h3 className="text-2xl font-bold text-gray-100 mb-2">{item.emoji} Problem</h3>
-            <p className="text-gray-300 mb-6 text-lg leading-relaxed">{item.problem}</p>
-            <div className="bg-gray-800/50 border-l-2 border-gray-600 pl-4 py-3 rounded-lg">
-              <h4 className="text-xl font-semibold text-gray-100 mb-1">💡 AlgoVista Solution</h4>
-              <p className="text-gray-200 leading-relaxed">{item.solution}</p>
+        <motion.div
+          key={i}
+          className="solution-row grid gap-5 rounded-[28px] p-6 md:grid-cols-[0.72fr_1.28fr] md:items-stretch"
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.18 }}
+          transition={{ duration: 0.55, delay: i * 0.08 }}
+        >
+          <div className="rounded-[24px] border border-[var(--glass-border)] bg-black/30 p-6">
+            <div className="mb-4 flex items-center justify-between">
+              <span className="text-3xl">{item.emoji}</span>
+              <span className="rounded-full border border-[var(--glass-border)] px-3 py-1 text-[10px] uppercase tracking-[0.26em] text-gray-500">
+                Challenge 0{i + 1}
+              </span>
             </div>
+            <h3 className="text-2xl font-bold text-white">The Problem</h3>
+            <p className="mt-4 text-base leading-8 text-gray-300">{item.problem}</p>
           </div>
-        </div>
+
+          <div className="rounded-[24px] border border-[rgba(255,215,0,0.22)] bg-[linear-gradient(145deg,rgba(255,215,0,0.08),rgba(255,255,255,0.03))] p-6">
+            <div className="mb-4 flex items-center gap-3">
+              <span className="h-3 w-3 rounded-full bg-[var(--primary-yellow)] shadow-[0_0_12px_rgba(255,215,0,0.8)]"></span>
+              <h4 className="text-sm font-semibold uppercase tracking-[0.28em] text-[var(--primary-yellow)]">
+                AlgoVista Solution
+              </h4>
+            </div>
+            <p className="text-base leading-8 text-gray-200">{item.solution}</p>
+          </div>
+        </motion.div>
       ))}
     </div>
   </div>
-
-  {/* Background subtle glow elements */}
-  <div className="absolute top-20 right-20 w-64 h-64 bg-white/5 rounded-full blur-3xl animate-pulse-slow pointer-events-none"></div>
-  <div className="absolute bottom-10 left-10 w-80 h-80 bg-white/5 rounded-full blur-3xl animate-pulse-slow pointer-events-none"></div>
 
   <style>
     {`
@@ -688,11 +837,11 @@ const [openDropdown, setOpenDropdown] = useState(null);
 
 <section
   id="community"
-  className="relative py-28 bg-black text-gray-200 overflow-hidden grid-bg font-mono"
+  className="relative py-28 text-[var(--text-main)] overflow-hidden grid-bg font-mono"
 >
   <div className="max-w-6xl mx-auto px-6 text-center relative z-10">
     {/* Heading */}
-    <h2 className="text-5xl font-extrabold mb-6 text-gray-100">
+    <h2 className="text-5xl font-extrabold mb-6 text-[var(--primary-yellow)] animate-text-glow drop-shadow-[0_0_15px_rgba(255,215,0,0.25)]">
       Join The AlgoVista Community
     </h2>
     <p className="text-gray-400 max-w-3xl mx-auto mb-16 text-lg leading-relaxed">
@@ -719,7 +868,7 @@ const [openDropdown, setOpenDropdown] = useState(null);
       ].map((item, i) => (
         <div
           key={i}
-          className="group relative p-8 rounded-2xl border border-gray-700 bg-gray-900/70 backdrop-blur-md shadow-[0_0_25px_rgba(0,0,0,0.6)] hover:shadow-[0_0_35px_rgba(255,255,255,0.1)] transition-all duration-500"
+          className="group relative p-8 glass-card hover:border-[var(--primary-yellow)] hover:shadow-[0_0_20px_rgba(255,215,0,0.2)] hover:-translate-y-2 transition-all duration-500"
         >
           <h3 className="text-2xl font-bold mb-4 text-gray-100 relative z-10">{item.title}</h3>
           <p className="text-gray-400 relative z-10">{item.desc}</p>
@@ -744,8 +893,8 @@ const [openDropdown, setOpenDropdown] = useState(null);
 
     {/* CTA */}
     <div className="mt-16">
-      <button className="bg-gray-800 hover:bg-gray-700 text-white font-semibold text-lg px-8 py-4 rounded-xl shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] transition-all duration-500">
-        Join The Community Now
+      <button className="btn-yellow font-mono text-lg px-8 py-4 shadow-[0_0_20px_rgba(255,215,0,0.2)] hover:shadow-[0_0_30px_rgba(255,215,0,0.4)] transition-all duration-500">
+        &gt; Join The Community Now _
       </button>
     </div>
   </div>
@@ -771,15 +920,15 @@ const [openDropdown, setOpenDropdown] = useState(null);
 {/* INSTURCTOR SECTION */}
 <section
   id="instructors"
-  className="relative py-28 bg-black text-gray-200 overflow-hidden grid-bg font-mono"
+  className="relative py-28 text-[var(--text-main)] overflow-hidden grid-bg font-mono"
 >
   {/* Background softly blurred circles */}
-  <div className="absolute top-0 left-0 w-72 h-72 bg-gray-700/20 rounded-full blur-3xl"></div>
-  <div className="absolute bottom-0 right-0 w-80 h-80 bg-gray-800/20 rounded-full blur-3xl"></div>
+  <div className="absolute top-0 left-0 w-72 h-72 bg-[#FFE100]/5 rounded-full blur-3xl"></div>
+  <div className="absolute bottom-0 right-0 w-80 h-80 bg-[#FFE100]/5 rounded-full blur-3xl"></div>
 
   <div className="max-w-6xl mx-auto px-6 relative z-10 text-center">
     {/* Heading */}
-    <h2 className="text-5xl font-extrabold mb-6 text-gray-100">
+    <h2 className="text-5xl font-extrabold mb-6 text-[var(--primary-yellow)] animate-text-glow drop-shadow-[0_0_15px_rgba(255,215,0,0.25)]">
       Meet Our Mentors
     </h2>
     <p className="text-gray-400 max-w-3xl mx-auto mb-16 text-lg leading-relaxed">
@@ -791,7 +940,7 @@ const [openDropdown, setOpenDropdown] = useState(null);
     {/* Founder Card */}
     <div className="flex justify-center mb-16">
       <div className="w-full sm:w-[400px]">
-        <div className="bg-gray-900/90 border border-gray-700 rounded-xl shadow-md hover:shadow-lg transition-all duration-500 p-6 text-left">
+        <div className="glass-card hover:border-[var(--primary-yellow)] hover:shadow-[0_0_25px_rgba(255,215,0,0.2)] hover:-translate-y-2 transition-all duration-500 p-6 text-left">
           <div className="flex items-center gap-5">
             <img
               src="/images/me2.jpg" // replace with your real image
@@ -864,7 +1013,7 @@ const [openDropdown, setOpenDropdown] = useState(null);
 
 <section
   id="roadmap"
-  className="relative py-28 bg-black text-gray-200 overflow-hidden grid-bg font-mono"
+  className="relative py-28 text-[var(--text-main)] overflow-hidden grid-bg font-mono"
 >
   {/* Background floating bubbles */}
   <div className="absolute top-10 left-10 w-20 h-20 bg-gray-700/20 rounded-full blur-3xl animate-bloat-slow"></div>
@@ -873,7 +1022,7 @@ const [openDropdown, setOpenDropdown] = useState(null);
 
   <div className="max-w-6xl mx-auto px-6 text-center relative z-10">
     {/* Heading */}
-    <h2 className="text-5xl font-extrabold mb-6 text-gray-100">
+    <h2 className="text-5xl font-extrabold mb-6 text-[var(--primary-yellow)] animate-text-glow drop-shadow-[0_0_15px_rgba(255,215,0,0.25)]">
       Your Learning Roadmap
     </h2>
     <p className="text-gray-400 max-w-3xl mx-auto mb-16 text-lg leading-relaxed">
@@ -933,7 +1082,7 @@ const [openDropdown, setOpenDropdown] = useState(null);
         return (
           <div
             key={i}
-            className="bg-gray-900/70 p-6 rounded-2xl border border-gray-700 hover:border-gray-500 hover:shadow-lg transition-all duration-500 flex flex-col justify-between"
+            className="glass-card hover:border-[var(--primary-yellow)] hover:shadow-[0_0_20px_rgba(255,215,0,0.2)] hover:-translate-y-2 transition-all duration-500 flex flex-col justify-between p-6"
           >
             <div>
               <div className="flex items-center justify-between mb-3">
@@ -954,7 +1103,7 @@ const [openDropdown, setOpenDropdown] = useState(null);
               </div>
             </div>
 
-            <button className="mt-6 w-full bg-gray-800 hover:bg-gray-700 text-white font-semibold py-2 rounded-lg transition-all duration-300">
+            <button className="mt-6 w-full btn-outline hover-tech-yellow py-2 rounded-lg transition-all duration-300">
               Get Started
             </button>
           </div>
@@ -978,7 +1127,7 @@ const [openDropdown, setOpenDropdown] = useState(null);
 
 
 
-<section id="career-section" className="w-full bg-black py-24 px-6 font-mono">
+<section id="career-section" className="w-full text-[var(--text-main)] py-24 px-6 font-mono grid-bg">
   <div className="max-w-7xl mx-auto grid grid-cols-1 gap-12 items-center">
 
     {/* ==== LEFT CONTENT ONLY ==== */}
@@ -1010,7 +1159,7 @@ const [openDropdown, setOpenDropdown] = useState(null);
       </ul>
 
       {/* CTA Button */}
-      <button className="mt-10 bg-gray-800 hover:bg-gray-700 text-white font-semibold px-8 py-4 rounded-xl shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-all duration-500 flex items-center gap-2">
+      <button className="mt-10 btn-yellow px-8 py-4 flex items-center gap-2">
         Start Learning 🚀
       </button>
     </div>
@@ -1024,7 +1173,7 @@ const [openDropdown, setOpenDropdown] = useState(null);
 
 <section
   id="faq"
-  className="relative py-24 bg-black text-gray-200 overflow-hidden grid-bg font-mono"
+  className="relative py-24 text-[var(--text-main)] overflow-hidden grid-bg font-mono"
 >
   {/* Background bubbles */}
   <div className="absolute top-0 left-0 w-72 h-72 bg-gray-700/20 rounded-full blur-3xl animate-pulse-slow"></div>
@@ -1032,7 +1181,7 @@ const [openDropdown, setOpenDropdown] = useState(null);
 
   <div className="max-w-5xl mx-auto px-6 relative z-10">
     {/* Heading */}
-    <h2 className="text-5xl font-extrabold text-center mb-10 text-gray-100">
+    <h2 className="text-5xl font-extrabold text-center mb-10 text-[var(--primary-yellow)] animate-text-glow drop-shadow-[0_0_15px_rgba(255,215,0,0.25)]">
       Frequently Asked Questions
     </h2>
     <p className="text-center text-gray-400 mb-16 max-w-2xl mx-auto text-sm leading-relaxed">
@@ -1067,7 +1216,7 @@ const [openDropdown, setOpenDropdown] = useState(null);
         <div
           key={i}
           onClick={() => setOpen(!open)}
-          className={`cursor-pointer mb-6 border border-gray-700 rounded-xl bg-gray-900/70 p-6 transition-all duration-500 hover:border-gray-500 hover:shadow-[0_0_20px_rgba(255,255,255,0.05)] ${open ? "border-gray-500" : ""}`}
+          className={`cursor-pointer mb-6 glass-card p-6 transition-all duration-500 hover:border-[var(--primary-yellow)] hover:shadow-[0_0_20px_rgba(255,215,0,0.1)] ${open ? "border-[var(--primary-yellow)]" : ""}`}
         >
           <div className="flex justify-between items-center">
             <h3 className="text-lg sm:text-xl font-semibold text-gray-100">{faq.question}</h3>
@@ -1099,14 +1248,14 @@ const [openDropdown, setOpenDropdown] = useState(null);
 
 
 {/* 🌐 Get in Touch Section */}
-<section className="w-full bg-black py-24 px-6 relative overflow-hidden font-mono grid-bg">
+<section className="w-full py-24 px-6 relative overflow-hidden font-mono grid-bg border-t border-[var(--glass-border)]">
   <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
     
     {/* LEFT: Form */}
     <div className="text-left space-y-6 ">
-      <h2 className="text-5xl font-extrabold text-gray-100 leading-tight">
+      <h2 className="text-5xl font-extrabold text-[var(--primary-yellow)] animate-text-glow leading-tight drop-shadow-[0_0_15px_rgba(255,215,0,0.25)]">
         Reach Out{" "}
-        <span className="text-gray-300">Today</span>
+        <span className="text-gray-300 text-shadow-none">Today</span>
       </h2>
       <p className="text-gray-400">
         Have a question or want to discuss your learning path? We’re here to assist you.
@@ -1116,33 +1265,33 @@ const [openDropdown, setOpenDropdown] = useState(null);
         <input
           type="text"
           placeholder="Enter your full name"
-          className="col-span-1 md:col-span-2 p-3 rounded-lg bg-gray-900 text-gray-300 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          className="col-span-1 md:col-span-2 p-3 glass-card focus:outline-none focus:ring-2 focus:ring-[var(--primary-yellow)]"
         />
         <input
           type="email"
           placeholder="Enter your email"
-          className="p-3 rounded-lg bg-gray-900 text-gray-300 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          className="p-3 glass-card focus:outline-none focus:ring-2 focus:ring-[var(--primary-yellow)]"
         />
         <input
           type="tel"
           placeholder="Enter your phone number"
-          className="p-3 rounded-lg bg-gray-900 text-gray-300 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          className="p-3 glass-card focus:outline-none focus:ring-2 focus:ring-[var(--primary-yellow)]"
         />
         <input
           type="text"
           placeholder="What's this about?"
-          className="p-3 rounded-lg bg-gray-900 text-gray-300 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          className="p-3 glass-card focus:outline-none focus:ring-2 focus:ring-[var(--primary-yellow)]"
         />
 
         <textarea
           rows="4"
           placeholder="Tell us more about your inquiry..."
-          className="col-span-1 md:col-span-2 p-3 rounded-lg bg-gray-900 text-gray-300 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          className="col-span-1 md:col-span-2 p-3 glass-card focus:outline-none focus:ring-2 focus:ring-[var(--primary-yellow)]"
         ></textarea>
 
         <button
           type="submit"
-          className="col-span-1 md:col-span-2 bg-gray-800 hover:bg-gray-700 text-white py-3 rounded-lg flex items-center justify-center gap-2 transition"
+          className="col-span-1 md:col-span-2 btn-yellow py-3 flex items-center justify-center gap-2 transition"
         >
           Send Message 
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1171,7 +1320,7 @@ const [openDropdown, setOpenDropdown] = useState(null);
       <img
         src="https://coderarmy.in/assets/images/webp/contactmewebp.jpg"
         alt="Contact Illustration"
-        className="w-80 h-80 object-contain rounded-lg shadow-[0_0_25px_rgba(255,255,255,0.05)] hover:scale-105 transition duration-300"
+        className="w-80 h-80 object-contain rounded-lg shadow-[0_0_25px_rgba(255,215,0,0.15)] hover:shadow-[0_0_35px_rgba(255,215,0,0.3)] hover:scale-105 transition duration-300"
       />
     </div>
 
@@ -1184,60 +1333,105 @@ const [openDropdown, setOpenDropdown] = useState(null);
 
 
 
-      {/* Footer */}
-    <footer className="bg-black text-gray-300 py-14 font-mono">
-  <div className="max-w-6xl mx-auto grid md:grid-cols-4 sm:grid-cols-2 gap-10 px-6">
-    
-    {/* About */}
-    <div>
-      <h3 className="text-gray-100 text-lg font-semibold mb-4">AlgoVista</h3>
-      <p className="text-sm text-gray-400">
-        Building the next generation of algorithm visualization tools for learners and developers.
-      </p>
-    </div>
+    <motion.footer
+      className="footer-shell relative mt-8 border-t border-[var(--glass-border)] text-[var(--text-main)] font-mono"
+      variants={revealUp}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.75, ease: "easeOut" }}
+    >
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,215,0,0.1),transparent_42%)]" />
+      <div className="relative max-w-6xl mx-auto px-6 py-16">
+        <div className="footer-hero mb-10 grid gap-8 rounded-[32px] p-8 lg:grid-cols-[1.15fr_0.85fr]">
+          <div>
+            <p className="text-xs uppercase tracking-[0.32em] text-[var(--primary-yellow)]">Build momentum</p>
+            <h3 className="mt-4 max-w-xl text-3xl font-extrabold leading-tight text-white">
+              Keep your prep focused with guided roadmaps, visual explainers, and a calmer interface.
+            </h3>
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-gray-400">
+              The page now lands softer, the testimonial wall feels more alive, and the footer closes with a stronger product story.
+            </p>
+          </div>
 
-    {/* Quick Links */}
-    <div>
-      <h4 className="text-gray-100 font-semibold mb-3">Quick Links</h4>
-      <ul className="space-y-2 text-sm">
-        <li><Link to="/login" className="hover:text-gray-100 transition">Login</Link></li>
-        <li><Link to="/signup" className="hover:text-gray-100 transition">Signup</Link></li>
-        <li><a href="#features" className="hover:text-gray-100 transition">Features</a></li>
-        <li><a href="#problems" className="hover:text-gray-100 transition">Problems</a></li>
-        <li><a href="#reviews" className="hover:text-gray-100 transition">Reviews</a></li>
-      </ul>
-    </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Link to="/signup" className="btn-yellow flex items-center justify-center text-center">
+              Create Free Account
+            </Link>
+            <Link to="/roadmaps" className="btn-outline flex items-center justify-center text-center">
+              Explore Roadmaps
+            </Link>
+            <div className="rounded-2xl border border-[var(--glass-border)] bg-black/30 p-4">
+              <p className="text-2xl font-bold text-[var(--primary-yellow)]">12000+</p>
+              <p className="mt-2 text-sm text-gray-400">Active learners building consistency.</p>
+            </div>
+            <div className="rounded-2xl border border-[var(--glass-border)] bg-black/30 p-4">
+              <p className="text-2xl font-bold text-[var(--primary-yellow)]">480+</p>
+              <p className="mt-2 text-sm text-gray-400">Visualized concepts and interview patterns.</p>
+            </div>
+          </div>
+        </div>
 
-    {/* Address */}
-    <div>
-      <h4 className="text-gray-100 font-semibold mb-3">Address</h4>
-      <p className="text-sm text-gray-400">
-        AlgoVista HQ, Tower 4 <br />
-        Bengaluru, India 560103 <br />
-        contact@AlgoVista.com
-      </p>
-    </div>
+        <div className="grid gap-10 md:grid-cols-2 xl:grid-cols-4">
+          <div>
+            <h4 className="text-lg font-semibold text-white">AlgoVista</h4>
+            <p className="mt-4 text-sm leading-7 text-gray-400">
+              A developer-first learning platform for visual DSA, system design clarity, and better interview preparation.
+            </p>
+            <div className="mt-6 flex gap-3 text-lg">
+              <a href="#" className="glass-card flex h-11 w-11 items-center justify-center rounded-2xl hover-tech-yellow"><FaGithub /></a>
+              <a href="#" className="glass-card flex h-11 w-11 items-center justify-center rounded-2xl hover-tech-yellow"><FaLinkedin /></a>
+              <a href="#" className="glass-card flex h-11 w-11 items-center justify-center rounded-2xl hover-tech-yellow"><FaTwitter /></a>
+            </div>
+          </div>
 
-    {/* Socials */}
-    <div>
-      <h4 className="text-gray-100 font-semibold mb-3">Follow Us</h4>
-      <div className="flex gap-4 text-lg">
-        <a href="#" className="hover:text-gray-100 transition"><FaGithub /></a>
-        <a href="#" className="hover:text-gray-100 transition"><FaLinkedin /></a>
-        <a href="#" className="hover:text-gray-100 transition"><FaTwitter /></a>
+          <div>
+            <h4 className="text-sm font-semibold uppercase tracking-[0.28em] text-gray-500">Navigation</h4>
+            <div className="mt-4 space-y-3 text-sm">
+              {footerNavigation.map((item) => (
+                <Link key={item.label} to={item.to} className="block text-gray-300 transition hover:text-[var(--primary-yellow)]">
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h4 className="text-sm font-semibold uppercase tracking-[0.28em] text-gray-500">On This Page</h4>
+            <div className="mt-4 space-y-3 text-sm">
+              {footerResources.map((item) => (
+                <a key={item.label} href={item.href} className="block text-gray-300 transition hover:text-[var(--primary-yellow)]">
+                  {item.label}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h4 className="text-sm font-semibold uppercase tracking-[0.28em] text-gray-500">Contact</h4>
+            <div className="mt-4 space-y-3 text-sm text-gray-300">
+              <p>Bengaluru, India</p>
+              <p>support@algovista.dev</p>
+              <p>Mon - Sat / 10:00 - 19:00 IST</p>
+            </div>
+            <div className="mt-6 rounded-2xl border border-[var(--glass-border)] bg-black/30 p-4 text-sm text-gray-400">
+              Need help picking the right track? Start with roadmaps, then move into guided problem sets.
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-10 flex flex-col gap-3 border-t border-[var(--glass-border)] pt-6 text-sm text-gray-500 md:flex-row md:items-center md:justify-between">
+          <p>(c) {new Date().getFullYear()} AlgoVista. All rights reserved.</p>
+          <p>Designed for focused prep, visual clarity, and steady momentum.</p>
+        </div>
       </div>
-    </div>
-  </div>
+    </motion.footer>
 
-  {/* Footer bottom */}
-  <div className="text-center mt-10 text-sm text-gray-500 border-t border-gray-800 pt-6">
-    © {new Date().getFullYear()} AlgoVista. All rights reserved.
-  </div>
-</footer>
-
+      
     
-    </div>
+    </motion.div>
   );
 };
 
 export default Home;
+

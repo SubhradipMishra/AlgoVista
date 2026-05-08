@@ -96,7 +96,7 @@ const Mentorship = () => {
   }
 
   return (
-    <div className="min-h-screen flex bg-black text-white font-mono">
+    <div className="min-h-screen flex grid-bg text-[var(--text-main)] font-mono">
       {/* Sidebar */}
       <UserSidebar
         user={session}
@@ -143,20 +143,11 @@ const Mentorship = () => {
             filteredMentors.map((mentor) => (
               <div
                 key={mentor._id}
-                className="
-                  bg-[#0c0c0c]
-                  border border-gray-800
-                  rounded-2xl
-                  p-6
-                  transition-all
-                  hover:-translate-y-1
-                  hover:border-gray-600
-                  hover:shadow-[0_0_40px_rgba(255,255,255,0.05)]
-                "
+                className="glass-card p-6 transition-all hover:-translate-y-1 hover:border-[var(--primary-yellow)]"
               >
                 {/* Availability */}
                 {mentor.isAvailable && (
-                  <div className="mb-3 inline-block text-xs bg-white text-black px-3 py-1 rounded-full font-semibold">
+                  <div className="mb-3 inline-block text-xs bg-[var(--primary-yellow)] text-black px-3 py-1 rounded-full font-semibold">
                     Available
                   </div>
                 )}
@@ -201,15 +192,7 @@ const Mentorship = () => {
 
                   {/* CTA */}
                   <Button
-                    className="
-                      mt-6
-                      w-full
-                      bg-white
-                      text-black
-                      border-none
-                      font-semibold
-                      hover:bg-gray-200
-                    "
+                    className="mt-6 w-full btn-outline hover-tech-yellow"
                     onClick={() =>
                       navigate(`/mentor/${mentor._id}`)
                     }

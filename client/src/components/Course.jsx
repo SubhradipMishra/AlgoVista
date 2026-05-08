@@ -57,7 +57,7 @@ const Course = () => {
   // ----------------- Loading UI -----------------
   if (sessionLoading || loading) {
     return (
-      <div className="flex min-h-screen grid-bg text-white overflow-hidden font-mono">
+      <div className="flex min-h-screen grid-bg text-[var(--text-main)] overflow-hidden font-mono">
         <main className="flex-1 px-8 md:px-16 py-10">
           <Skeleton.Input active size="large" style={{ width: "40%", marginBottom: 20 }} />
           <div className="grid md:grid-cols-2 gap-8">
@@ -71,7 +71,7 @@ const Course = () => {
   }
 
   return (
-    <div className="flex min-h-screen grid-bg text-white overflow-hidden font-mono">
+    <div className="flex min-h-screen grid-bg text-[var(--text-main)] overflow-hidden font-mono">
 
       <UserSidebar user={session?.user} selectedKey="courses" navigate={navigate} />
 
@@ -92,8 +92,8 @@ const Course = () => {
                 whileHover={{ scale: 1.03, y: -4 }}
                 className={
                   isPremium
-                    ? "relative bg-[#111]/90 p-6 rounded-3xl border border-[#3a3a3a] shadow-[0px_0px_15px_rgba(255,215,0,0.15)]"
-                    : "relative bg-[#1a1a1a]/80 p-6 rounded-3xl border border-gray-800 shadow-xl"
+                    ? "relative p-6 glass-card border border-[var(--primary-yellow)] shadow-[0_0_15px_rgba(255,225,0,0.15)]"
+                    : "relative p-6 glass-card"
                 }
               >
                 {/* -------- PREMIUM BADGE -------- */}
@@ -140,14 +140,14 @@ const Course = () => {
                   ) : isPremium ? (
                     <Link
                       to={`/courses/${course._id}`}
-                      className="block text-center py-4 rounded-2xl font-semibold bg-[#d4af37] text-black hover:bg-[#b8962e]"
+                      className="block text-center py-4 btn-yellow"
                     >
                       Buy Now – ₹{course.discountPrice}
                     </Link>
                   ) : (
                     <Link
                       to={`/courses/${course._id}`}
-                      className="block text-center py-4 rounded-2xl font-semibold bg-blue-600 hover:bg-blue-700"
+                      className="block text-center py-4 btn-outline text-white"
                     >
                       Enroll Free →
                     </Link>
