@@ -30,6 +30,7 @@ const { TabPane } = Tabs;
 export default function CodeEditor() {
   const { id } = useParams();
   const { session } = useContext(Context);
+  const languageId = 54;
 
   // loading & data
   const [problem, setProblem] = useState(null);
@@ -59,6 +60,27 @@ export default function CodeEditor() {
       fastest: output.length ? Math.min(...output.map((r) => +r.time || 99999)) : 0,
     };
   }, [output]);
+
+  const outputSummary = useMemo(() => {
+    if (summaryStats.total === 0) {
+      return {
+        label: "No test results yet",
+        tone: "#9CA3AF",
+      };
+    }
+
+    if (summaryStats.accepted === summaryStats.total) {
+      return {
+        label: `${summaryStats.accepted}/${summaryStats.total} passed`,
+        tone: "#FFFFFF",
+      };
+    }
+
+    return {
+      label: `${summaryStats.accepted}/${summaryStats.total} passed`,
+      tone: "#FACC15",
+    };
+  }, [summaryStats]);
 
   // fetch problem
   useEffect(() => {
@@ -137,9 +159,14 @@ export default function CodeEditor() {
     toast.info("Submitting...");
 
     try {
+      toast.info("Preparing Docker runtime...");
+      await axios.post("http://localhost:4000/submissions/prewarm", {
+        language_id: languageId,
+      });
+
       const { data } = await axios.post("http://localhost:4000/submissions", {
         source_code: code,
-        language_id: 54, // C++
+        language_id: languageId, // C++
         problemId: id,
         userId: session?.id,
       });
@@ -408,6 +435,38 @@ export default function CodeEditor() {
 
             <TabPane tab="Output" key="output">
               <div className="space-y-3">
+                {output.length > 0 && (
+                  <div className="glass-card p-4">
+                    <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                      <div>
+                        <div
+                          className="text-2xl font-bold"
+                          style={{ color: outputSummary.tone }}
+                        >
+                          {outputSummary.label}
+                        </div>
+                        <div className="mt-1 text-sm text-gray-400">
+                          {summaryStats.failed === 0
+                            ? "All visible test cases passed."
+                            : `${summaryStats.failed} test case${summaryStats.failed > 1 ? "s" : ""} still need attention.`}
+                        </div>
+                      </div>
+
+                      <div className="flex gap-3 text-sm text-gray-300">
+                        <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+                          Accepted: {summaryStats.accepted}
+                        </div>
+                        <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+                          Failed: {summaryStats.failed}
+                        </div>
+                        <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+                          Fastest: {summaryStats.fastest ? `${summaryStats.fastest} s` : "-"}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {output.length === 0 ? (
                   <div className="text-center text-gray-400">No output yet.</div>
                 ) : (
@@ -423,7 +482,7 @@ export default function CodeEditor() {
                         <div className="font-semibold" style={{ color: res.color }}>
                           {res.status} — Test {res.id}
                         </div>
-                        {res.time && <div className="text-sm text-gray-400">{res.time} ms</div>}
+                        {res.time && <div className="text-sm text-gray-400">{res.time} s</div>}
                       </div>
 
                       <div className="mt-2 text-sm text-gray-200">
@@ -538,7 +597,7 @@ export default function CodeEditor() {
 
             <Col span={6}>
               <Card className="glass-card">
-                <Statistic title="Fastest (ms)" value={summaryStats.fastest} valueStyle={{ color: "#FFFFFF" }} />
+                <Statistic title="Fastest (s)" value={summaryStats.fastest} valueStyle={{ color: "#FFFFFF" }} />
               </Card>
             </Col>
           </Row>

@@ -1,56 +1,26 @@
-import axios from "axios";
 import ProblemModel from "../problem/problem.model";
 import SubmissionModel from "./submission.model";
 import { Request, Response } from "express";
-
-const JUDGE0_BASE = "https://ce.judge0.com".replace(/\/$/, "");
-const judge0Headers = { "Content-Type": "application/json" };
+import { checkDockerExecutorHealth, executeSubmissionInDocker, prewarmDockerImage } from "../executor/dockerRunner";
 
 // Run code for all test cases
 export const createSubmissionMultiple = async (req: Request, res: Response) => {
   try {
-    console.log("SUbmit", req.body);
     const { language_id, source_code, problemId, userId } = req.body;
 
     const problem: any = await ProblemModel.findById(problemId);
     if (!problem) return res.status(404).json({ error: "Problem not found" });
 
-    const results: any[] = [];
-    let allPassed = true;
+    const results = await executeSubmissionInDocker({
+      languageId: Number(language_id),
+      sourceCode: source_code,
+      testCases: problem.testCases || [],
+    });
 
-    for (const tc of problem.testCases) {
-      const payload = { language_id, source_code, stdin: tc.input };
-      const { data } = await axios.post(
-        `${JUDGE0_BASE}/submissions?wait=true`,
-        payload,
-        { headers: judge0Headers }
-      );
+    const allPassed = results.every((result) => result.status === "Accepted");
+    const firstNonAccepted = results.find((result) => result.status !== "Accepted");
 
-      const output = data?.stdout ? data.stdout.trim() : "";
-      const expected = tc.expectedOutput.trim();
-      let status = "Accepted";
-
-      if (data?.status?.description === "Compilation Error")
-        status = "Compile Error";
-      else if (data?.status?.description === "Time Limit Exceeded")
-        status = "Time Limit";
-      else if (data?.status?.description === "Runtime Error")
-        status = "Runtime Error";
-      else if (output !== expected) status = "Wrong Answer";
-
-      if (status !== "Accepted") allPassed = false;
-
-      results.push({
-        input: tc.input,
-        expected,
-        output,
-        status,
-        time: data.time,
-        memory: data.memory,
-      });
-    }
-
-    const verdict = allPassed ? "Accepted" : "Wrong Answer";
+    const verdict = allPassed ? "Accepted" : firstNonAccepted?.status || "Wrong Answer";
     const score = allPassed ? 100 : 0;
 
     const submission = await SubmissionModel.create({
@@ -65,8 +35,39 @@ export const createSubmissionMultiple = async (req: Request, res: Response) => {
     });
 
     return res.status(200).json({ submission });
-  } catch (err) {
-    return res.status(500).json({ error: "Submission failed" });
+  } catch (err: any) {
+    const message = err?.message || "Submission failed";
+    const statusCode = message.includes("Unsupported language_id") ? 400 : 500;
+    return res.status(statusCode).json({ error: message });
+  }
+};
+
+export const getExecutorHealth = async (_req: Request, res: Response) => {
+  try {
+    const health = await checkDockerExecutorHealth();
+    return res.status(200).json(health);
+  } catch (err: any) {
+    return res.status(503).json({
+      ok: false,
+      error: err?.message || "Docker executor is unavailable",
+    });
+  }
+};
+
+export const prewarmExecutor = async (req: Request, res: Response) => {
+  try {
+    const languageId = Number(req.body?.language_id ?? req.query?.language_id);
+
+    if (!languageId) {
+      return res.status(400).json({ ok: false, error: "language_id is required" });
+    }
+
+    const result = await prewarmDockerImage(languageId);
+    return res.status(200).json(result);
+  } catch (err: any) {
+    const message = err?.message || "Failed to prepare Docker executor";
+    const statusCode = message.includes("Unsupported language_id") ? 400 : 503;
+    return res.status(statusCode).json({ ok: false, error: message });
   }
 };
 
@@ -88,7 +89,6 @@ export const getUserSubmissions = async (req: Request, res: Response) => {
 // Submissions filtered by user + problem
 export const getUserSubmissionsWithSpecificProblem = async (req: Request, res: Response) => {
   try {
-    console.log("userproblem", req.body);
     const { userId, problemId } = req.params as {
       userId?: string;
       problemId?: string;
