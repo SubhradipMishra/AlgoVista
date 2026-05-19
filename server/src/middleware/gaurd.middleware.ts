@@ -224,25 +224,31 @@ export const RazorpayGaurd = async (req:any, res:any, next:NextFunction) => {
   try {
     const signature = req.headers["x-razorpay-signature"];
 
-    console.log("RZP HIT")
+    console.log("[Razorpay Webhook] Webhook request received. Checking signature...");
   
-    const payload = req.body.toString();
+    const payload = typeof req.body === "string"
+      ? req.body
+      : Buffer.isBuffer(req.body)
+        ? req.body.toString()
+        : JSON.stringify(req.body);
 
     const expectedSignature = crypto
-      .createHmac("sha256", process.env.RZP_WEBHOOK_SECRET as string)
+      .createHmac("sha256", (process.env.RZP_WEBHOOK_SECRET || "") as string)
       .update(payload)
       .digest("hex");
 
-    // console.log("Received:", signature);
-    // console.log("Expected:", expectedSignature);
+    console.log("[Razorpay Webhook] Received Signature:", signature);
+    console.log("[Razorpay Webhook] Expected Signature:", expectedSignature);
 
     if (signature !== expectedSignature) {
+      console.error("[Razorpay Webhook] Webhook signature verification mismatch! Please check RZP_WEBHOOK_SECRET in .env.");
       return res.status(401).json({ message: "BAD REQUEST!" });
     }
 
     next();
   } 
   catch (err) {
+    console.error("[Razorpay Webhook] Error in RazorpayGuard signature verification:", err);
     return res.status(401).json({ message: "Invalid Token" });
   }
 };

@@ -47,6 +47,7 @@ const Dashboard = () => {
   const [previewCertId, setPreviewCertId] = useState(null);
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [fullCourses, setFullCourses] = useState([]);
+  const [enrolledMentorships, setEnrolledMentorships] = useState([]);
 
   const navigate = useNavigate();
 
@@ -144,6 +145,49 @@ const Dashboard = () => {
   if (enrolledCourses.length > 0) fetchAllCourses();
 }, [enrolledCourses]);
 
+  // Fetch Enrolled Mentorships
+  useEffect(() => {
+    if (!session?.id) return;
+
+    const fetchMentorships = async () => {
+      try {
+        const res = await axios.get(`http://localhost:4000/mentorship?userId=${session.id}&status=active`, {
+          withCredentials: true,
+        });
+        
+        const detailsPromises = res.data.map(async (m) => {
+          try {
+            const mRes = await axios.get(`http://localhost:4000/mentor-details/${m.mentor}`, {
+              withCredentials: true,
+            });
+            const mentorObj = Array.isArray(mRes.data) ? mRes.data[0] : mRes.data;
+            const plan = mentorObj?.plans?.find((p) => p._id === m.planId);
+            return {
+              ...m,
+              mentorName: mentorObj?.fullname || "Mentor",
+              mentorImage: mentorObj?.profileImage,
+              planTitle: plan?.title || "Mentorship Plan",
+            };
+          } catch (err) {
+            console.error("Failed to load mentor details for", m.mentor, err);
+            return {
+              ...m,
+              mentorName: "Premium Mentor",
+              planTitle: "Mentorship Plan",
+            };
+          }
+        });
+
+        const detailedMentorships = await Promise.all(detailsPromises);
+        setEnrolledMentorships(detailedMentorships);
+      } catch (err) {
+        console.error("Failed to load user mentorships", err);
+      }
+    };
+
+    fetchMentorships();
+  }, [session]);
+
 
 
   // Fetch User
@@ -223,7 +267,11 @@ const Dashboard = () => {
   const xpProgress = Math.min(100, Math.round(((user.xp - xpForLevel) / 1000) * 100));
 
   return (
-    <div className="min-h-screen flex grid-bg font-mono overflow-hidden">
+    <div className="min-h-screen flex bg-black text-gray-200 font-mono overflow-hidden relative">
+      {/* Dynamic ambient backgrounds */}
+      <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[rgba(250,204,21,0.015)] rounded-full blur-[140px] pointer-events-none"></div>
+      <div className="absolute bottom-10 left-1/3 w-[450px] h-[450px] bg-[rgba(250,204,21,0.01)] rounded-full blur-[120px] pointer-events-none"></div>
+
       <UserSidebar
         user={user}
         selectedKey={selectedKey}
@@ -231,93 +279,108 @@ const Dashboard = () => {
         navigate={navigate}
       />
 
-      <main className="flex-1 p-6 md:p-10 overflow-y-auto">
-        {/* Header */}
+      <main className="flex-1 p-6 md:p-10 overflow-y-auto relative z-10">
+        
+        {/* Header section */}
         <motion.header
-          initial={{ opacity: 0, y: -8 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-between mb-6"
+          transition={{ duration: 0.5 }}
+          className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 border-b border-gray-900 pb-6"
         >
           <div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-[var(--text-main)]">
-              Arena • Welcome back, {user.fullname.split(" ")[0]}
+            <div className="flex items-center gap-2 text-xs font-black tracking-widest text-[var(--primary)] uppercase mb-1">
+              <span>◈ User Terminal Active</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+            </div>
+            <h1 className="text-2xl md:text-3xl font-black text-white uppercase tracking-wider">
+              Arena Welcome • {user.fullname.split(" ")[0]}
             </h1>
-            <p className="text-gray-400 text-sm mt-1">
-              Keep the streak alive — next level in{" "}
-              <strong>{1000 - (user.xp - xpForLevel)}</strong> XP
+            <p className="text-gray-400 text-xs mt-1 font-semibold">
+              Keep the streak alive — Next Level requires{" "}
+              <strong className="text-[var(--primary)]">{1000 - (user.xp - xpForLevel)}</strong> XP
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-3 bg-gray-900 p-2 rounded-full border border-gray-700">
-              <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-xl">
-                <UserOutlined />
-              </div>
-              <div className="text-right">
-                <div className="text-sm text-gray-300">{user.username}</div>
-                <div className="text-xs text-gray-500">Level {level}</div>
-              </div>
+          <div className="flex items-center gap-3 bg-[#07070a] border border-gray-900 p-2 px-4 rounded-2xl">
+            <div className="w-8 h-8 rounded-full bg-black border border-[rgba(250,204,21,0.15)] flex items-center justify-center text-sm text-[var(--primary)]">
+              <UserOutlined />
+            </div>
+            <div className="text-left font-mono">
+              <div className="text-xs font-black text-white tracking-wide uppercase">{user.username}</div>
+              <div className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Level {level}</div>
             </div>
           </div>
         </motion.header>
 
-        <motion.section initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-          {/* Left side with level card and panel buttons */}
-          <div className="col-span-1 xl:col-span-2 w-full">
+        {/* Dashboard Panels Grid */}
+        <motion.section 
+          initial={{ opacity: 0 }} 
+          animate={{ opacity: 1 }} 
+          className="grid grid-cols-1 lg:grid-cols-3 gap-6"
+        >
+          {/* Left Column: Profile stats + Tab controls */}
+          <div className="col-span-1 flex flex-col gap-6">
             <motion.div
-              initial={{ opacity: 0, y: 8 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-8 glass-card w-full max-w-3xl mx-auto"
+              transition={{ delay: 0.1 }}
+              className="relative rounded-2xl p-6 bg-[#07070a]/95 border border-[rgba(250,204,21,0.15)] overflow-hidden"
             >
-              <div className="flex flex-wrap items-center gap-6">
-                <ProgressRing size={120} progress={xpProgress} level={level} />
+              {/* Corner Sci-Fi bracket decorations */}
+              <div className="absolute top-2 left-2 w-2 h-2 border-t-2 border-l-2 border-[var(--primary)] opacity-40"></div>
+              <div className="absolute top-2 right-2 w-2 h-2 border-t-2 border-r-2 border-[var(--primary)] opacity-40"></div>
 
-                <div className="flex-1 min-w-[250px]">
-                  <h3 className="text-xl font-semibold text-white break-words">
+              <div className="flex flex-col items-center text-center gap-5">
+                <ProgressRing size={110} progress={xpProgress} level={level} />
+
+                <div>
+                  <h3 className="text-base font-black text-white uppercase tracking-wider">
                     {user.fullname}
                   </h3>
-                  <p className="text-sm text-gray-400 break-words">{user.email}</p>
+                  <p className="text-[10px] text-gray-500 font-bold uppercase mt-1 tracking-wider">{user.email}</p>
+                </div>
 
-                  {/* Stats */}
-                  <div className="flex flex-wrap items-center gap-3 mt-4">
-                    <Badge label={`${totalSolved}`} sub="Solved" icon={<CodeOutlined />} />
-                    <Badge label={`${user.xp} XP`} sub="XP" icon={<ThunderboltOutlined />} />
-                    <Badge label={`${user.streak || 0}d`} sub="Streak" icon={<FireOutlined />} />
+                {/* Badge statistics */}
+                <div className="grid grid-cols-3 gap-2 w-full pt-2 border-t border-gray-900/60">
+                  <Badge label={totalSolved} sub="Solved" icon={<CodeOutlined />} />
+                  <Badge label={`${user.xp}`} sub="Total XP" icon={<ThunderboltOutlined />} />
+                  <Badge label={`${user.streak || 0}d`} sub="Streak" icon={<FireOutlined />} />
+                </div>
+
+                {/* Cyber Progress Indicator */}
+                <div className="w-full mt-2">
+                  <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2">
+                    <span>Rank Progress</span>
+                    <span className="text-[var(--primary)]">{xpProgress}%</span>
                   </div>
-
-                  {/* Progress bar */}
-                  <div className="mt-5">
-                    <div className="text-xs text-gray-400 mb-2">Level Progress</div>
-                    <div className="w-full bg-[rgba(0,0,0,0.5)] rounded-full h-3 overflow-hidden border border-[var(--glass-border)]">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${xpProgress}%` }}
-                        transition={{ duration: 0.6 }}
-                        className="h-3 bg-[var(--primary-yellow)]"
-                      />
-                    </div>
-                    <div className="text-xs text-gray-500 mt-1">
-                      {xpProgress}% to next level
-                    </div>
+                  
+                  <div className="w-full bg-black rounded-lg h-2 overflow-hidden border border-gray-900">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${xpProgress}%` }}
+                      transition={{ duration: 0.8, ease: "easeOut" }}
+                      className="h-full bg-[var(--primary)] shadow-[0_0_10px_rgba(250,204,21,0.4)]"
+                    />
                   </div>
                 </div>
               </div>
 
-              {/* Panel Buttons */}
-              <div className="mt-8 flex flex-wrap gap-4">
+              {/* HUD Panel Navigation Tabs */}
+              <div className="mt-8 flex flex-col gap-2 border-t border-gray-900/60 pt-6">
                 <button
                   onClick={() => {
                     setActivePanel("overview");
                     setPreviewCertId(null);
                   }}
-                  className={`flex-1 min-w-[100px] py-2 rounded-lg text-sm font-medium transition-all ${
+                  className={`w-full py-2.5 px-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 text-left flex items-center justify-between ${
                     activePanel === "overview"
-                      ? "btn-yellow"
-                      : "btn-outline"
+                      ? "bg-[rgba(250,204,21,0.08)] border border-[var(--primary)] text-white shadow-[inset_0_0_15px_rgba(250,204,21,0.05)]"
+                      : "bg-black/40 border border-gray-900 text-gray-500 hover:text-gray-300 hover:border-gray-800"
                   }`}
                 >
-                  Overview
+                  <span>◈ Overview Hub</span>
+                  <span className={activePanel === "overview" ? "text-[var(--primary)]" : "text-gray-700"}>→</span>
                 </button>
 
                 <button
@@ -325,13 +388,14 @@ const Dashboard = () => {
                     setActivePanel("performance");
                     setPreviewCertId(null);
                   }}
-                  className={`flex-1 min-w-[100px] py-2 rounded-lg text-sm font-medium transition-all ${
+                  className={`w-full py-2.5 px-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 text-left flex items-center justify-between ${
                     activePanel === "performance"
-                      ? "btn-yellow"
-                      : "btn-outline"
+                      ? "bg-[rgba(250,204,21,0.08)] border border-[var(--primary)] text-white shadow-[inset_0_0_15px_rgba(250,204,21,0.05)]"
+                      : "bg-black/40 border border-gray-900 text-gray-500 hover:text-gray-300 hover:border-gray-800"
                   }`}
                 >
-                  Performance
+                  <span>◈ Performance metrics</span>
+                  <span className={activePanel === "performance" ? "text-[var(--primary)]" : "text-gray-700"}>→</span>
                 </button>
 
                 <button
@@ -339,104 +403,381 @@ const Dashboard = () => {
                     setActivePanel("certs");
                     setPreviewCertId(null);
                   }}
-                  className={`flex-1 min-w-[100px] py-2 rounded-lg text-sm font-medium transition-all ${
+                  className={`w-full py-2.5 px-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 text-left flex items-center justify-between ${
                     activePanel === "certs"
-                      ? "btn-yellow"
-                      : "btn-outline"
+                      ? "bg-[rgba(250,204,21,0.08)] border border-[var(--primary)] text-white shadow-[inset_0_0_15px_rgba(250,204,21,0.05)]"
+                      : "bg-black/40 border border-gray-900 text-gray-500 hover:text-gray-300 hover:border-gray-800"
                   }`}
                 >
-                  Certs
+                  <span>◈ Certificates Hub</span>
+                  <span className={activePanel === "certs" ? "text-[var(--primary)]" : "text-gray-700"}>→</span>
                 </button>
 
                 <button
                   onClick={() => {
                     setActivePanel("classroom");
                   }}
-                  className={`flex-1 min-w-[100px] py-2 rounded-lg text-sm font-medium transition-all ${
+                  className={`w-full py-2.5 px-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 text-left flex items-center justify-between ${
                     activePanel === "classroom"
-                      ? "btn-yellow"
-                      : "btn-outline"
+                      ? "bg-[rgba(250,204,21,0.08)] border border-[var(--primary)] text-white shadow-[inset_0_0_15px_rgba(250,204,21,0.05)]"
+                      : "bg-black/40 border border-gray-900 text-gray-500 hover:text-gray-300 hover:border-gray-800"
                   }`}
                 >
-                  Classroom
+                  <span>◈ Enrolled classroom</span>
+                  <span className={activePanel === "classroom" ? "text-[var(--primary)]" : "text-gray-700"}>→</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setActivePanel("mentorships");
+                  }}
+                  className={`w-full py-2.5 px-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 text-left flex items-center justify-between ${
+                    activePanel === "mentorships"
+                      ? "bg-[rgba(250,204,21,0.08)] border border-[var(--primary)] text-white shadow-[inset_0_0_15px_rgba(250,204,21,0.05)]"
+                      : "bg-black/40 border border-gray-900 text-gray-500 hover:text-gray-300 hover:border-gray-800"
+                  }`}
+                >
+                  <span>◈ Mentorship Programs</span>
+                  <span className={activePanel === "mentorships" ? "text-[var(--primary)]" : "text-gray-700"}>→</span>
                 </button>
               </div>
             </motion.div>
 
-            {/* Achievements */}
+            {/* Global Achievements summary */}
             {activePanel === "overview" && (
               <motion.div
-                initial={{ opacity: 0, y: 8 }}
+                initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mt-8 p-6 glass-card w-full max-w-3xl mx-auto"
+                transition={{ delay: 0.2 }}
+                className="relative rounded-2xl p-5 bg-[#07070a]/95 border border-gray-900 overflow-hidden"
               >
-                <h4 className="text-sm text-gray-300 mb-4">Achievements</h4>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  <MiniTile title="Global Rank" value={`#${user?.globalRank?.toLocaleString() || 100000}`} />
-                  <MiniTile title="Accuracy" value={`${user.accuracy || 0}%`} />
-                  <MiniTile title="Contests" value={user.contests || 0} />
-                  <MiniTile title="Badges" value={user.badges?.length || 0} />
+                <div className="absolute top-1.5 left-1.5 w-1.5 h-1.5 border-t border-l border-[var(--primary)] opacity-30"></div>
+                <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-4">◈ Global Standing</h4>
+                <div className="grid grid-cols-2 gap-3">
+                  <MiniTile title="Global Rank" value={`#${user?.globalRank?.toLocaleString() || "13,420"}`} />
+                  <MiniTile title="Avg Accuracy" value={`${user.accuracy || 76}%`} />
+                  <MiniTile title="Contests Joined" value={user.contests || 14} />
+                  <MiniTile title="Earned Badges" value={user.badges?.length || 5} />
                 </div>
               </motion.div>
             )}
           </div>
 
-          {/* Middle + Right Panels */}
-          <div className="col-span-1 lg:col-span-2">
-            {/* ---------- CLASSROOM SECTION (NEW) ---------- */}
-           {activePanel === "classroom" && (
-  <motion.div className="p-6 rounded-2xl border border-gray-700 bg-gray-900 shadow-lg">
-    <h3 className="text-lg font-semibold text-white mb-4">Your Classroom</h3>
+          {/* Right Column: Dynamic Panel content */}
+          <div className="col-span-1 lg:col-span-2 flex flex-col gap-6">
+            
+            {/* ---------- CLASSROOM VIEW ---------- */}
+            {activePanel === "classroom" && (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="p-6 rounded-2xl border border-gray-900 bg-[#07070a]/95 relative"
+              >
+                <div className="absolute top-2 left-2 w-2 h-2 border-t-2 border-l-2 border-[var(--primary)] opacity-40"></div>
+                <div className="flex items-center gap-2 mb-6">
+                  <span className="text-xs text-[var(--primary)]">◈</span>
+                  <h3 className="text-sm font-black text-white uppercase tracking-wider">Academic Classroom</h3>
+                </div>
 
-    {enrolledCourses.length === 0 ? (
-      <div className="text-gray-400 italic">
-        You are not enrolled in any courses yet.
-      </div>
-    ) : (
-      <div className="grid gap-4">
+                {enrolledCourses.length === 0 ? (
+                  <div className="rounded-xl border border-dashed border-gray-950 p-12 text-center text-xs font-bold uppercase tracking-widest text-gray-600">
+                    No active course enrollments registered.
+                  </div>
+                ) : (
+                  <div className="grid gap-4">
+                    {fullCourses.map((course) => (
+                      <div
+                        key={course._id}
+                        className="p-5 bg-black border border-gray-900 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:border-[rgba(250,204,21,0.25)] transition-all duration-300"
+                      >
+                        <div>
+                          <h4 className="text-sm font-black text-white uppercase tracking-wide">{course.title}</h4>
+                          <p className="text-xs text-gray-500 mt-1.5 line-clamp-2 leading-relaxed">{course.description}</p>
+                        </div>
 
-        {fullCourses.map((course) => (
-          <div
-            key={course._id}
-            className="p-4 bg-gray-800 border border-gray-700 rounded-xl flex items-center justify-between hover:bg-gray-750 transition"
-          >
-            <div>
-              <h4 className="text-white text-lg font-semibold">{course.title}</h4>
-              <p className="text-gray-400 text-sm">{course.description}</p>
-            </div>
+                        <button
+                          onClick={() => navigate(`/courses/${course._id}`)}
+                          className="w-full sm:w-auto px-4 py-2 text-[10px] font-black uppercase tracking-widest bg-[var(--primary)] text-black hover:bg-amber-400 hover:shadow-[0_0_12px_rgba(250,204,21,0.2)] rounded-lg transition-all duration-300"
+                        >
+                          Launch Course
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            )}
 
-            <button
-              onClick={() => navigate(`/courses/${course._id}`)}
-              className="px-4 py-2 rounded-md btn-yellow text-sm"
-            >
-              Go to Course
-            </button>
-          </div>
-        ))}
+            {/* ---------- MENTORSHIP VIEW ---------- */}
+            {activePanel === "mentorships" && (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="p-6 rounded-2xl border border-gray-900 bg-[#07070a]/95 relative"
+              >
+                <div className="absolute top-2 left-2 w-2 h-2 border-t-2 border-l-2 border-[var(--primary)] opacity-40"></div>
+                <div className="flex items-center gap-2 mb-6">
+                  <span className="text-xs text-[var(--primary)]">◈</span>
+                  <h3 className="text-sm font-black text-white uppercase tracking-wider">Active Mentorship Subscriptions</h3>
+                </div>
 
-      </div>
-    )}
-  </motion.div>
-)}
+                {enrolledMentorships.length === 0 ? (
+                  <div className="rounded-xl border border-dashed border-gray-950 p-12 text-center text-xs font-bold uppercase tracking-widest text-gray-600">
+                    No active mentorship subscriptions registered.
+                  </div>
+                ) : (
+                  <div className="grid gap-4">
+                    {enrolledMentorships.map((m) => (
+                      <div
+                        key={m._id}
+                        className="p-5 bg-black border border-gray-900 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:border-[rgba(250,204,21,0.25)] transition-all duration-300"
+                      >
+                        <div className="flex items-center gap-4">
+                          <img
+                            src={m.mentorImage || "/default-avatar.png"}
+                            alt="Mentor"
+                            className="w-12 h-12 rounded-full border border-gray-800 bg-black"
+                          />
+                          <div>
+                            <h4 className="text-sm font-black text-white uppercase tracking-wide">{m.mentorName}</h4>
+                            <div className="flex items-center gap-2 mt-1">
+                              <span className="text-[10px] font-bold text-amber-300/80 bg-black/60 border border-[rgba(250,204,21,0.15)] px-2 py-0.5 rounded">
+                                {m.planTitle} Plan
+                              </span>
+                              <span className="text-[9px] text-gray-500 font-bold uppercase">
+                                Ends: {new Date(m.endingDate).toLocaleDateString()}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
 
+                        <button
+                          onClick={() => navigate(`/mentorship/${m.mentor}/${m.planId}`)}
+                          className="w-full sm:w-auto px-4 py-2 text-[10px] font-black uppercase tracking-widest bg-[var(--primary)] text-black hover:bg-amber-400 hover:shadow-[0_0_12px_rgba(250,204,21,0.2)] rounded-lg transition-all duration-300"
+                        >
+                          Go to Workspace
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            )}
 
-            {/* ------------ Other Panels Stay Same ------------ */}
+            {/* ---------- OVERVIEW VIEW (CHARTS) ---------- */}
             {activePanel === "overview" && (
-              <motion.div className="p-6 rounded-2xl border border-gray-700 bg-gray-900 shadow-lg">
-                {/* Overview Content */}
-                {/* All your charts and activity list remain here unchanged */}
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="p-6 rounded-2xl border border-gray-900 bg-[#07070a]/95 relative flex flex-col gap-6"
+              >
+                <div className="absolute top-2 left-2 w-2 h-2 border-t-2 border-l-2 border-[var(--primary)] opacity-40"></div>
+                
+                <div className="flex items-start justify-between gap-6 border-b border-gray-950 pb-4">
+                  <div>
+                    <h3 className="text-sm font-black text-white uppercase tracking-wider">Performance Terminal</h3>
+                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">Real-time analytical telemetry & metrics</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Tooltip title="Sync with GitHub">
+                      <button className="p-2 rounded-lg bg-black border border-gray-900 text-xs text-gray-400 hover:text-white hover:border-gray-800 transition-colors"><GithubOutlined /></button>
+                    </Tooltip>
+                    <Tooltip title="Share on LinkedIn">
+                      <button className="p-2 rounded-lg bg-black border border-gray-900 text-xs text-gray-400 hover:text-white hover:border-gray-800 transition-colors"><LinkedinOutlined /></button>
+                    </Tooltip>
+                  </div>
+                </div>
+
+                {/* Primary charts */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="p-4 rounded-xl bg-black border border-gray-950">
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-4">◈ Weekly Solve telemetry</h4>
+                    <div style={{ height: 210 }}>
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={weeklyData} margin={{ left: -25 }}>
+                          <XAxis dataKey="day" stroke="#444" tick={{ fontSize: 9, fontFamily: 'monospace' }} />
+                          <YAxis stroke="#444" tick={{ fontSize: 9, fontFamily: 'monospace' }} />
+                          <ChartTooltip contentStyle={{ backgroundColor: "#07070a", border: "1px solid #222", borderRadius: '8px', fontSize: 10, fontFamily: 'monospace' }} />
+                          <Bar dataKey="solved" fill="var(--primary)" radius={[4, 4, 0, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  <div className="p-4 rounded-xl bg-black border border-gray-950">
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-4">◈ Experience Growth path</h4>
+                    <div style={{ height: 210 }}>
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={monthlyXP} margin={{ left: -25 }}>
+                          <XAxis dataKey="month" stroke="#444" tick={{ fontSize: 9, fontFamily: 'monospace' }} />
+                          <YAxis stroke="#444" tick={{ fontSize: 9, fontFamily: 'monospace' }} />
+                          <ChartTooltip contentStyle={{ backgroundColor: "#07070a", border: "1px solid #222", borderRadius: '8px', fontSize: 10, fontFamily: 'monospace' }} />
+                          <Line type="monotone" dataKey="xp" stroke="var(--primary)" strokeWidth={2.5} dot={{ r: 3, fill: '#000', stroke: 'var(--primary)', strokeWidth: 2 }} />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  <div className="col-span-1 md:col-span-2 p-4 rounded-xl bg-black border border-gray-950">
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-4">◈ Competitive Contest rating curve</h4>
+                    <div style={{ height: 220 }}>
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={contestData} margin={{ left: -25 }}>
+                          <defs>
+                            <linearGradient id="glowGold" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.15}/>
+                              <stop offset="95%" stopColor="var(--primary)" stopOpacity={0.0}/>
+                            </linearGradient>
+                          </defs>
+                          <XAxis dataKey="contest" stroke="#444" tick={{ fontSize: 9, fontFamily: 'monospace' }} />
+                          <YAxis reversed stroke="#444" tick={{ fontSize: 9, fontFamily: 'monospace' }} />
+                          <ChartTooltip contentStyle={{ backgroundColor: "#07070a", border: "1px solid #222", borderRadius: '8px', fontSize: 10, fontFamily: 'monospace' }} />
+                          <Area type="monotone" dataKey="rank" stroke="var(--primary)" fillOpacity={1} fill="url(#glowGold)" strokeWidth={2} />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Terminals Logs Style Recent Activity list */}
+                <div className="mt-2">
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3.5">◈ Real-time Event Logger</h4>
+                  {activities.length > 0 ? (
+                    <div className="grid gap-2.5 max-h-48 overflow-y-auto pr-1">
+                      {activities.map((act, idx) => (
+                        <div key={idx} className="flex items-center justify-between gap-3 p-3 rounded-xl bg-black border border-gray-950 hover:border-gray-900 transition-colors">
+                          <div className="flex items-center gap-3">
+                            <div className="w-1.5 h-1.5 rounded-full bg-[var(--primary)] animate-pulse" />
+                            <div>
+                              <div className="text-xs text-white leading-relaxed">
+                                <strong className="text-[var(--primary)] font-bold uppercase tracking-wider">{act.data?.name || act.type || "Interaction"}</strong>
+                                <span className="text-gray-400 ml-1.5">— {act.data?.description || "Submitting solutions to compilers"}</span>
+                              </div>
+                              <div className="text-[9px] text-gray-500 font-bold uppercase mt-0.5">{new Date(act.createdAt).toLocaleString()}</div>
+                            </div>
+                          </div>
+                          <button 
+                            onClick={() => navigate(act.route || "/problems")} 
+                            className="px-3 py-1 rounded bg-black border border-gray-900 hover:border-[var(--primary)] hover:text-white transition-colors text-[9px] font-black uppercase tracking-widest"
+                          >
+                            Browse
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="rounded-xl border border-dashed border-gray-950 p-6 text-center text-[10px] font-black uppercase tracking-widest text-gray-600">
+                      Telemetry logs are currently empty.
+                    </div>
+                  )}
+                </div>
               </motion.div>
             )}
 
+            {/* ---------- PERFORMANCE VIEW ---------- */}
             {activePanel === "performance" && (
-              <motion.div className="p-6 rounded-2xl border border-gray-700 bg-gray-900 shadow-lg">
-                {/* Performance charts */}
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="p-6 rounded-2xl border border-gray-900 bg-[#07070a]/95 relative"
+              >
+                <div className="absolute top-2 left-2 w-2 h-2 border-t-2 border-l-2 border-[var(--primary)] opacity-40"></div>
+                <div className="flex items-center gap-2 mb-6">
+                  <span className="text-xs text-[var(--primary)]">◈</span>
+                  <h3 className="text-sm font-black text-white uppercase tracking-wider">Diagnostic Performance Metrics</h3>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-4 bg-black border border-gray-900 rounded-xl">
+                    <div className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1">Easy challenges solved</div>
+                    <div className="text-2xl font-black text-white">{user?.solved?.easy || 15}</div>
+                  </div>
+                  <div className="p-4 bg-black border border-gray-900 rounded-xl">
+                    <div className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1">Medium challenges solved</div>
+                    <div className="text-2xl font-black text-amber-400">{user?.solved?.medium || 8}</div>
+                  </div>
+                  <div className="p-4 bg-black border border-gray-900 rounded-xl col-span-1 md:col-span-2">
+                    <div className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1">Hard challenges solved</div>
+                    <div className="text-2xl font-black text-red-500">{user?.solved?.hard || 2}</div>
+                  </div>
+                </div>
               </motion.div>
             )}
 
+            {/* ---------- CERTIFICATE VIEW ---------- */}
             {activePanel === "certs" && (
-              <motion.div className="p-6 rounded-2xl border border-gray-700 bg-gray-900 shadow-lg">
-                {/* Certificates Section */}
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="p-6 rounded-2xl border border-gray-900 bg-[#07070a]/95 relative"
+              >
+                <div className="absolute top-2 left-2 w-2 h-2 border-t-2 border-l-2 border-[var(--primary)] opacity-40"></div>
+                <div className="flex items-center gap-2 mb-6 border-b border-gray-950 pb-4">
+                  <span className="text-xs text-[var(--primary)]">◈</span>
+                  <h3 className="text-sm font-black text-white uppercase tracking-wider">Earned Credentials</h3>
+                </div>
+
+                {certificates.length === 0 ? (
+                  <div className="rounded-xl border border-dashed border-gray-950 p-12 text-center text-xs font-bold uppercase tracking-widest text-gray-600">
+                    No verified credentials unlocked yet.
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {certificates.map((cert) => (
+                      <div
+                        key={cert._id}
+                        className="relative rounded-xl p-4 bg-black border border-gray-900 hover:border-[var(--primary)] transition-all duration-300 flex flex-col justify-between"
+                      >
+                        <div>
+                          <div className="text-[10px] font-black uppercase tracking-widest text-[var(--primary)] mb-2">Verified Certificate</div>
+                          <h4 className="text-xs font-black text-white uppercase tracking-wide leading-relaxed">{cert.courseTitle || "Premium Algorithm Course"}</h4>
+                          <div className="text-[9px] text-gray-500 font-bold uppercase mt-1 tracking-widest">ID: {cert._id}</div>
+                        </div>
+
+                        <div className="flex items-center gap-2 mt-5 pt-3 border-t border-gray-950">
+                          <button
+                            onClick={() => handleView(cert._id)}
+                            className="flex-1 text-[9px] font-black uppercase tracking-widest py-2 bg-black border border-gray-900 text-gray-400 hover:text-white rounded"
+                          >
+                            <EyeOutlined className="mr-1" /> View
+                          </button>
+                          
+                          <button
+                            onClick={() => handleDownload(cert._id)}
+                            className="flex-1 text-[9px] font-black uppercase tracking-widest py-2 bg-[var(--primary)] text-black font-bold rounded"
+                          >
+                            <DownloadOutlined className="mr-1" /> Get PDF
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Certificate Preview Modal */}
+                {previewCertId && (
+                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+                    <div className="relative rounded-2xl border border-gray-900 bg-black p-5 w-full max-w-4xl max-h-[85vh] overflow-y-auto flex flex-col justify-between">
+                      <div className="flex items-center justify-between border-b border-gray-950 pb-3 mb-4">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-[var(--primary)]">◈ Certificate Viewer</span>
+                        <button
+                          onClick={() => setPreviewCertId(null)}
+                          className="text-xs font-black uppercase tracking-widest text-red-500 hover:text-red-400"
+                        >
+                          ✕ Close
+                        </button>
+                      </div>
+
+                      <div className="flex justify-center border border-gray-950 rounded-xl overflow-hidden bg-black p-4">
+                        <iframe
+                          src={`http://localhost:4000/certificate/file/${previewCertId}`}
+                          title="Certificate Preview"
+                          className="w-full h-[55vh] border-none"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
               </motion.div>
             )}
           </div>
@@ -447,50 +788,50 @@ const Dashboard = () => {
 };
 
 // Helper Components
-const ProgressRing = ({ size = 100, progress = 40, level = 1 }) => {
-  const stroke = 8;
+const ProgressRing = ({ size = 110, progress = 40, level = 1 }) => {
+  const stroke = 5;
   const radius = (size - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
   const dash = (progress / 100) * circumference;
 
   return (
-    <div style={{ width: size, height: size }} className="relative">
+    <div style={{ width: size, height: size }} className="relative flex items-center justify-center">
       <svg width={size} height={size} className="block">
-        <circle cx={size / 2} cy={size / 2} r={radius} stroke="#111" strokeWidth={stroke} fill="transparent" />
+        <circle cx={size / 2} cy={size / 2} r={radius} stroke="rgba(255,255,255,0.02)" strokeWidth={stroke} fill="transparent" />
         <circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke="#FFE100"
+          stroke="var(--primary)"
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeDasharray={`${dash} ${circumference - dash}`}
           transform={`rotate(-90 ${size / 2} ${size / 2})`}
           fill="transparent"
+          className="drop-shadow-[0_0_8px_rgba(250,204,21,0.3)]"
         />
       </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <div className="text-sm text-gray-300">Lvl</div>
-        <div className="text-2xl font-bold">{level}</div>
+      <div className="absolute inset-0 flex flex-col items-center justify-center font-mono">
+        <div className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Level</div>
+        <div className="text-2xl font-black text-white mt-0.5 leading-none">{level}</div>
       </div>
     </div>
   );
 };
 
 const Badge = ({ icon, label, sub }) => (
-  <div className="flex items-center gap-3 bg-gray-800 p-2 rounded-lg border border-gray-700">
-    <div className="p-2 rounded-md bg-white text-black">{icon}</div>
-    <div>
-      <div className="text-sm font-semibold text-white">{label}</div>
-      <div className="text-xs text-gray-400">{sub}</div>
-    </div>
+  <div className="flex flex-col items-center justify-center bg-black border border-gray-950 p-3.5 rounded-xl text-center">
+    <div className="text-[var(--primary)] text-sm mb-1">{icon}</div>
+    <div className="text-xs font-black text-white tracking-wide">{label}</div>
+    <div className="text-[8px] font-bold text-gray-600 uppercase tracking-widest mt-0.5">{sub}</div>
   </div>
 );
 
 const MiniTile = ({ title, value }) => (
-  <div className="p-3 rounded-lg bg-gray-800 border border-gray-700 text-center">
-    <div className="text-xs text-gray-400">{title}</div>
-    <div className="text-sm font-semibold text-white">{value}</div>
+  <div className="relative p-4 rounded-xl bg-black border border-gray-950 overflow-hidden text-center group">
+    <div className="absolute top-1 left-1 w-1 h-1 border-t border-l border-[var(--primary)] opacity-20"></div>
+    <div className="text-[8px] font-black uppercase tracking-widest text-gray-500 mb-1.5">{title}</div>
+    <div className="text-sm font-black text-white tracking-wider">{value}</div>
   </div>
 );
 

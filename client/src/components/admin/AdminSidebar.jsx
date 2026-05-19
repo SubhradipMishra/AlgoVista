@@ -13,6 +13,7 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   BookOutlined,
+  CrownOutlined,
 } from "@ant-design/icons";
 
 const AdminSidebar = ({ session, open, setOpen }) => {
@@ -25,6 +26,16 @@ const AdminSidebar = ({ session, open, setOpen }) => {
     { key: "/admin/roadmaps", icon: <BranchesOutlined />, label: "Roadmaps" },
     { key: "/admin/problems", icon: <QuestionCircleOutlined />, label: "Problems" },
     { key: "/admin/course", icon: <BookOutlined />, label: "Courses" },
+    {
+      key: "/admin/mentorship",
+      icon: <CrownOutlined />,
+      label: "Mentorship",
+      children: [
+        { key: "/admin/dashboard?plan=basic", label: "Basic Plan" },
+        { key: "/admin/dashboard?plan=gold", label: "Gold Plan" },
+        { key: "/admin/dashboard?plan=advanced", label: "Advanced Plan" },
+      ],
+    },
     { key: "/admin/settings", icon: <SettingOutlined />, label: "Settings" },
     { key: "/logout", icon: <LogoutOutlined />, label: "Logout" },
   ];
@@ -88,7 +99,7 @@ const AdminSidebar = ({ session, open, setOpen }) => {
           theme="dark"
           mode="inline"
           inlineCollapsed={collapsed}
-          selectedKeys={[location.pathname]}
+          selectedKeys={[location.pathname + location.search]}
           items={menuItems}
           onClick={handleMenuClick}
           className="font-mono bg-black menu-bw"
@@ -114,7 +125,7 @@ const AdminSidebar = ({ session, open, setOpen }) => {
         <Menu
           theme="dark"
           mode="inline"
-          selectedKeys={[location.pathname]}
+          selectedKeys={[location.pathname + location.search]}
           items={menuItems}
           onClick={handleMenuClick}
           className="font-mono bg-black menu-bw"
@@ -144,6 +155,17 @@ const AdminSidebar = ({ session, open, setOpen }) => {
 
         .menu-bw .ant-menu-item-selected .ant-menu-title-content {
           font-weight: 600 !important;
+        }
+
+        .menu-bw .ant-menu-submenu-title {
+          color: #ccc !important;
+        }
+        .menu-bw .ant-menu-submenu-title:hover {
+          background: rgba(255, 255, 255, 0.08) !important;
+          color: white !important;
+        }
+        .menu-bw .ant-menu-sub {
+          background: #000000 !important;
         }
       `}</style>
     </>

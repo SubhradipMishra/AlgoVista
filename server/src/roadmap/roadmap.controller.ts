@@ -11,7 +11,7 @@ export const createRoadmap = async (req: any, res: Response) => {
     // Inject createdBy from logged-in user
     const roadmap = new RoadmapModel({
       ...req.body,
-      createdBy: req.user._id, // <-- automatically injected
+      createdBy: req.user.id || req.user._id, // <-- automatically injected
     });
 
     const savedRoadmap = await roadmap.save();

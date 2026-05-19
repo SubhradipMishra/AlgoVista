@@ -48,8 +48,15 @@ export const fetchEnrolledCourse = async (req: any, res: Response) => {
   try {
     const userId = req.user.id;
 
+    // Perform on-demand expiration check and update
+    const now = new Date();
+    await CourseEnrollmentModel.updateMany(
+      { userId, status: { $ne: "expired" }, expiresAt: { $lt: now } },
+      { $set: { status: "expired" } }
+    );
+
     const courses = await CourseEnrollmentModel
-      .find({ userId })
+      .find({ userId, status: { $ne: "expired" } })
       .lean();
 
     return res.status(200).json({

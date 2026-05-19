@@ -12,10 +12,12 @@ import MentorDetailsModel from '../mentor-deatils/mentor-deatils.model';
 import { createMentorship } from '../mentorship/mentorship.controller';
 
 
-const instance = new Razorpay({
-  key_id: "rzp_test_RpG7PsiR24EZK5",
-  key_secret: "N5ZdLaR0LIzAvGaPMKpIQV8Y",
-});
+const getInstance = () => {
+  return new Razorpay({
+    key_id: process.env.RZP_KEY || "rzp_test_SbMCXavd2ljutr",
+    key_secret: process.env.RZP_SECRET || "usn6oNqkOxcmjocD4uVGes9n",
+  });
+};
 
 
 export const generateOrderCourse = async(req:Request, res:Response)=>{
@@ -30,7 +32,7 @@ export const generateOrderCourse = async(req:Request, res:Response)=>{
 	    if (!product) return res.status(400).json({ message: "Bad Request!" });
         
 		const price = product.discountPrice ; 
-		 const order = await instance.orders.create({
+		 const order = await getInstance().orders.create({
       amount: price * 100,
       currency: "INR",
       receipt: `AlgoVista_${Date.now()}`,
@@ -219,16 +221,16 @@ export const generateOrderMentor = async (req: any, res: Response) => {
     const selectedPlan = mentor.plans[0];
 
     /* ---------- Create Razorpay Order ---------- */
-    const order = await instance.orders.create({
-  amount: selectedPlan.price * 100,
-  currency: "INR",
-  receipt: `AlgoVista_${Date.now()}`,
-  notes: {
-    user: req.user._id,      // 👈 REQUIRED
-    mentor: mentorId,        // 👈 REQUIRED
-    product: productId,      // 👈 REQUIRED
-  },
-});
+    const order = await getInstance().orders.create({
+      amount: selectedPlan.price * 100,
+      currency: "INR",
+      receipt: `AlgoVista_${Date.now()}`,
+      notes: {
+        user: req.user.id || req.user._id || userId,      // 👈 REQUIRED
+        mentor: mentorId,        // 👈 REQUIRED
+        product: productId,      // 👈 REQUIRED
+      },
+    });
 
 
     

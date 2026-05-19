@@ -27,7 +27,6 @@ import AdminSidebar from "./AdminSidebar";
 
 export default function AddProblems() {
   const [collapsed, setCollapsed] = useState(false);
-  const [darkMode, setDarkMode] = useState(true);
   const [searchText, setSearchText] = useState("");
 
   const [sessionLoading, setSessionLoading] = useState(true);
@@ -121,130 +120,104 @@ export default function AddProblems() {
 
   if (sessionLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen text-white">
-        Loading...
+      <div className="flex items-center justify-center min-h-screen bg-black text-white font-mono">
+        <div className="text-[10px] font-black uppercase tracking-widest text-[var(--primary)] animate-pulse">Initializing Problem Matrix...</div>
       </div>
     );
   }
 
   return (
-    <div className={`flex min-h-screen font-mono 
-      ${darkMode ? "bg-[#030303] text-white" : "bg-gray-100 text-black"}`}>
-
+    <div className="flex min-h-screen font-mono text-white bg-black overflow-hidden relative">
       <AdminSidebar session={session} open={collapsed} setOpen={setCollapsed} />
 
       {/* MAIN LAYOUT */}
-      <div className="flex-1 p-10 overflow-y-auto">
+      <div className="flex-1 p-6 md:p-10 overflow-y-auto relative z-0">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-amber-900/20 via-black to-black -z-10" />
 
         {/* HEADER */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex justify-between items-center mb-10"
+          className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10 border-b border-gray-900 pb-5"
         >
-          <h1 className="text-4xl font-extrabold bg-gradient-to-r 
-            from-purple-400 to-blue-400 bg-clip-text text-transparent">
-            Problem Management
-          </h1>
+          <div className="flex items-center gap-3">
+            <BulbOutlined className="text-3xl text-[var(--primary)]" />
+            <h1 className="text-3xl font-black uppercase tracking-wider text-white">
+              Problem Management
+            </h1>
+          </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 w-full md:w-auto">
             {/* SEARCH */}
             <Input
               placeholder="Search problems..."
-              prefix={<SearchOutlined />}
+              prefix={<SearchOutlined className="text-[var(--primary)]" />}
               onChange={(e) => setSearchText(e.target.value)}
-              className={`w-64 rounded-xl px-3 py-2 shadow-lg 
-                ${darkMode ? "bg-[#121212] border-gray-700 text-white" 
-                           : "bg-white border-gray-300"}`}
+              className="!bg-[#0c0c10] !text-white !border-gray-900 hover:!border-[var(--primary)] focus:!border-[var(--primary)] !rounded-xl text-xs py-2 px-4 shadow-inner font-mono w-full md:w-64"
             />
-
-            {/* THEME TOGGLE */}
-            <Tooltip title="Toggle Theme">
-              <Switch
-                checkedChildren={<BulbFilled />}
-                unCheckedChildren={<BulbOutlined />}
-                checked={darkMode}
-                onChange={() => setDarkMode(!darkMode)}
-                className="scale-125"
-              />
-            </Tooltip>
           </div>
         </motion.div>
 
-        {/* UPLOAD CARD */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <Card
-            className="max-w-2xl w-full rounded-3xl backdrop-blur-2xl shadow-2xl border 
-              border-white/10"
-            style={{
-              background: darkMode
-                ? "rgba(20,20,20,0.6)"
-                : "rgba(255,255,255,0.7)",
-            }}
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* UPLOAD CARD */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="lg:col-span-1"
           >
-            <h1 className="text-3xl font-bold text-center mb-6">
-              Upload Problem JSON
-            </h1>
+            <div className="relative overflow-hidden rounded-3xl border border-[rgba(250,204,21,0.15)] bg-[#07070a]/90 p-8 shadow-[0_0_50px_rgba(250,204,21,0.03)] h-full flex flex-col justify-center">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(250,204,21,0.03),_transparent_60%)] pointer-events-none" />
+              
+              <h1 className="text-xs font-black text-white uppercase tracking-widest text-center mb-8 flex flex-col items-center gap-2">
+                <UploadOutlined className="text-3xl text-amber-500 mb-2" />
+                Inject JSON Payload
+              </h1>
 
-            <div className="flex flex-col gap-5">
-              <Button
-                onClick={handlePasteJSON}
-                className="flex items-center justify-center gap-2 px-4 py-3
-                  rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 text-white
-                  hover:scale-105 transition-all duration-200"
-              >
-                Paste JSON <RightOutlined />
-              </Button>
-
-              <Upload accept=".json" beforeUpload={handleJSONUpload} showUploadList={false}>
-                <Button
-                  icon={<UploadOutlined />}
-                  className="flex items-center justify-center gap-2 px-4 py-3
-                    rounded-xl bg-gradient-to-r from-gray-800 to-gray-900 text-white
-                    hover:scale-105 transition-all duration-200"
+              <div className="flex flex-col gap-5 relative z-10">
+                <button
+                  onClick={handlePasteJSON}
+                  className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-[var(--primary)] text-black hover:bg-amber-400 font-black uppercase tracking-widest text-[10px] rounded-xl transition-all shadow-md"
                 >
-                  Upload JSON File
-                </Button>
-              </Upload>
+                  Raw JSON Paste <RightOutlined />
+                </button>
 
-              <p className="text-gray-400 text-sm text-center">Supported: .json</p>
+                <Upload accept=".json" beforeUpload={handleJSONUpload} showUploadList={false} className="w-full">
+                  <button
+                    className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-black border border-gray-800 hover:border-[var(--primary)] text-white hover:text-[var(--primary)] font-black uppercase tracking-widest text-[10px] rounded-xl transition-all shadow-inner"
+                  >
+                    Select JSON File
+                  </button>
+                </Upload>
+
+                <p className="text-[10px] font-bold text-gray-600 text-center uppercase tracking-widest mt-2 border-t border-gray-900 pt-4">Supported Format: .json</p>
+              </div>
             </div>
-          </Card>
-        </motion.div>
+          </motion.div>
 
-        {/* TABLE */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          className="mt-10"
-        >
-          <Card
-            className="max-w-4xl w-full rounded-3xl shadow-xl backdrop-blur-xl border 
-              border-white/10"
-            style={{
-              background: darkMode
-                ? "rgba(15,15,15,0.6)"
-                : "rgba(255,255,255,0.7)",
-            }}
+          {/* TABLE */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            className="lg:col-span-2"
           >
-            <h2 className="text-2xl font-bold mb-5 text-center">Demo Problem List</h2>
+            <div className="relative overflow-hidden rounded-3xl border border-gray-900 bg-black p-8 shadow-md h-full">
+              <h2 className="text-xs font-black uppercase tracking-widest text-white mb-6">Local Problem Archive</h2>
 
-            <Table
-              dataSource={filteredData}
-              columns={columns}
-              pagination={{ pageSize: 5 }}
-              className="rounded-xl"
-            />
-          </Card>
-        </motion.div>
+              <Table
+                dataSource={filteredData}
+                columns={columns}
+                pagination={{ pageSize: 5 }}
+                className="text-white"
+                rowClassName={() => "hover:bg-gray-950 transition-colors bg-black"}
+              />
+            </div>
+          </motion.div>
+        </div>
 
-        <ToastContainer theme="dark" />
+        <ToastContainer position="top-right" autoClose={2500} theme="dark" />
       </div>
     </div>
   );

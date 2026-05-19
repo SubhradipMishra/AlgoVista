@@ -47,7 +47,6 @@ export default function RoadmapDetail() {
   const [loading, setLoading] = useState(true);
   const [started, setStarted] = useState(false);
   const [progress, setProgress] = useState({});
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [certificate, setCertificate] = useState(null);
 
   /* fetch roadmap */
@@ -151,183 +150,180 @@ export default function RoadmapDetail() {
     }
   };
 
-  if (loading || sessionLoading)
-    return <Skeleton active paragraph={{ rows: 8 }} />;
+  if (loading || sessionLoading) {
+    return (
+      <div className="min-h-screen bg-black text-white p-10 flex flex-col justify-center items-center font-mono">
+        <div className="w-full max-w-3xl space-y-6">
+          <Skeleton active paragraph={{ rows: 8 }} />
+        </div>
+      </div>
+    );
+  }
 
-  if (!roadmap) return <div className="mt-20 text-center">Failed</div>;
+  if (!roadmap) {
+    return (
+      <div className="min-h-screen bg-black text-white flex flex-col justify-center items-center font-mono">
+        <p className="text-xl text-[var(--primary)]">Roadmap not found</p>
+        <Link to="/roadmaps" className="mt-4 text-sm text-gray-400 hover:text-white underline">
+          Back to Roadmaps
+        </Link>
+      </div>
+    );
+  }
 
   return (
-    <div className="grid-bg min-h-screen bg-black text-white font-mono overflow-hidden flex">
-      {/* SIDEBAR */}
-      <AnimatePresence>
-        {sidebarOpen && (
-          <motion.aside
-            initial={{ x: -260 }}
-            animate={{ x: 0 }}
-            exit={{ x: -260 }}
-            className="fixed z-40 w-64 h-screen !bg-black/90 border-r border-gray-800 p-6 flex flex-col justify-between"
-          >
-            <div>
-              <div className="text-lg tracking-widest font-bold mb-8">
-                DEVTRAIL
-              </div>
+    <div className="min-h-screen bg-black text-gray-200 font-mono relative overflow-hidden pb-20">
+      {/* Decorative ambient backgrounds */}
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[rgba(250,204,21,0.02)] rounded-full blur-[140px] pointer-events-none"></div>
+      <div className="absolute bottom-10 right-1/4 w-[400px] h-[400px] bg-[rgba(250,204,21,0.01)] rounded-full blur-[120px] pointer-events-none"></div>
 
-              <nav className="space-y-4 text-sm">
-                <Link className="block hover:text-gray-300" to="/">
-                  <HomeOutlined /> Home
-                </Link>
-                <Link className="block hover:text-gray-300" to="/roadmaps">
-                  <BookOutlined /> Roadmaps
-                </Link>
-                <Link className="block hover:text-gray-300" to="/problems">
-                  <CodeOutlined /> Problems
-                </Link>
-              </nav>
-            </div>
-
-            <div className="border border-gray-800 rounded-xl p-4 text-center">
-              <Avatar size={52} icon={<UserOutlined />} />
-              <p className="mt-2 text-sm">
-                {session?.fullname || session?.name}
-              </p>
-              <p className="text-xs text-gray-500 truncate">
-                {session?.email}
-              </p>
-            </div>
-          </motion.aside>
-        )}
-      </AnimatePresence>
-
-      {/* TOGGLE */}
-      <Button
-        type="text"
-        icon={sidebarOpen ? <CloseOutlined /> : <MenuOutlined />}
-        onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="fixed top-4 left-4 z-50 !text-white hover:!text-gray-300"
-      />
-
-      {/* CONTENT */}
-      <main
-        className={`flex-1 px-10 py-10 transition-all ${
-          sidebarOpen ? "ml-64" : ""
-        }`}
-      >
+      {/* Main Container */}
+      <main className="max-w-4xl mx-auto px-6 pt-28 relative z-10">
+        
+        {/* Navigation */}
         <Link
           to="/roadmaps"
-          className="text-gray-400 hover:text-white inline-block mb-6"
+          className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-[var(--primary)] transition-colors mb-8 group"
         >
-          <ArrowLeftOutlined /> Back
+          <ArrowLeftOutlined className="group-hover:-translate-x-1 transition-transform" />
+          <span>Back to Roadmaps</span>
         </Link>
 
-        <Title className="!text-white !mb-2 !font-mono">
-          {roadmap.moduleTitle}
-        </Title>
+        {/* Hero Section */}
+        <div className="rounded-3xl border border-[rgba(250,204,21,0.15)] bg-[#07070a]/90 p-8 md:p-10 mb-10 shadow-[0_0_50px_rgba(250,204,21,0.03)] relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-[rgba(250,204,21,0.03)] rounded-full blur-xl pointer-events-none"></div>
+          
+          <div className="inline-block px-3 py-1 rounded-full text-[10px] uppercase tracking-[0.2em] bg-[rgba(250,204,21,0.08)] border border-[rgba(250,204,21,0.25)] text-[var(--primary)] mb-4">
+            Curriculum Roadmap
+          </div>
+          
+          <h2 className="text-3xl md:text-4xl font-black text-[var(--primary)] mb-4 leading-tight">
+            {roadmap.moduleTitle}
+          </h2>
 
-        <Paragraph className="!text-gray-400 !font-mono max-w-3xl">
-          {roadmap.description}
-        </Paragraph>
+          <p className="text-sm md:text-base leading-relaxed text-gray-400 max-w-3xl mb-6">
+            {roadmap.description}
+          </p>
 
-        {!started ? (
-          <Button
-            icon={<PlayCircleOutlined />}
-            onClick={() => setStarted(true)}
-            className="!bg-transparent !border !border-white !text-white hover:!bg-white hover:!text-black transition-all"
-          >
-            Start Learning
-          </Button>
-        ) : (
-          <>
-            <div className="max-w-xl mt-6">
-              <Progress
-                percent={totalProgress}
-                strokeColor="#7500e2aa"
-                trailColor="#1f2937"
-                className="!font-mono"
-              />
-            </div>
-
-            {totalProgress === 100 && (
-              <div className="mt-4 flex gap-3">
-                {!certificate ? (
-                  <Button
-                    onClick={generateCertificate}
-                    className="!bg-white !text-black !border-none"
-                  >
-                    Generate Certificate
-                  </Button>
-                ) : (
-                  <>
-                    <Button
-                      onClick={() =>
-                        downloadFile(certificate.fileUrl, "certificate.pdf")
-                      }
-                      className="!bg-purple-900 !text-black !mb-5"
-                    >
-                      Download
-                    </Button>
-                    <Button
-                      onClick={() =>
-                        window.open(certificate.fileUrl, "_blank")
-                      }
-                      className="!bg-transparent !border !border-white !text-white"
-                    >
-                      View
-                    </Button>
-                  </>
-                )}
+          {!started ? (
+            <button
+              onClick={() => setStarted(true)}
+              className="btn-yellow text-sm font-semibold py-3 px-8 flex items-center gap-2"
+            >
+              <PlayCircleOutlined /> Start Learning
+            </button>
+          ) : (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between text-xs text-gray-400 tracking-wider uppercase font-semibold">
+                <span>Overall Progress</span>
+                <span className="text-[var(--primary)]">{totalProgress}%</span>
               </div>
-            )}
+              
+              <div className="w-full h-2.5 rounded-full bg-gray-900 border border-gray-800 overflow-hidden p-0.5">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-amber-500 to-[var(--primary)] transition-all duration-500 shadow-[0_0_10px_rgba(250,204,21,0.5)]"
+                  style={{ width: `${totalProgress}%` }}
+                ></div>
+              </div>
 
+              {totalProgress === 100 && (
+                <div className="mt-6 p-6 rounded-2xl border border-green-500/30 bg-green-950/10 flex flex-col md:flex-row items-center justify-between gap-4">
+                  <div>
+                    <h4 className="text-sm font-bold text-green-400">Roadmap 100% Completed!</h4>
+                    <p className="text-xs text-gray-400 mt-1">You are now eligible to claim your verified certificate of mastery.</p>
+                  </div>
+                  <div className="flex items-center gap-3 w-full md:w-auto">
+                    {!certificate ? (
+                      <button
+                        onClick={generateCertificate}
+                        className="btn-yellow text-xs font-bold py-2.5 px-6 whitespace-nowrap"
+                      >
+                        Claim Certificate
+                      </button>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => downloadFile(certificate.fileUrl, "certificate.pdf")}
+                          className="btn-yellow text-xs font-bold py-2.5 px-6"
+                        >
+                          Download
+                        </button>
+                        <button
+                          onClick={() => window.open(certificate.fileUrl, "_blank")}
+                          className="btn-outline text-xs font-bold py-2.5 px-6"
+                        >
+                          View
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Modules Section */}
+        {started && (
+          <div className="space-y-6">
+            <h3 className="text-lg font-bold uppercase tracking-wider text-gray-400 mb-4">
+              Syllabus & Modules
+            </h3>
+            
             <Collapse
               bordered={false}
-              className="mt-8 !bg-transparent !font-mono"
+              className="!bg-transparent space-y-4"
             >
               {roadmap.subtopics.map((mod, i) => (
                 <Panel
                   key={mod._id}
                   header={
-                    <div className="flex justify-between items-center w-full">
-                      <span className="text-purple-600">{`${i + 1}. ${mod.name}`}</span>
-                      <span className="text-xs text-gray-400">
+                    <div className="flex justify-between items-center w-full pr-4">
+                      <span className="text-sm font-bold text-gray-100 group-hover:text-[var(--primary)] transition-colors">
+                        {`${i + 1}. ${mod.name}`}
+                      </span>
+                      <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-black/60 border border-[rgba(250,204,21,0.2)] text-[var(--primary)]">
                         {moduleProgress(mod)}%
                       </span>
                     </div>
                   }
-                  className="!bg-gray-900 !border !border-purple-800 mb-3"
+                  className="!bg-[#0a0a0d]/90 !border !border-[rgba(250,204,21,0.1)] hover:!border-[rgba(250,204,21,0.3)] rounded-2xl overflow-hidden transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.2)]"
                 >
-                  {mod.resources.map((res) => (
-                    <div
-                      key={res._id}
-                      className="flex justify-between items-center py-2 border-b border-gray-800 last:border-none"
-                    >
-                      <Checkbox
-                        checked={progress[mod.name]?.has(res.title)}
-                        onChange={(e) =>
-                          handleCheck(
-                            mod.name,
-                            res.title,
-                            e.target.checked
-                          )
-                        }
-                        className="!text-white"
+                  <div className="space-y-1.5 pt-2">
+                    {mod.resources.map((res) => (
+                      <div
+                        key={res._id}
+                        className="flex justify-between items-center py-3.5 px-4 rounded-xl hover:bg-white/[0.02] border-b border-gray-900 last:border-none transition-colors"
                       >
-                        {res.title}
-                      </Checkbox>
+                        <Checkbox
+                          checked={progress[mod.name]?.has(res.title)}
+                          onChange={(e) =>
+                            handleCheck(
+                              mod.name,
+                              res.title,
+                              e.target.checked
+                            )
+                          }
+                          className="!text-gray-300 font-semibold text-xs tracking-wide"
+                        >
+                          {res.title}
+                        </Checkbox>
 
-                      <a
-                        href={res.link}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-gray-400 hover:text-white text-sm"
-                      >
-                        Read
-                      </a>
-                    </div>
-                  ))}
+                        <a
+                          href={res.link}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-xs font-bold text-amber-400/80 hover:text-[var(--primary)] underline transition-colors"
+                        >
+                          Read Material
+                        </a>
+                      </div>
+                    ))}
+                  </div>
                 </Panel>
               ))}
             </Collapse>
-          </>
+          </div>
         )}
       </main>
     </div>

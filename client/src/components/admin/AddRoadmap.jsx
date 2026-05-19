@@ -212,44 +212,50 @@ const AddRoadmap = () => {
       <AdminSidebar session={session} open={open} setOpen={setOpen} selectedKey="2" menuItems={menuItems} />
 
       {/* Main Content */}
-      <div className="flex-1 p-6 md:p-10 overflow-y-auto">
-        <div className="flex items-center justify-between mb-10">
-          <h1 className="text-3xl font-bold">
-            {editingRoadmap ? "Edit Roadmap" : "Add New Roadmap"}
-          </h1>
-          <button onClick={() => setOpen(true)} className="md:hidden text-white text-2xl">
+      <div className="flex-1 p-6 md:p-10 overflow-y-auto relative z-0">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-amber-900/20 via-black to-black -z-10" />
+
+        <div className="flex items-center justify-between mb-10 border-b border-gray-900 pb-5">
+          <div className="flex items-center gap-3">
+            <PlusCircleOutlined className="text-3xl text-[var(--primary)]" />
+            <h1 className="text-3xl font-black uppercase tracking-wider text-white">
+              {editingRoadmap ? "Edit Roadmap" : "Add New Roadmap"}
+            </h1>
+          </div>
+          <button onClick={() => setOpen(true)} className="md:hidden text-white text-2xl hover:text-[var(--primary)] transition-colors">
             <MenuOutlined />
           </button>
         </div>
 
         {/* Form */}
-        <div className="bg-gray-900 border border-gray-700 rounded-xl p-6 mb-10">
-          <Form layout="vertical" form={form} onFinish={handleSubmit}>
-            <Form.Item label="Module Title" name="moduleTitle" rules={[{ required: true }]}>
-              <Input placeholder="Enter module title" className="bg-black text-white" />
+        <div className="relative overflow-hidden rounded-3xl border border-[rgba(250,204,21,0.15)] bg-[#07070a]/90 p-8 shadow-[0_0_50px_rgba(250,204,21,0.03)] mb-10">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(250,204,21,0.03),_transparent_60%)] pointer-events-none" />
+          <Form layout="vertical" form={form} onFinish={handleSubmit} className="relative z-10">
+            <Form.Item label={<span className="text-[10px] font-black uppercase tracking-widest text-gray-500">Module Title</span>} name="moduleTitle" rules={[{ required: true }]}>
+              <Input placeholder="Enter module title" className="!bg-[#0c0c10] !text-white !border-gray-900 hover:!border-[var(--primary)] focus:!border-[var(--primary)] !rounded-xl text-xs py-2 px-4 shadow-inner font-mono" />
             </Form.Item>
 
-            <Form.Item label="Order" name="order" rules={[{ required: true }]}>
-              <Input type="number" placeholder="Enter order" className="bg-black text-white" />
+            <Form.Item label={<span className="text-[10px] font-black uppercase tracking-widest text-gray-500">Order</span>} name="order" rules={[{ required: true }]}>
+              <Input type="number" placeholder="Enter order" className="!bg-[#0c0c10] !text-white !border-gray-900 hover:!border-[var(--primary)] focus:!border-[var(--primary)] !rounded-xl text-xs py-2 px-4 shadow-inner font-mono" />
             </Form.Item>
 
-            <Form.Item label="Description" name="description" rules={[{ required: true }]}>
-              <TextArea rows={4} placeholder="Enter roadmap description" className="bg-black text-white" />
+            <Form.Item label={<span className="text-[10px] font-black uppercase tracking-widest text-gray-500">Description</span>} name="description" rules={[{ required: true }]}>
+              <TextArea rows={4} placeholder="Enter roadmap description" className="!bg-[#0c0c10] !text-white !border-gray-900 hover:!border-[var(--primary)] focus:!border-[var(--primary)] !rounded-xl text-xs py-2 px-4 shadow-inner font-mono" />
             </Form.Item>
 
-            <Form.Item label="Difficulty" name="difficulty" rules={[{ required: true }]}>
-              <Select placeholder="Select difficulty" className="bg-black text-white">
+            <Form.Item label={<span className="text-[10px] font-black uppercase tracking-widest text-gray-500">Difficulty</span>} name="difficulty" rules={[{ required: true }]}>
+              <Select placeholder="Select difficulty" className="!bg-[#0c0c10] text-xs font-mono">
                 <Option value="Beginner">Beginner</Option>
                 <Option value="Intermediate">Intermediate</Option>
                 <Option value="Advanced">Advanced</Option>
               </Select>
             </Form.Item>
 
-            <Form.Item label="Tags" name="tags">
+            <Form.Item label={<span className="text-[10px] font-black uppercase tracking-widest text-gray-500">Tags</span>} name="tags">
               {tagsLoading ? (
                 <Spin tip="Loading tags..." />
               ) : (
-                <Select mode="multiple" placeholder="Select or add tags" allowClear className="bg-black text-white">
+                <Select mode="multiple" placeholder="Select or add tags" allowClear className="!bg-[#0c0c10] text-xs font-mono">
                   {tags.map((tag) => (
                     <Option key={tag._id || tag.title} value={tag.title}>{tag.title}</Option>
                   ))}
@@ -259,54 +265,67 @@ const AddRoadmap = () => {
 
             <Form.List name="subtopics">
               {(fields, { add, remove }) => (
-                <>
-                  <h3 className="text-md font-semibold mb-3">Subtopics</h3>
-                  {fields.map(({ key, name, ...restField }) => (
-                    <Card key={key} className="mb-4 bg-black border border-gray-700">
-                      <Space direction="vertical" className="w-full">
-                        <Form.Item {...restField} name={[name, "name"]} label="Subtopic Name" rules={[{ required: true }]}>
-                          <Input placeholder="Enter subtopic name" className="bg-black text-white" />
-                        </Form.Item>
+                <div className="mt-8 border-t border-gray-900 pt-6">
+                  <h3 className="text-xs font-black uppercase tracking-widest text-white mb-6 flex items-center gap-2">
+                    <DashboardOutlined className="text-[var(--primary)]" /> Modules Structure
+                  </h3>
+                  <div className="space-y-6">
+                    {fields.map(({ key, name, ...restField }) => (
+                      <div key={key} className="bg-black border border-gray-900 p-6 rounded-2xl relative overflow-hidden">
+                        <Space direction="vertical" className="w-full">
+                          <Form.Item {...restField} name={[name, "name"]} label={<span className="text-[10px] font-black uppercase tracking-widest text-gray-500">Subtopic Name</span>} rules={[{ required: true }]}>
+                            <Input placeholder="Enter subtopic name" className="!bg-[#0c0c10] !text-white !border-gray-900 hover:!border-[var(--primary)] focus:!border-[var(--primary)] !rounded-xl text-xs py-2 px-4 shadow-inner font-mono" />
+                          </Form.Item>
 
-                        <Form.List name={[name, "resources"]}>
-                          {(resFields, { add: addRes, remove: removeRes }) => (
-                            <>
-                              {resFields.map(({ key: rKey, name: rName, ...rRest }) => (
-                                <Space key={rKey} direction="horizontal" className="w-full">
-                                  <Form.Item {...rRest} name={[rName, "title"]} label="Resource Title" rules={[{ required: true }]} className="flex-1">
-                                    <Input placeholder="Enter resource title" className="bg-black text-white" />
-                                  </Form.Item>
-                                  <Form.Item {...rRest} name={[rName, "link"]} label="Resource Link" rules={[{ required: true }]} className="flex-1">
-                                    <Input placeholder="Enter resource link" className="bg-black text-white" />
-                                  </Form.Item>
-                                  <Button danger onClick={() => removeRes(rName)}>Delete</Button>
-                                </Space>
-                              ))}
-                              <Button type="dashed" onClick={() => addRes()}>Add Resource</Button>
-                            </>
-                          )}
-                        </Form.List>
-                        <Button danger onClick={() => remove(name)}>Remove Subtopic</Button>
-                      </Space>
-                    </Card>
-                  ))}
-                  <Button type="dashed" onClick={() => add()}>Add Subtopic</Button>
-                </>
+                          <Form.List name={[name, "resources"]}>
+                            {(resFields, { add: addRes, remove: removeRes }) => (
+                              <div className="mt-4 p-4 bg-[#07070a] border border-gray-900 rounded-xl space-y-4">
+                                <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Attached Resources</h4>
+                                {resFields.map(({ key: rKey, name: rName, ...rRest }) => (
+                                  <div key={rKey} className="flex flex-col md:flex-row gap-4 items-end">
+                                    <Form.Item {...rRest} name={[rName, "title"]} label={<span className="text-[9px] uppercase font-bold text-gray-500">Resource Title</span>} rules={[{ required: true }]} className="flex-1 mb-0 w-full">
+                                      <Input placeholder="Enter title" className="!bg-[#0c0c10] !text-white !border-gray-900 hover:!border-[var(--primary)] focus:!border-[var(--primary)] !rounded-xl text-xs py-1.5 px-3 font-mono" />
+                                    </Form.Item>
+                                    <Form.Item {...rRest} name={[rName, "link"]} label={<span className="text-[9px] uppercase font-bold text-gray-500">Resource Link</span>} rules={[{ required: true }]} className="flex-1 mb-0 w-full">
+                                      <Input placeholder="Enter link" className="!bg-[#0c0c10] !text-white !border-gray-900 hover:!border-[var(--primary)] focus:!border-[var(--primary)] !rounded-xl text-xs py-1.5 px-3 font-mono" />
+                                    </Form.Item>
+                                    <button type="button" onClick={() => removeRes(rName)} className="h-[34px] px-4 bg-red-950 text-red-500 hover:bg-red-900 hover:text-white rounded-xl text-[9px] font-black uppercase tracking-widest transition-colors">
+                                      Del
+                                    </button>
+                                  </div>
+                                ))}
+                                <button type="button" onClick={() => addRes()} className="mt-2 text-[10px] font-black uppercase tracking-widest text-amber-500 hover:text-amber-400">
+                                  + Add Resource
+                                </button>
+                              </div>
+                            )}
+                          </Form.List>
+                          <button type="button" onClick={() => remove(name)} className="mt-4 w-full py-2 bg-red-950/40 border border-red-900/50 text-red-400 hover:bg-red-900 hover:text-white font-black uppercase tracking-widest text-[9px] rounded-xl transition-colors">
+                            Remove Subtopic Module
+                          </button>
+                        </Space>
+                      </div>
+                    ))}
+                  </div>
+                  <button type="button" onClick={() => add()} className="mt-6 w-full py-3 bg-black border border-[rgba(250,204,21,0.3)] hover:border-[var(--primary)] text-[var(--primary)] hover:text-black hover:bg-[var(--primary)] font-black uppercase tracking-widest text-[10px] rounded-xl transition-all">
+                    + Add New Subtopic
+                  </button>
+                </div>
               )}
             </Form.List>
 
-            <Form.Item className="mt-6 flex gap-4">
-              <Button type="primary" htmlType="submit" loading={loading}>
-                {editingRoadmap ? "Update Roadmap" : "Add Roadmap"}
-              </Button>
-              {editingRoadmap && <Button onClick={() => { setEditingRoadmap(null); form.resetFields(); }}>Cancel</Button>}
+            <Form.Item className="mt-10 flex gap-4">
+              <button type="submit" disabled={loading} className="px-8 py-3 bg-[var(--primary)] text-black hover:bg-amber-400 font-black uppercase tracking-widest text-[10px] rounded-xl transition-all shadow-md">
+                {editingRoadmap ? "Update Roadmap" : "Commit Roadmap To Catalog"}
+              </button>
+              {editingRoadmap && <button type="button" onClick={() => { setEditingRoadmap(null); form.resetFields(); }} className="ml-4 px-8 py-3 bg-gray-900 text-white hover:bg-gray-800 font-black uppercase tracking-widest text-[10px] rounded-xl transition-all shadow-md">Cancel</button>}
             </Form.Item>
           </Form>
         </div>
 
         {/* Table */}
-        <div className="bg-gray-900 border border-gray-700 rounded-xl p-6">
-          <h2 className="text-white font-semibold text-lg mb-4">Your Created Roadmaps</h2>
+        <div className="relative overflow-hidden rounded-3xl border border-gray-900 bg-black p-8 shadow-md">
+          <h2 className="text-xs font-black uppercase tracking-widest text-white mb-6">Your Created Roadmaps Archive</h2>
           <Table
             dataSource={roadmaps}
             columns={columns}
@@ -314,6 +333,7 @@ const AddRoadmap = () => {
             loading={tableLoading}
             pagination={false}
             className="text-white"
+            rowClassName={() => "hover:bg-gray-950 transition-colors bg-black"}
           />
           <div className="flex justify-center mt-6">
             <Pagination

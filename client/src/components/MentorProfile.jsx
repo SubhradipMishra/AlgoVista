@@ -98,7 +98,7 @@ const MentorProfile = () => {
       console.log(data);
 
       const options = {
-        key: "rzp_test_RpG7PsiR24EZK5",
+        key: "rzp_test_SrKIlIS4UjIGK5",
         amount: data.order.amount,
         currency: "INR",
         name: "AlgoVista",
@@ -140,249 +140,263 @@ const MentorProfile = () => {
   const hasAnyActivePlan = activeMentorships.length > 0;
 
   return (
-    <div className="min-h-screen bg-black text-white font-mono px-6 py-10">
-      {/* ================= HEADER ================= */}
-      <div className="max-w-6xl mx-auto bg-gray-900 border border-gray-800 rounded-2xl p-8">
-        <div className="flex flex-col md:flex-row gap-8">
-          <Avatar
-            size={96}
-            src={mentor.profileImage}
-            className="border border-gray-700"
-          />
+    <div className="min-h-screen bg-black text-gray-200 font-mono relative overflow-hidden pb-20">
+      {/* Decorative ambient backgrounds */}
+      <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[rgba(250,204,21,0.02)] rounded-full blur-[140px] pointer-events-none"></div>
+      <div className="absolute bottom-10 left-1/4 w-[400px] h-[400px] bg-[rgba(250,204,21,0.01)] rounded-full blur-[120px] pointer-events-none"></div>
 
-          <div className="flex-1">
-            <div className="flex justify-between items-start">
-              <div>
-                <h1 className="text-3xl font-bold">{mentor.fullname}</h1>
-                <p className="text-gray-400 mt-1">Mentor</p>
-                <p className="text-gray-400 mt-3 max-w-xl">
-                  {mentor.bio || mentor.description}
-                </p>
+      {/* Main Container */}
+      <main className="max-w-6xl mx-auto px-6 pt-28 relative z-10 font-mono">
+        
+        {/* ================= HEADER ================= */}
+        <div className="rounded-3xl border border-[rgba(250,204,21,0.15)] bg-[#07070a]/90 p-8 md:p-10 mb-10 shadow-[0_0_50px_rgba(250,204,21,0.03)] relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-[rgba(250,204,21,0.03)] rounded-full blur-xl pointer-events-none"></div>
+
+          <div className="flex flex-col md:flex-row gap-8 items-start">
+            <div className="relative">
+              <Avatar
+                size={96}
+                src={mentor.profileImage}
+                className="border border-[rgba(250,204,21,0.2)] bg-black shadow-lg"
+              />
+              {mentor.isAvailable && (
+                <span className="absolute bottom-0 right-1 w-4 h-4 rounded-full bg-green-400 border-2 border-black animate-pulse" />
+              )}
+            </div>
+
+            <div className="flex-1 w-full">
+              <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+                <div>
+                  <h1 className="text-3xl font-black text-white">{mentor.fullname}</h1>
+                  <div className="flex items-center gap-3 mt-2">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[var(--primary)] bg-[rgba(250,204,21,0.08)] border border-[rgba(250,204,21,0.2)] px-2.5 py-0.5 rounded-full">
+                      Elite Mentor
+                    </span>
+                    <span className="text-gray-500 text-sm">| Professional Guidance</span>
+                  </div>
+                  <p className="text-gray-400 mt-4 text-sm md:text-base leading-relaxed max-w-2xl">
+                    {mentor.bio || mentor.description}
+                  </p>
+                </div>
+
+                {/* Actions */}
+                <div className="flex items-center gap-3">
+                  <button className="btn-outline text-xs py-2 px-5 font-bold transition-all duration-300">
+                    Follow
+                  </button>
+
+                  <Dropdown
+                    menu={{ items: menuItems }}
+                    placement="bottomRight"
+                    trigger={["click"]}
+                  >
+                    <Button
+                      icon={<MoreOutlined />}
+                      className="!bg-black/60 !border-[rgba(250,204,21,0.25)] !text-gray-300 hover:!text-[var(--primary)] hover:!border-[var(--primary)] h-9 w-9 rounded-xl flex items-center justify-center"
+                    />
+                  </Dropdown>
+                </div>
               </div>
 
-              {/* Actions */}
-              <div className="flex items-center gap-3">
-                <Button className="border border-gray-600 text-white hover:bg-white hover:text-black">
-                  Follow
-                </Button>
+              {/* Meta */}
+              <div className="flex flex-wrap gap-6 mt-6 text-xs md:text-sm text-gray-300 font-semibold">
+                <span className="flex items-center gap-2">
+                  <StarFilled className="text-[var(--primary)] text-sm" />
+                  <span className="text-white">{mentor.averageRating || 4.5} Rating</span>
+                </span>
 
-                <Dropdown
-                  menu={{ items: menuItems }}
-                  placement="bottomRight"
-                  trigger={["click"]}
-                >
-                  <Button
-                    icon={<MoreOutlined />}
-                    className="border border-gray-700 text-gray-300 hover:text-white"
-                  />
-                </Dropdown>
+                <span className="text-gray-400">
+                  <span className="text-white">{mentor.noOfMentees}</span>/{mentor.maximumNoOfMentees} Mentees Active
+                </span>
+
+                <span className={mentor.isAvailable ? "text-green-400" : "text-red-400"}>
+                  {mentor.isAvailable ? "● Available to Accept" : "● Fully Booked"}
+                </span>
               </div>
-            </div>
 
-            {/* Meta */}
-            <div className="flex flex-wrap gap-6 mt-6 text-sm text-gray-300">
-              <span className="flex items-center gap-2">
-                <StarFilled className="text-yellow-400" />
-                {mentor.averageRating || 4.5}
-              </span>
-
-              <span>
-                {mentor.noOfMentees}/{mentor.maximumNoOfMentees} mentees
-              </span>
-
-              <span
-                className={
-                  mentor.isAvailable ? "text-green-400" : "text-red-400"
-                }
-              >
-                {mentor.isAvailable ? "Available" : "Busy"}
-              </span>
-            </div>
-
-            {/* Skills */}
-            <div className="flex flex-wrap gap-2 mt-5">
-              {mentor.specializations.map((s, i) => (
-                <Tag
-                  key={i}
-                  className="bg-black border-gray-700 text-gray-200"
-                >
-                  {s}
-                </Tag>
-              ))}
-            </div>
-
-            {/* Social */}
-            <div className="flex gap-4 mt-5 text-lg text-gray-400">
-              {mentor.socialLinks?.linkedin && (
-                <a href={mentor.socialLinks.linkedin} target="_blank">
-                  <LinkedinOutlined />
-                </a>
-              )}
-              {mentor.socialLinks?.github && (
-                <a href={mentor.socialLinks.github} target="_blank">
-                  <GithubOutlined />
-                </a>
-              )}
-              {mentor.socialLinks?.website && (
-                <a href={mentor.socialLinks.website} target="_blank">
-                  <GlobalOutlined />
-                </a>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ================= TABS ================= */}
-      <div className="max-w-6xl mx-auto mt-10 border-b border-gray-800 flex gap-8 text-gray-400">
-        {["profile", "offerings", "reviews"].map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`pb-3 capitalize transition ${
-              activeTab === tab
-                ? "border-b-2 border-white text-white"
-                : "hover:text-white"
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-
-      {/* ================= PROFILE ================= */}
-      {activeTab === "profile" && (
-        <div className="max-w-6xl mx-auto mt-8 grid md:grid-cols-2 gap-6">
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <h3 className="font-semibold mb-2">Experience</h3>
-            <p className="text-gray-400">{mentor.experience}</p>
-          </div>
-
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <h3 className="font-semibold mb-2">Education</h3>
-            <p className="text-gray-400">{mentor.education}</p>
-          </div>
-        </div>
-      )}
-
-      {/* ================= OFFERINGS ================= */}
-      {activeTab === "offerings" && (
-        <div className="max-w-6xl mx-auto mt-12 grid md:grid-cols-3 gap-8">
-          {mentor.plans.map((plan, i) => {
-            const maxPrice = Math.max(...mentor.plans.map((p) => p.price));
-
-            // ⭐ RECOMMENDED LOGIC
-            const isPro = plan.title?.toLowerCase() === "pro";
-            const isPopular = isPro || plan.price === maxPrice;
-
-            // 🔹 Convert comma-separated text into points
-            const canDo = Array.isArray(plan.whatCanDo)
-              ? plan.whatCanDo.flatMap((item) => item.split(","))
-              : [];
-
-            const cannotDo = Array.isArray(plan.whatCannotDo)
-              ? plan.whatCannotDo.flatMap((item) => item.split(","))
-              : [];
-
-            const activePlan = activeMentorships.find(
-              (m) => m.planId === plan._id
-            );
-
-            const isActivePlan = !!activePlan;
-            const shouldDisable = hasAnyActivePlan && !isActivePlan;
-
-            return (
-              <div
-                key={plan._id || i}
-                className={`relative rounded-2xl p-7 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl
-            ${
-              isPopular
-                ? "border border-white bg-gradient-to-b from-gray-800 to-black shadow-[0_0_40px_rgba(255,255,255,0.15)]"
-                : "border border-gray-800 bg-gray-900"
-            }`}
-              >
-                {/* ⭐ BADGES */}
-                {isPopular && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white text-black text-xs font-bold px-4 py-1 rounded-full tracking-wide">
-                    MOST POPULAR
+              {/* Skills */}
+              <div className="flex flex-wrap gap-1.5 mt-6">
+                {mentor.specializations.map((s, i) => (
+                  <span
+                    key={i}
+                    className="text-[10px] font-bold text-amber-300/80 bg-black/60 border border-[rgba(250,204,21,0.15)] px-3 py-1 rounded-md"
+                  >
+                    {s}
                   </span>
-                )}
-
-                {isPro && (
-                  <span className="absolute top-4 right-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-bold px-3 py-1 rounded-full">
-                    PRO
-                  </span>
-                )}
-
-                {/* HEADER */}
-                <h3 className="text-xl font-bold tracking-wide">
-                  {plan.title}
-                </h3>
-
-                <p className="text-gray-400 text-sm mt-1">
-                  {plan.duration / 30} Month{plan.duration > 30 ? "s" : ""}
-                </p>
-
-                {/* PRICE */}
-                <p className="text-4xl font-extrabold mt-5">
-                  ₹{plan.price}
-                </p>
-
-                <div className="h-px bg-gray-800 my-6" />
-
-                {/* FEATURES */}
-                <ul className="space-y-3 text-sm">
-                  {canDo.map((item, idx) => (
-                    <li
-                      key={`can-${idx}`}
-                      className="flex items-start gap-3 text-gray-200"
-                    >
-                      <span className="text-green-400 mt-[2px]">✔</span>
-                      <span>{item.trim()}</span>
-                    </li>
-                  ))}
-
-                  {cannotDo.map((item, idx) => (
-                    <li
-                      key={`cannot-${idx}`}
-                      className="flex items-start gap-3 text-gray-500"
-                    >
-                      <span className="text-red-400 mt-[2px]">✖</span>
-                      <span>{item.trim()}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* CTA */}
-                <Button
-                  disabled={!isActivePlan}
-                  className={`mt-8 w-full font-semibold tracking-wide ${
-                    isActivePlan
-                      ? isPopular
-                        ? "bg-white text-black hover:bg-gray-200"
-                        : "border border-gray-600 text-white hover:bg-white hover:text-black"
-                      : "bg-gray-800 text-gray-400 cursor-not-allowed"
-                  }`}
-                  onClick={() =>
-                    isActivePlan &&
-                  navigate(`/mentorship/${mentor.mentorId}/${plan._id}`)
-
-                  }
-                >
-                  {isActivePlan ? "Explore" : "Choose Plan"}
-                </Button>
+                ))}
               </div>
-            );
-          })}
-        </div>
-      )}
 
-      {/* ================= REVIEWS ================= */}
-      {activeTab === "reviews" && (
-        <div className="max-w-6xl mx-auto mt-10 bg-gray-900 border border-gray-800 rounded-xl py-20 text-center text-gray-400">
-          Reviews coming soon.
+              {/* Social links */}
+              <div className="flex gap-4 mt-6 text-lg text-gray-400">
+                {mentor.socialLinks?.linkedin && (
+                  <a href={mentor.socialLinks.linkedin} target="_blank" rel="noreferrer" className="hover:text-[var(--primary)] transition-colors">
+                    <LinkedinOutlined />
+                  </a>
+                )}
+                {mentor.socialLinks?.github && (
+                  <a href={mentor.socialLinks.github} target="_blank" rel="noreferrer" className="hover:text-[var(--primary)] transition-colors">
+                    <GithubOutlined />
+                  </a>
+                )}
+                {mentor.socialLinks?.website && (
+                  <a href={mentor.socialLinks.website} target="_blank" rel="noreferrer" className="hover:text-[var(--primary)] transition-colors">
+                    <GlobalOutlined />
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
-      )}
+
+        {/* ================= TABS ================= */}
+        <div className="mt-10 border-b border-gray-900 flex gap-8 text-sm font-bold uppercase tracking-wider text-gray-500 mb-8">
+          {["profile", "offerings", "reviews"].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`pb-3 transition-all relative ${
+                activeTab === tab
+                  ? "text-[var(--primary)]"
+                  : "hover:text-white"
+              }`}
+            >
+              {tab}
+              {activeTab === tab && (
+                <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[var(--primary)]" />
+              )}
+            </button>
+          ))}
+        </div>
+
+        {/* ================= PROFILE ================= */}
+        {activeTab === "profile" && (
+          <div className="grid md:grid-cols-2 gap-6 mt-6">
+            <div className="rounded-3xl border border-[rgba(250,204,21,0.1)] bg-[#07070a]/90 p-6 md:p-8">
+              <h3 className="text-sm uppercase tracking-widest text-[var(--primary)] font-bold mb-4">Experience</h3>
+              <p className="text-gray-300 text-sm md:text-base leading-relaxed whitespace-pre-wrap">{mentor.experience || "Multiple years of building production scale systems."}</p>
+            </div>
+
+            <div className="rounded-3xl border border-[rgba(250,204,21,0.1)] bg-[#07070a]/90 p-6 md:p-8">
+              <h3 className="text-sm uppercase tracking-widest text-[var(--primary)] font-bold mb-4">Education</h3>
+              <p className="text-gray-300 text-sm md:text-base leading-relaxed whitespace-pre-wrap">{mentor.education || "Bachelor of Technology in Computer Science."}</p>
+            </div>
+          </div>
+        )}
+
+        {/* ================= OFFERINGS ================= */}
+        {activeTab === "offerings" && (
+          <div className="grid md:grid-cols-3 gap-6 mt-6">
+            {mentor.plans.map((plan, i) => {
+              const maxPrice = Math.max(...mentor.plans.map((p) => p.price));
+              const isPro = plan.title?.toLowerCase() === "pro";
+              const isPopular = isPro || plan.price === maxPrice;
+
+              const canDo = Array.isArray(plan.whatCanDo)
+                ? plan.whatCanDo.flatMap((item) => item.split(","))
+                : [];
+
+              const cannotDo = Array.isArray(plan.whatCannotDo)
+                ? plan.whatCannotDo.flatMap((item) => item.split(","))
+                : [];
+
+              const activePlan = activeMentorships.find(
+                (m) => m.planId === plan._id
+              );
+
+              const isActivePlan = !!activePlan;
+
+              return (
+                <div
+                  key={plan._id || i}
+                  className={`relative rounded-3xl p-8 transition-all duration-300 flex flex-col justify-between overflow-hidden
+                    ${
+                      isPopular
+                        ? "border-2 border-[var(--primary)] bg-gradient-to-b from-[#0e0e02] to-[#040400] shadow-[0_0_40px_rgba(250,204,21,0.12)]"
+                        : "border border-[rgba(250,204,21,0.12)] bg-[#07070a]/90"
+                    }`}
+                >
+                  {isPopular && (
+                    <span className="absolute top-0 right-1/2 translate-x-1/2 bg-[var(--primary)] text-black text-[10px] font-black tracking-widest px-4 py-1 rounded-b-xl uppercase">
+                      Popular Choice
+                    </span>
+                  )}
+
+                  <div>
+                    {/* Header */}
+                    <div className="flex justify-between items-start mb-6">
+                      <div>
+                        <h3 className="text-lg md:text-xl font-black text-white uppercase tracking-wide">
+                          {plan.title}
+                        </h3>
+                        <p className="text-gray-500 text-xs mt-1">
+                          {plan.duration / 30} Month{plan.duration > 30 ? "s" : ""} Access
+                        </p>
+                      </div>
+                      {isPro && (
+                        <span className="text-[10px] font-black tracking-widest text-[var(--primary)] border border-[rgba(250,204,21,0.3)] bg-[rgba(250,204,21,0.08)] px-2 py-0.5 rounded-full">
+                          PRO
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Price */}
+                    <div className="mb-6">
+                      <span className="text-xs text-gray-500 font-bold font-mono">INR</span>
+                      <span className="text-4xl font-black text-white ml-1.5">₹{plan.price}</span>
+                    </div>
+
+                    <div className="h-px bg-gray-900 mb-6" />
+
+                    {/* Features list */}
+                    <ul className="space-y-3.5 text-xs text-gray-300">
+                      {canDo.map((item, idx) => (
+                        <li key={`can-${idx}`} className="flex items-start gap-2.5">
+                          <span className="text-green-400 font-bold select-none">✓</span>
+                          <span>{item.trim()}</span>
+                        </li>
+                      ))}
+
+                      {cannotDo.map((item, idx) => (
+                        <li key={`cannot-${idx}`} className="flex items-start gap-2.5 text-gray-600">
+                          <span className="text-red-500 font-bold select-none">✕</span>
+                          <span>{item.trim()}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Action CTA */}
+                  <button
+                    onClick={() => {
+                      if (isActivePlan) {
+                        navigate(`/mentorship/${mentor.mentorId}/${plan._id}`);
+                      } else {
+                        handleBuyNow(plan);
+                      }
+                    }}
+                    className={`mt-8 w-full py-3 px-6 rounded-xl font-bold uppercase tracking-widest text-xs transition-all duration-300 ${
+                      isActivePlan
+                        ? "bg-green-500/10 border border-green-500/40 text-green-400 hover:bg-green-500/20 cursor-pointer"
+                        : isPopular
+                        ? "bg-[var(--primary)] text-black hover:bg-amber-400 hover:shadow-[0_0_20px_rgba(250,204,21,0.25)] cursor-pointer"
+                        : "btn-outline cursor-pointer"
+                    }`}
+                  >
+                    {isActivePlan ? "Explore Workspace" : "Choose Plan"}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* ================= REVIEWS ================= */}
+        {activeTab === "reviews" && (
+          <div className="mt-6 rounded-3xl border border-[rgba(250,204,21,0.1)] bg-[#07070a]/90 py-20 text-center text-gray-500 text-sm">
+            Student feedback log is currently generating. Reviews coming soon.
+          </div>
+        )}
+      </main>
     </div>
   );
 };

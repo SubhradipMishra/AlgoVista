@@ -1,9 +1,15 @@
 import express from "express";
 import dotenv from "dotenv";
+// ✅ Load environment variables first
+dotenv.config();
+
 import mongoose from "mongoose";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
+import { createServer } from "http";
+import { Server } from "socket.io";
+import { MentorshipMessageModel } from "./mentorship/features.model";
 
 // ✅ Import all routes
 import UserRouter from "./user/user.routes";
@@ -12,20 +18,85 @@ import TagsRouter from "./tags/tags.routes";
 import ProgressRouter from "./roadmap-progress/roadmap-progress.routes";
 import TopicsRouter from "./topics/topics.routes";
 
-// ✅ Load environment variables
-dotenv.config();
-
 const app = express();
+const server = createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
+    credentials: true,
+  },
+});
 
-// ================================
-// 🌐 Middleware Configuration
-// ================================
+io.on("connection", (socket) => {
+  console.log("🔌 User connected to Socket:", socket.id);
 
-// Enable CORS for frontend
+  socket.on("join_room", (room) => {
+    socket.join(room);
+    console.log(`👤 User joined room: ${room}`);
+  });
+
+  socket.on("send_message", async (data) => {
+    try {
+      const { mentorshipId, senderId, senderRole, text } = data;
+      if (!mentorshipId || !senderId || !senderRole || !text) return;
+
+      const newMessage = new MentorshipMessageModel({
+        mentorshipId,
+        senderId,
+        senderRole,
+        text,
+      });
+      await newMessage.save();
+
+      // Emit back to everyone in the room
+      io.to(mentorshipId).emit("receive_message", newMessage);
+
+      // Simulated real chatting reply from mentor
+      if (senderRole === "user") {
+        setTimeout(async () => {
+          try {
+            const replies = [
+              "Awesome question! Let's schedule a call to deep dive into this.",
+              "Nice progress. Focus on optimizing the database queries first.",
+              "I highly suggest you check out the handbook resource we just shared.",
+              "Looks perfect! Make sure you submit this for our next code review session.",
+              "Let's meet tomorrow to review your resume updates.",
+            ];
+            const randomReply = replies[Math.floor(Math.random() * replies.length)];
+            const mentorMessage = new MentorshipMessageModel({
+              mentorshipId,
+              senderId: "mentor_sim",
+              senderRole: "mentor",
+              text: randomReply,
+            });
+            await mentorMessage.save();
+            io.to(mentorshipId).emit("receive_message", mentorMessage);
+          } catch (e) {
+            console.error("Simulated reply error:", e);
+          }
+        }, 1500);
+      }
+    } catch (err) {
+      console.error("Socket message error:", err);
+    }
+  });
+
+  socket.on("delete_message", ({ room, messageId }) => {
+    io.to(room).emit("message_deleted", { messageId });
+  });
+
+  socket.on("disconnect", () => {
+    console.log("🔌 User disconnected from Socket:", socket.id);
+  });
+});
+
+// ==========================================
+// ⚙️ Express Middlewares & Configurations
+// ==========================================
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173", // ✅ fallback for safety
-    credentials: true, // ✅ required for cookies/auth headers
+    origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
+    credentials: true,
   })
 );
 
@@ -46,7 +117,7 @@ mongoose
 
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+server.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
 
 // ================================
 

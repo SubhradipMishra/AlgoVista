@@ -106,138 +106,162 @@ export default function Problems() {
   const shown = filteredProblems.slice((page - 1) * pageSize, page * pageSize);
 
   return (
-    <div
-      className={`min-h-screen font-mono transition duration-300 ${
-        viewDark ? "grid-bg text-[var(--text-main)]" : "bg-white text-black"
-      } relative`}
-    >
+    <div className="min-h-screen bg-black text-gray-200 font-mono relative overflow-hidden pb-20">
+      {/* Decorative ambient backgrounds */}
+      <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[rgba(250,204,21,0.02)] rounded-full blur-[140px] pointer-events-none"></div>
+      <div className="absolute bottom-10 left-1/4 w-[400px] h-[400px] bg-[rgba(250,204,21,0.01)] rounded-full blur-[120px] pointer-events-none"></div>
 
-      {/* HEADER */}
-      <div
-        className={`px-6 py-4 flex items-center justify-between sticky top-0 z-50 ${
-          viewDark ? "glass-panel" : "bg-white/70 backdrop-blur-md"
-        }`}
-      >
-        {/* Filters */}
-        <div className="flex items-center gap-4">
-          {/* SEARCH BOX */}
-          <div
-            className={`flex items-center gap-2 px-3 py-2 rounded-xl border shadow-sm ${
-              viewDark
-                ? "bg-[rgba(0,0,0,0.5)] border-[var(--glass-border)]"
-                : "bg-gray-100 border-black/20"
-            }`}
-          >
-            <Search size={15} className="opacity-70" />
-            <Input
-              placeholder="Search problems..."
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              bordered={false}
-              className={`font-mono ${
-                viewDark ? "bg-transparent text-white" : "text-black"
-              }`}
-              style={{ width: 230 }}
-            />
+      {/* Main Container */}
+      <main className="max-w-7xl mx-auto px-6 pt-28 relative z-10 font-mono">
+        
+        {/* Header section */}
+        <div className="mb-10 text-center sm:text-left relative">
+          <div className="flex items-center justify-center sm:justify-start gap-2.5 mb-2 text-xs font-black tracking-widest text-[var(--primary)] uppercase">
+            <span>◈ Test Your Algorithms</span>
           </div>
-
-          <Select value={difficulty} onChange={setDifficulty} className="!w-28 font-mono">
-            <Option value="all">All</Option>
-            <Option value="easy">Easy</Option>
-            <Option value="medium">Medium</Option>
-            <Option value="hard">Hard</Option>
-          </Select>
-
-          <Select value={category} onChange={setCategory} className="!w-36 font-mono">
-            <Option value="all">All Tags</Option>
-            {categories.map((c) => (
-              <Option key={c} value={c === "All" ? "all" : c}>
-                {c}
-              </Option>
-            ))}
-          </Select>
-
-          <Select value={sortBy} onChange={setSortBy} className="!w-36 font-mono">
-            <Option value="latest">Latest</Option>
-            <Option value="most_solved">Most Solved</Option>
-            <Option value="difficulty">Difficulty</Option>
-          </Select>
+          <h1 className="text-3xl md:text-4xl font-black text-white uppercase tracking-wider">
+            Coding Challenges
+          </h1>
+          <p className="text-gray-400 text-sm mt-2 max-w-xl">
+            Solve curated algorithmic challenges and level up your data structures knowledge.
+          </p>
+          <div className="h-px bg-gradient-to-r from-[rgba(250,204,21,0.2)] to-transparent mt-6 w-44 mx-auto sm:mx-0" />
         </div>
 
-        <Tooltip title="Theme Switch">
-          <Switch checked={viewDark} onChange={setViewDark} />
-        </Tooltip>
-      </div>
+        {/* ================= CONTROLS HUD ================= */}
+        <div className="mb-8 p-5 rounded-3xl border border-[rgba(250,204,21,0.15)] bg-[#07070a]/95 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
+            {/* Search Box */}
+            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-gray-900 bg-black/80 w-full md:w-72 focus-within:border-[var(--primary)] transition-all duration-300">
+              <Search size={14} className="text-gray-500" />
+              <Input
+                placeholder="Search problems by name..."
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                bordered={false}
+                className="font-mono text-xs text-white placeholder-gray-600 w-full"
+              />
+            </div>
 
-      {/* PROBLEM LIST */}
-      <div className="max-w-5xl mx-auto mt-8 px-4">
+            {/* Select controls */}
+            <Select 
+              value={difficulty} 
+              onChange={setDifficulty} 
+              className="font-mono text-xs min-w-[110px]"
+              popupClassName="font-mono text-xs"
+            >
+              <Option value="all">Difficulty: All</Option>
+              <Option value="easy">Easy</Option>
+              <Option value="medium">Medium</Option>
+              <Option value="hard">Hard</Option>
+            </Select>
+
+            <Select 
+              value={category} 
+              onChange={setCategory} 
+              className="font-mono text-xs min-w-[130px]"
+              popupClassName="font-mono text-xs"
+            >
+              <Option value="all">Category: All</Option>
+              {categories.map((c) => (
+                <Option key={c} value={c === "All" ? "all" : c}>
+                  {c}
+                </Option>
+              ))}
+            </Select>
+
+            <Select 
+              value={sortBy} 
+              onChange={setSortBy} 
+              className="font-mono text-xs min-w-[130px]"
+              popupClassName="font-mono text-xs"
+            >
+              <Option value="latest">Sort: Latest</Option>
+              <Option value="most_solved">Sort: Most Solved</Option>
+              <Option value="difficulty">Sort: Difficulty</Option>
+            </Select>
+          </div>
+
+          <div className="text-[10px] font-black uppercase tracking-widest text-gray-500">
+            {filteredProblems.length} challenges found
+          </div>
+        </div>
+
+        {/* ================= PROBLEM LIST ================= */}
         {loading ? (
           <div className="grid grid-cols-1 gap-4 py-10 animate-pulse">
             {[1, 2, 3].map((n) => (
               <div
                 key={n}
-                className="h-24 rounded-xl bg-white/10 dark:bg-black/20 border border-white/10"
+                className="h-24 rounded-2xl bg-[#07070a] border border-gray-900"
               ></div>
             ))}
           </div>
         ) : shown.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 gap-5 pb-10">
-              {shown.map((p) => (
-                <div
-                  key={p._id}
-                  className={`group rounded-xl px-6 py-5 transition-all cursor-pointer
-                  ${
-                    viewDark
-                      ? "glass-card hover:border-[var(--primary-yellow)]"
-                      : "bg-[#f4f4f4] border border-black/10 hover:bg-[#eee]"
-                  }
-                  hover:-translate-y-1`}
-                  onClick={() => navigate(`/problems/${p._id}`)}
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h2 className="text-xl font-semibold">{p.title}</h2>
+            <div className="grid grid-cols-1 gap-4 pb-10">
+              {shown.map((p) => {
+                const diffColor = 
+                  p.difficulty === "easy" 
+                    ? "text-green-400 bg-green-950/20 border-green-900/30" 
+                    : p.difficulty === "medium" 
+                    ? "text-amber-400 bg-amber-950/20 border-amber-900/30" 
+                    : "text-red-400 bg-red-950/20 border-red-900/30";
 
-                      <div className="flex gap-2 mt-3">
-                        {p.tags.slice(0, 3).map((t) => (
-                          <span
-                            key={t}
-                            className="px-2 py-1 border text-xs rounded-md opacity-80 border-white/20"
-                          >
-                            {t}
+                return (
+                  <div
+                    key={p._id}
+                    className="group relative rounded-2xl px-6 py-5 bg-[#07070a]/95 border border-gray-900 hover:border-[var(--primary)] hover:shadow-[0_0_30px_rgba(250,204,21,0.06)] hover:-translate-y-0.5 transition-all duration-500 cursor-pointer flex flex-col justify-between"
+                    onClick={() => navigate(`/problems/${p._id}`)}
+                  >
+                    {/* HUD Corner Brackets */}
+                    <div className="absolute top-2 left-2 w-2 h-2 border-t-2 border-l-2 border-[var(--primary)] opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300 pointer-events-none"></div>
+                    <div className="absolute top-2 right-2 w-2 h-2 border-t-2 border-r-2 border-[var(--primary)] opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300 pointer-events-none"></div>
+                    <div className="absolute bottom-2 left-2 w-2 h-2 border-b-2 border-l-2 border-[var(--primary)] opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300 pointer-events-none"></div>
+                    <div className="absolute bottom-2 right-2 w-2 h-2 border-b-2 border-r-2 border-[var(--primary)] opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300 pointer-events-none"></div>
+
+                    <div className="flex items-center justify-between gap-4">
+                      <div>
+                        <h2 className="text-base font-black text-white uppercase tracking-wide group-hover:text-[var(--primary)] transition-colors">
+                          {p.title}
+                        </h2>
+
+                        <div className="flex flex-wrap gap-1.5 mt-3">
+                          {/* Difficulty badge */}
+                          <span className={`text-[9px] font-bold px-2 py-0.5 border rounded uppercase tracking-wider ${diffColor}`}>
+                            {p.difficulty}
                           </span>
-                        ))}
+                          
+                          {p.tags.slice(0, 3).map((t) => (
+                            <span
+                              key={t}
+                              className="text-[9px] font-bold text-gray-500 bg-black border border-gray-900 px-2 py-0.5 rounded uppercase tracking-wider"
+                            >
+                              {t}
+                            </span>
+                          ))}
+                        </div>
                       </div>
+
+                      <Button
+                        type="default"
+                        className="font-mono text-[10px] font-black uppercase tracking-widest bg-[var(--primary)] text-black border-none hover:bg-amber-400 hover:shadow-[0_0_15px_rgba(250,204,21,0.2)] rounded-lg px-4 py-2 flex items-center gap-1.5 transition-all duration-300"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/problems/${p._id}`);
+                        }}
+                      >
+                        Solve
+                        <ArrowRight size={12} className="group-hover:translate-x-0.5 transition" />
+                      </Button>
                     </div>
-
-                    <Button
-                      type="default"
-                      className={`font-mono flex items-center gap-2 transition-all 
-                      ${
-                        viewDark
-                          ? "btn-outline group-hover:btn-yellow"
-                          : "bg-transparent border border-black/40 text-black hover:bg-black/5 rounded-lg px-3 py-2"
-                      }`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/problems/${p._id}`);
-                      }}
-                    >
-                      Solve
-                      <ArrowRight size={16} className="group-hover:translate-x-1 transition" />
-                    </Button>
                   </div>
-
-                  <div className="text-xs opacity-50 mt-3 uppercase">
-                    Difficulty: {p.difficulty}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* PAGINATION */}
-            <div className="flex justify-end pb-8">
+            <div className="flex justify-center md:justify-end pb-8">
               <Pagination
                 current={page}
                 total={filteredProblems.length}
@@ -248,14 +272,14 @@ export default function Problems() {
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
                 showSizeChanger
-                className="font-mono"
+                className="font-mono text-xs uppercase"
               />
             </div>
           </>
         ) : (
-          <div className="text-center py-20 opacity-60">No problems found.</div>
+          <div className="text-center py-20 text-gray-500 text-xs font-bold uppercase tracking-widest">No challenges found.</div>
         )}
-      </div>
+      </main>
     </div>
   );
 }

@@ -16,9 +16,13 @@ const  schema = new Schema({
     type: Date,
     default: Date.now,
   },
+   expiresAt: {
+    type: Date,
+    default: () => new Date(Date.now() + 180 * 24 * 60 * 60 * 1000), // Default to 180 days access
+  },
   status: {
     type: String,
-    enum: ["enrolled", "completed","ongoing"],
+    enum: ["enrolled", "completed", "ongoing", "expired"],
     default: "enrolled",
   },
 	

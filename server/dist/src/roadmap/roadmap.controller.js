@@ -15,7 +15,7 @@ const createRoadmap = async (req, res) => {
         // Inject createdBy from logged-in user
         const roadmap = new roadmap_model_1.default({
             ...req.body,
-            createdBy: req.user._id, // <-- automatically injected
+            createdBy: req.user.id || req.user._id, // <-- automatically injected
         });
         const savedRoadmap = await roadmap.save();
         res.status(201).json({

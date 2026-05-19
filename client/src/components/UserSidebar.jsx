@@ -14,6 +14,7 @@ import {
   UserOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  CrownOutlined,
 } from "@ant-design/icons";
 
 const { Sider } = Layout;
@@ -43,8 +44,9 @@ const SocialIcon = ({ icon, url }) => (
 const menuItems = [
   { key: "1", icon: <DashboardOutlined />, label: "Dashboard", link: "/dashboard/" },
   { key: "2", icon: <TrophyOutlined />, label: "Roadmaps", link: "/roadmaps" },
-  { key: "3", icon: <SettingOutlined />, label: "Settings", link: "/dashboard/settings" },
-  { key: "4", icon: <LogoutOutlined />, label: "Logout", link: "/logout" },
+  { key: "3", icon: <CrownOutlined />, label: "Mentorship", link: "/mentorship" },
+  { key: "4", icon: <SettingOutlined />, label: "Settings", link: "/dashboard/settings" },
+  { key: "5", icon: <LogoutOutlined />, label: "Logout", link: "/logout" },
 ];
 
 const UserSidebar = ({ user, selectedKey, setSelectedKey, navigate }) => {

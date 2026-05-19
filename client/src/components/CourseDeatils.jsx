@@ -101,7 +101,7 @@ const CourseDetails = () => {
       console.log(data);
 
       const options = {
-        key:"rzp_test_RpG7PsiR24EZK5",
+        key: "rzp_test_SrKIlIS4UjIGK5",
         amount:data.amount ,
         currency:"INR",
       name:"AlgoVista",
@@ -184,8 +184,23 @@ const CourseDetails = () => {
   const prerequisites = course.prerequisits || [];
 
   return (
-    <div className="min-h-screen grid-bg text-white font-mono overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 py-12 lg:px-8 lg:py-16">
+    <div className="min-h-screen bg-black text-gray-200 font-mono relative overflow-hidden pb-20">
+      {/* Decorative ambient backgrounds */}
+      <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[rgba(250,204,21,0.02)] rounded-full blur-[140px] pointer-events-none"></div>
+      <div className="absolute bottom-10 left-1/4 w-[400px] h-[400px] bg-[rgba(250,204,21,0.01)] rounded-full blur-[120px] pointer-events-none"></div>
+
+      {/* Main Container */}
+      <div className="max-w-7xl mx-auto px-6 pt-28 relative z-10 font-mono">
+        
+        {/* ================= BACK NAVIGATION ================= */}
+        <div className="mb-8">
+          <button
+            onClick={() => navigate("/courses")}
+            className="flex items-center gap-2 text-xs font-black tracking-widest text-gray-400 hover:text-[var(--primary)] uppercase transition-colors"
+          >
+            <span>← Back to Courses</span>
+          </button>
+        </div>
 
         <div className="grid lg:grid-cols-[2.2fr_1fr] gap-12 items-start">
 
@@ -196,36 +211,36 @@ const CourseDetails = () => {
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="relative rounded-3xl overflow-hidden border border-gray-800/50 bg-[#1a1a1a] shadow-xl"
+              className="relative rounded-3xl overflow-hidden border border-[rgba(250,204,21,0.15)] bg-black shadow-[0_0_50px_rgba(250,204,21,0.03)] group"
             >
               <img
                 src={course.thumbnail}
                 alt={course.title}
-                className="w-full h-[280px] lg:h-[360px] object-cover hover:scale-105 transition-transform duration-500"
+                className="w-full h-[280px] lg:h-[360px] object-cover group-hover:scale-105 transition-transform duration-500"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
 
               {/* Badges */}
               <div className="absolute top-6 left-6 flex flex-wrap gap-2">
-                <span className="px-4 py-2 bg-purple-600/80 text-xs font-bold uppercase tracking-wider rounded-full border border-purple-500/50">
+                <span className="px-4 py-1.5 bg-black/80 text-[10px] font-black uppercase tracking-wider rounded-md border border-[rgba(250,204,21,0.3)] text-[var(--primary)]">
                   {course.difficultyLevel}
                 </span>
                 {course.certificateAvailable && (
-                  <span className="px-4 py-2 bg-green-600/80 text-xs font-bold uppercase tracking-wider rounded-full border border-green-500/50">
-                    Certificate
+                  <span className="px-4 py-1.5 bg-green-950/80 text-[10px] font-black uppercase tracking-wider rounded-md border border-green-900/30 text-green-400">
+                    Certificate Included
                   </span>
                 )}
               </div>
 
               {/* Stats */}
-              <div className="absolute bottom-6 left-6 right-6 flex flex-wrap items-center justify-between gap-4 text-sm">
-                <div className="flex items-center gap-2 bg-black/80 px-3 py-1 rounded-full">
-                  <ClockCircleOutlined className="text-purple-400" />
-                  {course.duration}
+              <div className="absolute bottom-6 left-6 right-6 flex flex-wrap items-center justify-between gap-4 text-xs font-bold uppercase tracking-wider">
+                <div className="flex items-center gap-2 bg-black/80 border border-gray-900 px-4 py-2 rounded-full">
+                  <ClockCircleOutlined className="text-[var(--primary)]" />
+                  <span>{course.duration} Duration</span>
                 </div>
-                <div className="flex items-center gap-2 bg-black/80 px-3 py-1 rounded-full">
-                  <BookOutlined className="text-purple-400" />
-                  {course.modules?.length || 0} Modules • {totalLessons} Lessons
+                <div className="flex items-center gap-2 bg-black/80 border border-gray-900 px-4 py-2 rounded-full">
+                  <BookOutlined className="text-[var(--primary)]" />
+                  <span>{course.modules?.length || 0} Modules · {totalLessons} Lessons</span>
                 </div>
               </div>
             </motion.div>
@@ -237,20 +252,20 @@ const CourseDetails = () => {
               transition={{ delay: 0.1 }}
               className="space-y-6"
             >
-              <h1 className="text-4xl lg:text-5xl font-black leading-tight text-white">
+              <h1 className="text-4xl lg:text-5xl font-black leading-tight text-white uppercase tracking-wide">
                 {course.title}
               </h1>
-              <p className="text-lg text-gray-300 leading-relaxed max-w-3xl">
+              <p className="text-gray-400 text-sm md:text-base leading-relaxed max-w-3xl">
                 {course.description}
               </p>
 
               {/* Tags */}
               {course.tags?.length > 0 && (
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5">
                   {course.tags.map((tag, i) => (
                     <span 
                       key={i} 
-                      className="px-4 py-2 bg-gray-800/50 border border-gray-600 rounded-2xl text-sm font-medium text-purple-300 hover:bg-purple-500/20 transition-all"
+                      className="text-[10px] font-bold text-amber-300/80 bg-black/60 border border-[rgba(250,204,21,0.15)] px-3 py-1 rounded-md"
                     >
                       {tag}
                     </span>
@@ -264,21 +279,22 @@ const CourseDetails = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="rounded-3xl border border-gray-700/50 bg-[#1a1a1a]/80 p-8 backdrop-blur-sm"
+              className="rounded-3xl border border-[rgba(250,204,21,0.1)] bg-[#07070a]/90 p-8 shadow-sm relative overflow-hidden"
             >
-              <h3 className="text-xl font-bold mb-6 flex items-center gap-3 text-white">
-                <UserOutlined className="text-xl text-purple-400" />
-                Instructor
+              <div className="absolute top-0 right-0 w-24 h-24 bg-[rgba(250,204,21,0.01)] rounded-full blur-xl pointer-events-none"></div>
+              <h3 className="text-xs font-black uppercase tracking-widest mb-6 flex items-center gap-2.5 text-white border-b border-gray-900 pb-3">
+                <UserOutlined className="text-[var(--primary)]" />
+                Featured Instructor
               </h3>
               <div className="flex items-center gap-4">
-                <div className="w-20 h-20 bg-gradient-to-br from-purple-600/80 to-purple-700/80 rounded-2xl flex items-center justify-center text-2xl font-bold text-white border-2 border-purple-500/50">
+                <div className="w-16 h-16 bg-black border border-[rgba(250,204,21,0.2)] rounded-2xl flex items-center justify-center text-xl font-black text-[var(--primary)] shadow-md">
                   {instructors.charAt(0)?.toUpperCase()}
                 </div>
                 <div>
-                  <p className="text-lg font-semibold text-white">{instructors}</p>
-                  <div className="flex items-center gap-2 mt-1 text-sm text-gray-400">
-                    <StarFilled className="text-yellow-400" />
-                    <span>{course.rating || 0} ({course.numReviews || 0} reviews)</span>
+                  <p className="text-base font-bold text-white uppercase tracking-wide">{instructors}</p>
+                  <div className="flex items-center gap-2 mt-1 text-xs text-gray-500 font-semibold">
+                    <StarFilled className="text-[var(--primary)]" />
+                    <span>{course.rating || 4.8} rating · ({course.numReviews || 0} reviews)</span>
                   </div>
                 </div>
               </div>
@@ -290,16 +306,16 @@ const CourseDetails = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="rounded-3xl border border-gray-700/50 bg-[#1a1a1a]/80 p-8 backdrop-blur-sm"
+                className="rounded-3xl border border-[rgba(250,204,21,0.1)] bg-[#07070a]/90 p-8 shadow-sm"
               >
-                <h3 className="text-xl font-bold mb-6 uppercase tracking-wider text-purple-300">
-                  Prerequisites
+                <h3 className="text-xs font-black uppercase tracking-widest mb-6 text-[var(--primary)] border-b border-gray-900 pb-3">
+                  Prerequisites & Background
                 </h3>
-                <ul className="space-y-3">
+                <ul className="space-y-3.5 text-xs font-semibold">
                   {prerequisites.map((req, i) => (
                     <li key={i} className="flex items-start gap-3 text-gray-300">
-                      <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0" />
-                      {req}
+                      <span className="text-[var(--primary)] font-bold">◈</span>
+                      <span>{req}</span>
                     </li>
                   ))}
                 </ul>
@@ -312,16 +328,16 @@ const CourseDetails = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="rounded-3xl border border-gray-700/50 bg-[#1a1a1a]/80 p-8 backdrop-blur-sm"
+                className="rounded-3xl border border-[rgba(250,204,21,0.1)] bg-[#07070a]/90 p-8 shadow-sm"
               >
-                <h3 className="text-xl font-bold mb-6 uppercase tracking-wider text-purple-300">
+                <h3 className="text-xs font-black uppercase tracking-widest mb-6 text-[var(--primary)] border-b border-gray-900 pb-3">
                   What You'll Learn
                 </h3>
-                <ul className="space-y-3">
+                <ul className="space-y-3.5 text-xs font-semibold">
                   {course.outCome.map((outcome, i) => (
                     <li key={i} className="flex items-start gap-3 text-gray-300">
-                      <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0" />
-                      {outcome}
+                      <span className="text-green-400 font-bold">✓</span>
+                      <span>{outcome}</span>
                     </li>
                   ))}
                 </ul>
@@ -338,76 +354,68 @@ const CourseDetails = () => {
           >
 
             {/* Price Card */}
-            <div className="rounded-3xl border-2 border-gray-700/50 bg-[#1a1a1a]/90 backdrop-blur-sm p-8 shadow-xl">
+            <div className="rounded-3xl border border-[rgba(250,204,21,0.15)] bg-[#07070a]/90 p-8 shadow-md relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-20 h-20 bg-[rgba(250,204,21,0.01)] rounded-full blur-xl pointer-events-none"></div>
+
               <div className="space-y-4 mb-8">
-                <p className="text-xs uppercase tracking-widest text-purple-400">Course Price</p>
+                <p className="text-[10px] uppercase tracking-widest text-gray-500 font-black">Course Offering</p>
 
                 {isFree ? (
-                  <p className="text-5xl lg:text-6xl font-black text-green-400">FREE</p>
+                  <p className="text-5xl font-black text-green-400 tracking-wider">FREE</p>
                 ) : (
-                  <div className="space-y-2">
-                    <span className="text-2xl line-through text-gray-500">₹{course.price}</span>
-                    <p className="text-5xl lg:text-6xl font-black text-white">₹{course.discountPrice}</p>
+                  <div className="space-y-1">
+                    <span className="text-xs line-through text-gray-600 font-bold font-mono">₹{course.price}</span>
+                    <p className="text-4xl font-black text-white">₹{course.discountPrice}</p>
                   </div>
                 )}
               </div>
 
               {/* CTA BUTTON */}
               {isFree ? (
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                <button
                   onClick={handleFreeCourseStart}
-                  className="w-full py-5 px-6 rounded-3xl text-xl font-bold uppercase tracking-wider bg-green-600 text-white hover:bg-green-700 border border-green-500/50 shadow-lg hover:shadow-purple-500/20 transition-all duration-300"
+                  className="w-full py-3.5 px-6 rounded-xl text-xs font-black uppercase tracking-widest bg-green-500/10 border border-green-500/40 text-green-400 hover:bg-green-500/20 shadow-md transition-all duration-300"
                 >
                   Start Learning Free
-                </motion.button>
+                </button>
               ) : (
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                <button
                   onClick={() => handleBuyNow(course)}
-
-                  className="w-full py-5 px-6 rounded-3xl text-xl font-bold uppercase tracking-wider bg-purple-600 text-white hover:bg-purple-700 border border-purple-500/50 shadow-lg hover:shadow-purple-500/30 transition-all duration-300"
+                  className="w-full py-3.5 px-6 rounded-xl text-xs font-black uppercase tracking-widest bg-[var(--primary)] text-black hover:bg-amber-400 hover:shadow-[0_0_20px_rgba(250,204,21,0.25)] transition-all duration-300"
                 >
                   Buy Now - ₹{course.discountPrice}
-                </motion.button>
+                </button>
               )}
 
               {!isFree && (
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
+                <button
                   onClick={handlePreview}
-                  className="w-full mt-4 py-3 px-4 rounded-2xl text-sm font-bold uppercase tracking-wider border-2 border-gray-600/50 text-gray-300 hover:bg-gray-800 hover:border-purple-500/50 hover:text-purple-300 transition-all duration-300"
+                  className="w-full mt-4 py-3 px-4 rounded-xl text-xs font-bold uppercase tracking-widest border border-gray-800 text-gray-400 hover:text-white hover:border-white transition-all duration-300"
                 >
-                  <PlayCircleOutlined className="inline-block mr-2" />
+                  <PlayCircleOutlined className="inline-block mr-2 text-[var(--primary)]" />
                   Watch Preview
-                </motion.button>
+                </button>
               )}
 
-              <div className="h-px bg-gray-700/50 my-6" />
+              <div className="h-px bg-gray-900 my-6" />
 
               {/* Course Stats */}
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-purple-500 rounded-full" />
-                  <span className="text-gray-500">Language</span>
-                  <span className="font-bold ml-auto text-white">{course.language}</span>
+              <div className="space-y-3.5 text-xs font-bold uppercase tracking-wider">
+                <div className="flex items-center justify-between text-gray-500">
+                  <span>Language</span>
+                  <span className="text-white font-mono">{course.language}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-blue-500 rounded-full" />
-                  <span className="text-gray-500">Category</span>
-                  <span className="font-bold ml-auto text-white">{course.category}</span>
+                <div className="flex items-center justify-between text-gray-500">
+                  <span>Category</span>
+                  <span className="text-white">{course.category}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-green-500 rounded-full" />
-                  <span className="text-gray-500">Views</span>
-                  <span className="font-bold ml-auto text-white">{course.views || 0}</span>
+                <div className="flex items-center justify-between text-gray-500">
+                  <span>Views</span>
+                  <span className="text-white font-mono">{course.views || 0}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-yellow-500 rounded-full" />
-                  <span className="text-gray-500">Students</span>
-                  <span className="font-bold ml-auto text-white">
+                <div className="flex items-center justify-between text-gray-500">
+                  <span>Students</span>
+                  <span className="text-white font-mono">
                     {course.enrolledUsers?.length || 0}
                   </span>
                 </div>
@@ -415,30 +423,30 @@ const CourseDetails = () => {
             </div>
 
             {/* Roadmap */}
-            <div className="rounded-3xl border-2 border-gray-700/50 bg-[#1a1a1a]/90 backdrop-blur-sm overflow-hidden shadow-xl">
-              <div className="p-6 border-b border-gray-700/50">
-                <h3 className="text-lg font-bold uppercase tracking-wider text-purple-400 flex items-center gap-2">
+            <div className="rounded-3xl border border-[rgba(250,204,21,0.1)] bg-[#07070a]/90 overflow-hidden shadow-sm">
+              <div className="p-6 border-b border-gray-900">
+                <h3 className="text-xs font-black uppercase tracking-widest text-[var(--primary)] flex items-center gap-2">
                   <BookOutlined />
                   Learning Roadmap
                 </h3>
               </div>
-              <div className="relative">
+              <div className="relative border-b border-gray-900">
                 {isPDF(course.roadmapImage) ? (
                   <iframe
-                    src={course.roadmapImage}
-                    title="Roadmap"
-                    className="w-full h-80 border-none"
+                     src={course.roadmapImage}
+                     title="Roadmap"
+                     className="w-full h-80 border-none"
                   />
                 ) : (
                   <img
                     src={course.roadmapImage}
                     alt="Roadmap"
-                    className="w-full h-72 lg:h-80 object-cover"
+                    className="w-full h-64 object-cover"
                   />
                 )}
               </div>
-              <div className="p-6 bg-gray-800/50 border-t border-gray-700/50">
-                <p className="text-sm text-gray-400">Visual roadmap of your learning journey</p>
+              <div className="p-4 bg-black/60">
+                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Visual roadmap of your learning journey</p>
               </div>
             </div>
           </motion.div>
@@ -451,23 +459,25 @@ const CourseDetails = () => {
           transition={{ delay: 0.4 }}
           className="mt-20"
         >
-          <h2 className="text-3xl font-black mb-12 text-center uppercase tracking-wider text-white">
-            Course Curriculum
-          </h2>
+          <div className="text-center mb-12 relative">
+            <h2 className="text-2xl md:text-3xl font-black uppercase tracking-wider text-white">
+              Course Curriculum
+            </h2>
+            <div className="h-px bg-gradient-to-r from-transparent via-[rgba(250,204,21,0.2)] to-transparent mt-4 w-64 mx-auto" />
+          </div>
 
           {isFree ? (
-            <div className="text-center py-20 rounded-3xl border-2 border-dashed border-purple-500/30 bg-purple-500/5">
-              <h3 className="text-2xl font-bold mb-4 text-purple-400">Ready to Start?</h3>
-              <p className="text-lg text-gray-400 mb-8 max-w-md mx-auto">
+            <div className="text-center py-20 rounded-3xl border border-dashed border-[rgba(250,204,21,0.15)] bg-black/40">
+              <h3 className="text-xl font-black mb-3 text-[var(--primary)] uppercase tracking-wider">Ready to Start?</h3>
+              <p className="text-xs text-gray-400 mb-8 max-w-xs mx-auto leading-relaxed">
                 Click "Start Learning Free" above to unlock all modules and begin your journey.
               </p>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
+              <button
                 onClick={handleFreeCourseStart}
-                className="px-12 py-5 rounded-3xl text-xl font-bold uppercase tracking-wider bg-green-600 text-white hover:bg-green-700 border border-green-500/50 shadow-lg hover:shadow-purple-500/20 transition-all duration-300"
+                className="px-12 py-3.5 rounded-xl text-xs font-black uppercase tracking-widest bg-green-500/10 border border-green-500/40 text-green-400 hover:bg-green-500/20 transition-all duration-300"
               >
                 Access All Content
-              </motion.button>
+              </button>
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -475,23 +485,21 @@ const CourseDetails = () => {
                 <motion.div
                   key={module._id || index}
                   whileHover={{ y: -4 }}
-                  className="group rounded-3xl border border-gray-700/50 bg-[#1a1a1a]/80 p-8 backdrop-blur-sm hover:border-purple-500/50 hover:bg-gray-800/50 transition-all duration-300 cursor-pointer"
+                  className="group rounded-3xl border border-[rgba(250,204,21,0.12)] bg-[#07070a]/95 p-6 hover:border-[var(--primary)] hover:shadow-[0_0_30px_rgba(250,204,21,0.08)] transition-all duration-500 cursor-pointer"
                   onClick={handleBuyNow}
                 >
-                  <h4 className="font-bold text-lg mb-4 group-hover:text-purple-400 transition-colors">
+                  <h4 className="font-bold text-base text-white uppercase tracking-wider group-hover:text-[var(--primary)] transition-colors mb-3">
                     {module.title}
                   </h4>
-                  <p className="text-sm text-gray-400 mb-6">{module.submodules?.length || 0} Lessons</p>
+                  <p className="text-xs text-gray-500 font-bold uppercase tracking-wider mb-6">{module.submodules?.length || 0} Lessons</p>
+                  
                   <div className="flex items-center justify-between">
-                    <span className="text-xs bg-purple-500/20 px-3 py-1 rounded-full font-medium text-purple-400 border border-purple-500/30">
-                      Preview Locked
+                    <span className="text-[9px] bg-black border border-gray-900 px-3 py-1 rounded font-bold uppercase tracking-wider text-gray-600">
+                      Locked
                     </span>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      className="px-4 py-2 bg-purple-600 text-white text-sm font-bold rounded-xl hover:bg-purple-700 shadow-md group-hover:shadow-purple-500/30 transition-all"
-                    >
-                      Unlock Module
-                    </motion.button>
+                    <span className="text-[10px] font-bold text-[var(--primary)] hover:text-white transition-colors uppercase tracking-widest">
+                      Unlock →
+                    </span>
                   </div>
                 </motion.div>
               ))}
@@ -499,16 +507,16 @@ const CourseDetails = () => {
               {course.modules.length > 6 && (
                 <motion.div
                   whileHover={{ scale: 1.02 }}
-                  className="md:col-span-2 lg:col-span-3 p-12 border-2 border-dashed border-gray-600/50 rounded-3xl text-center hover:border-purple-500/50 bg-gray-800/30 transition-all cursor-pointer"
+                  className="md:col-span-2 lg:col-span-3 p-12 border border-dashed border-[rgba(250,204,21,0.15)] rounded-3xl text-center bg-black/40 transition-all cursor-pointer"
                   onClick={handleBuyNow}
                 >
-                  <p className="text-2xl font-bold mb-4 text-purple-400">
-                    +{course.modules.length - 6} More Modules
+                  <p className="text-xl font-black mb-3 text-[var(--primary)] uppercase tracking-wider">
+                    +{course.modules.length - 6} More Modules Available
                   </p>
-                  <p className="text-gray-400 mb-6">
-                    Purchase to unlock complete curriculum
+                  <p className="text-xs text-gray-500 font-bold uppercase tracking-widest mb-6">
+                    Purchase this premium course to unlock complete curriculum
                   </p>
-                  <button className="px-8 py-4 bg-purple-600 text-white font-bold rounded-2xl uppercase tracking-wider hover:bg-purple-700 border border-purple-500/50 shadow-lg hover:shadow-purple-500/30 transition-all">
+                  <button className="px-8 py-3.5 bg-[var(--primary)] text-black font-black text-xs uppercase tracking-widest rounded-xl hover:bg-amber-400 transition-all">
                     Get Full Access
                   </button>
                 </motion.div>

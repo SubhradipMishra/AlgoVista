@@ -34,6 +34,7 @@ import CourseLearn from "./components/CourseLearn";
 import MentorProfile from "./components/MentorProfile";
 import { ManageMentors } from "./components/super-admin/ManageMentors";
 import MentorshipDetails from "./components/MentorShipDetails";
+import AdminMentorshipDetails from "./components/admin/AdminMentorshipDetails";
 
 function App() {
   const [sessionLoading, setSessionLoading] = useState(true);
@@ -91,6 +92,11 @@ function App() {
           <Route 
            path="/admin/dashboard"
            element={<AdminDashboard/>}
+          />
+
+          <Route 
+           path="/admin/mentorship/:mentorshipId"
+           element={<AdminMentorshipDetails />}
           />
 
            <Route 
