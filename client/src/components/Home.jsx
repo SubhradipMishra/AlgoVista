@@ -136,6 +136,7 @@ const footerNavigation = [
   { label: "Roadmaps", to: "/roadmaps" },
   { label: "Problems", to: "/problems" },
   { label: "Mentorship", to: "/mentorship" },
+  { label: "Community", to: "/community" },
   { label: "Dev Tools", to: "/devtools" },
 ];
 
@@ -272,7 +273,7 @@ const Home = () => {
           }
         `}
       >
-        <div className="max-w-7xl mx-auto flex justify-between items-center px-6 sm:px-8">
+        <div className="max-w-[90rem] mx-auto flex items-center justify-between gap-6 px-6 sm:px-8">
           {/* Slick Modern Logo & Icon */}
           <Link to="/" className="flex items-center gap-3 group">
             <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 via-yellow-400 to-[var(--primary)] text-black font-black text-xl shadow-[0_0_20px_rgba(250,204,21,0.35)] group-hover:rotate-6 transition-all duration-300">
@@ -285,10 +286,10 @@ const Home = () => {
           </Link>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex space-x-8 items-center text-sm font-semibold relative text-gray-300">
+          <div className="hidden md:flex flex-1 items-center justify-center gap-7 text-sm font-semibold text-gray-300">
             <Link
               to="/"
-              className="relative hover-tech-yellow transition-all group flex items-center gap-1.5"
+              className="relative flex h-10 items-center gap-1.5 whitespace-nowrap hover-tech-yellow transition-all group"
             >
               Home
               <span className="absolute left-0 -bottom-1.5 w-0 h-[2px] bg-[var(--primary)] transition-all duration-300 group-hover:w-full"></span>
@@ -296,7 +297,7 @@ const Home = () => {
 
             {/* Resources Dropdown */}
             <div className="relative group">
-              <button className="flex items-center gap-1 hover:text-[var(--primary)] transition-all cursor-pointer">
+              <button className="flex h-10 items-center gap-1 whitespace-nowrap hover:text-[var(--primary)] transition-all cursor-pointer">
                 Resources <FaChevronDown className="ml-1 text-[10px] group-hover:rotate-180 transition-transform duration-300" />
               </button>
               <div className="absolute left-0 mt-3 w-60 rounded-2xl border border-[rgba(250,204,21,0.15)] bg-[#07070a]/95 backdrop-blur-2xl shadow-xl opacity-0 scale-95 invisible group-hover:opacity-100 group-hover:visible group-hover:scale-100 transition-all duration-300 overflow-hidden">
@@ -315,49 +316,55 @@ const Home = () => {
               </div>
             </div>
 
-            <Link to="/roadmaps" className="relative hover-tech-yellow transition-all group">
+            <Link to="/roadmaps" className="relative flex h-10 items-center whitespace-nowrap hover-tech-yellow transition-all group">
               Roadmap
               <span className="absolute left-0 -bottom-1.5 w-0 h-[2px] bg-[var(--primary)] transition-all duration-300 group-hover:w-full"></span>
             </Link>
 
-            <Link to="/problems" className="relative hover-tech-yellow transition-all group">
+            <Link to="/problems" className="relative flex h-10 items-center whitespace-nowrap hover-tech-yellow transition-all group">
               Problems
               <span className="absolute left-0 -bottom-1.5 w-0 h-[2px] bg-[var(--primary)] transition-all duration-300 group-hover:w-full"></span>
             </Link>
 
-            <Link to="/mentorship" className="relative hover-tech-yellow transition-all group">
+            <Link to="/mentorship" className="relative flex h-10 items-center whitespace-nowrap hover-tech-yellow transition-all group">
               Mentorship
               <span className="absolute left-0 -bottom-1.5 w-0 h-[2px] bg-[var(--primary)] transition-all duration-300 group-hover:w-full"></span>
             </Link>
 
-            <Link to="/success-stories" className="relative hover-tech-yellow transition-all group">
+            <Link to="/community" className="relative flex h-10 items-center whitespace-nowrap hover-tech-yellow transition-all group">
+              Community
+              <span className="absolute left-0 -bottom-1.5 w-0 h-[2px] bg-[var(--primary)] transition-all duration-300 group-hover:w-full"></span>
+            </Link>
+
+            <Link to="/success-stories" className="relative flex h-10 items-center whitespace-nowrap hover-tech-yellow transition-all group">
               Success Stories
               <span className="absolute left-0 -bottom-1.5 w-0 h-[2px] bg-[var(--primary)] transition-all duration-300 group-hover:w-full"></span>
             </Link>
 
-            <Link to="/devtools" className="relative hover-tech-yellow transition-all group">
+            <Link to="/devtools" className="relative flex h-10 items-center whitespace-nowrap hover-tech-yellow transition-all group">
               Dev Tools
               <span className="absolute left-0 -bottom-1.5 w-0 h-[2px] bg-[var(--primary)] transition-all duration-300 group-hover:w-full"></span>
             </Link>
+          </div>
 
-            {/* USER SESSION */}
+          <div className="hidden md:flex items-center justify-end min-w-[17rem]">
             {session ? (
               <div className="relative group">
-                <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-black/60 hover:shadow-[0_0_15px_rgba(250,204,21,0.08)] cursor-pointer transition-all duration-350">
+                <div className="flex items-center gap-3 rounded-2xl bg-black/60 px-4 py-2 hover:shadow-[0_0_15px_rgba(250,204,21,0.08)] cursor-pointer transition-all duration-350">
                   <FaUserCircle size={24} className="text-[var(--primary)]" />
                   <div className="leading-tight text-left">
-                    <span className="font-semibold text-gray-100 text-xs block">{session.fullname}</span>
-                    <span className="block text-[10px] text-gray-500 tracking-tight">{session.email?.split("@")[0]}</span>
+                    <span className="block text-xs font-semibold text-gray-100">{session.fullname}</span>
+                    <span className="block text-[10px] tracking-tight text-gray-500">{session.email?.split("@")[0]}</span>
                   </div>
                   <FaChevronDown className="ml-1 text-gray-500 group-hover:text-gray-300 transition-transform duration-300 group-hover:rotate-180" size={10} />
                 </div>
 
-                <div className="absolute right-0 mt-3 w-64 rounded-2xl border border-[rgba(250,204,21,0.15)] bg-black/95 backdrop-blur-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible scale-95 group-hover:scale-100 transition-all duration-300 overflow-hidden">
-                  <div className="px-5 py-3 border-b border-[rgba(250,204,21,0.1)] flex items-center gap-3 bg-[rgba(250,204,21,0.02)]">
-                    <FaUserCircle className="text-[var(--primary)] text-2xl" />
+                <div className="absolute right-0 mt-3 w-64 overflow-hidden rounded-2xl border border-[rgba(250,204,21,0.15)] bg-black/95 backdrop-blur-2xl shadow-2xl opacity-0 invisible scale-95 transition-all duration-300 group-hover:visible group-hover:scale-100 group-hover:opacity-100">
+                  <div className="flex items-center gap-3 border-b border-[rgba(250,204,21,0.1)] bg-[rgba(250,204,21,0.02)] px-5 py-3">
+                    <FaUserCircle className="text-2xl text-[var(--primary)]" />
                     <div className="text-left">
-                      <p className="font-semibold text-gray-100 text-sm">{session.fullname}</p>
-                      <p className="text-xs text-gray-500 truncate max-w-[170px]">{session.email}</p>
+                      <p className="text-sm font-semibold text-gray-100">{session.fullname}</p>
+                      <p className="max-w-[170px] truncate text-xs text-gray-500">{session.email}</p>
                     </div>
                   </div>
 
@@ -365,7 +372,7 @@ const Home = () => {
                     <li>
                       <Link
                         to={session.role === "admin" ? "/admin/dashboard" : "/dashboard"}
-                        className="flex items-center gap-3 px-5 py-2.5 text-gray-300 hover:text-[var(--primary)] hover:bg-[rgba(250,204,21,0.05)] transition-all"
+                        className="flex items-center gap-3 px-5 py-2.5 text-gray-300 transition-all hover:bg-[rgba(250,204,21,0.05)] hover:text-[var(--primary)]"
                       >
                         <FaTachometerAlt className="text-[var(--primary)]" /> Dashboard
                       </Link>
@@ -373,7 +380,7 @@ const Home = () => {
                     <li>
                       <button
                         onClick={handleLogout}
-                        className="flex items-center gap-3 w-full px-5 py-2.5 text-left text-red-400 hover:bg-red-950/20 cursor-pointer transition-colors"
+                        className="flex w-full items-center gap-3 px-5 py-2.5 text-left text-red-400 transition-colors hover:bg-red-950/20 cursor-pointer"
                       >
                         <FaSignOutAlt className="text-red-400" /> Logout
                       </button>
@@ -383,8 +390,8 @@ const Home = () => {
               </div>
             ) : (
               <div className="flex items-center gap-3">
-                <Link to="/login"><button className="btn-outline text-xs py-2 px-5 cursor-pointer">Login</button></Link>
-                <Link to="/signup"><button className="btn-yellow text-xs py-2 px-5 cursor-pointer">Sign Up</button></Link>
+                <Link to="/login"><button className="btn-outline whitespace-nowrap text-xs py-2 px-5 cursor-pointer">Login</button></Link>
+                <Link to="/signup"><button className="btn-yellow whitespace-nowrap text-xs py-2 px-5 cursor-pointer">Sign Up</button></Link>
               </div>
             )}
           </div>
@@ -405,6 +412,7 @@ const Home = () => {
               { name: "Resources", link: "/resources" },
               { name: "Roadmap", link: "/roadmaps" },
               { name: "Problems", link: "/problems" },
+              { name: "Community", link: "/community" },
               { name: "Devtools", link: "/devtools" }
             ].map((item, i) => (
               <Link
@@ -997,9 +1005,12 @@ const Home = () => {
 
           {/* CTA */}
           <div className="mt-16">
-            <button className="btn-yellow font-mono text-lg px-8 py-4 shadow-[0_0_20px_rgba(250,204,21,0.2)] hover:shadow-[0_0_30px_rgba(250,204,21,0.4)] transition-all duration-500 cursor-pointer">
+            <Link
+              to="/community"
+              className="inline-flex btn-yellow font-mono text-lg px-8 py-4 shadow-[0_0_20px_rgba(250,204,21,0.2)] hover:shadow-[0_0_30px_rgba(250,204,21,0.4)] transition-all duration-500 cursor-pointer"
+            >
               &gt; Join The Community Now _
-            </button>
+            </Link>
           </div>
         </div>
 

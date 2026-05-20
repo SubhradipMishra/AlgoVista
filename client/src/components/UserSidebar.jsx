@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Layout, Menu, Avatar, Tag, Divider, Button } from "antd";
 import {
   DashboardOutlined,
+  MessageOutlined,
   TrophyOutlined,
   SettingOutlined,
   LogoutOutlined,
@@ -45,8 +46,9 @@ const menuItems = [
   { key: "1", icon: <DashboardOutlined />, label: "Dashboard", link: "/dashboard/" },
   { key: "2", icon: <TrophyOutlined />, label: "Roadmaps", link: "/roadmaps" },
   { key: "3", icon: <CrownOutlined />, label: "Mentorship", link: "/mentorship" },
-  { key: "4", icon: <SettingOutlined />, label: "Settings", link: "/dashboard/settings" },
-  { key: "5", icon: <LogoutOutlined />, label: "Logout", link: "/logout" },
+  { key: "4", icon: <MessageOutlined />, label: "Community", link: "/community" },
+  { key: "5", icon: <SettingOutlined />, label: "Settings", link: "/dashboard/settings" },
+  { key: "6", icon: <LogoutOutlined />, label: "Logout", link: "/logout" },
 ];
 
 const UserSidebar = ({ user, selectedKey, setSelectedKey, navigate }) => {

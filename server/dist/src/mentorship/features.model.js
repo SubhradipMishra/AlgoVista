@@ -33,7 +33,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MentorshipSubmissionModel = exports.MentorshipSessionModel = exports.MentorshipMessageModel = void 0;
+exports.MentorshipResourceModel = exports.MentorshipSubmissionModel = exports.MentorshipSessionModel = exports.MentorshipMessageModel = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 // 1. Direct Mentorship Chat Schema
 const messageSchema = new mongoose_1.Schema({
@@ -122,3 +122,23 @@ const submissionSchema = new mongoose_1.Schema({
 exports.MentorshipMessageModel = (0, mongoose_1.model)("MentorshipMessage", messageSchema);
 exports.MentorshipSessionModel = (0, mongoose_1.model)("MentorshipSession", sessionSchema);
 exports.MentorshipSubmissionModel = (0, mongoose_1.model)("MentorshipSubmission", submissionSchema);
+// 4. Learning Resources Curation Schema
+const resourceSchema = new mongoose_1.Schema({
+    mentorshipId: {
+        type: mongoose_1.default.Types.ObjectId,
+        ref: "Mentorship",
+        required: true,
+    },
+    title: {
+        type: String,
+        required: true,
+    },
+    link: {
+        type: String,
+        required: true,
+    },
+    notes: {
+        type: String,
+    },
+}, { timestamps: true });
+exports.MentorshipResourceModel = (0, mongoose_1.model)("MentorshipResource", resourceSchema);

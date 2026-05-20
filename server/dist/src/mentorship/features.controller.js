@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.reviewSubmission = exports.createSubmission = exports.getSubmissions = exports.scheduleSession = exports.getSessions = exports.sendMessage = exports.getMessages = void 0;
+exports.addResource = exports.getResources = exports.reviewSubmission = exports.createSubmission = exports.getSubmissions = exports.scheduleSession = exports.getSessions = exports.deleteMessage = exports.sendMessage = exports.getMessages = void 0;
 const features_model_1 = require("./features.model");
 // ==========================================
 // 💬 Direct Chat Controller Functions
@@ -41,6 +41,18 @@ const sendMessage = async (req, res) => {
     }
 };
 exports.sendMessage = sendMessage;
+const deleteMessage = async (req, res) => {
+    try {
+        const { messageId } = req.params;
+        await features_model_1.MentorshipMessageModel.findByIdAndDelete(messageId);
+        return res.status(200).json({ message: "Message deleted successfully" });
+    }
+    catch (err) {
+        console.error("Delete message error:", err);
+        return res.status(500).json({ message: "Failed to delete message" });
+    }
+};
+exports.deleteMessage = deleteMessage;
 // ==========================================
 // 📅 1-on-1 Sessions Controller Functions
 // ==========================================
@@ -138,3 +150,42 @@ const reviewSubmission = async (req, res) => {
     }
 };
 exports.reviewSubmission = reviewSubmission;
+// ==========================================
+// 📚 Learning Resources Controller Functions
+// ==========================================
+const getResources = async (req, res) => {
+    try {
+        const { mentorshipId } = req.params;
+        const resources = await features_model_1.MentorshipResourceModel.find({ mentorshipId }).sort({
+            createdAt: -1,
+        });
+        return res.status(200).json(resources);
+    }
+    catch (err) {
+        console.error("Get resources error:", err);
+        return res.status(500).json({ message: "Failed to fetch resources" });
+    }
+};
+exports.getResources = getResources;
+const addResource = async (req, res) => {
+    try {
+        const { mentorshipId } = req.params;
+        const { title, link, notes } = req.body;
+        if (!title || !link) {
+            return res.status(400).json({ message: "Title and link are required" });
+        }
+        const newResource = new features_model_1.MentorshipResourceModel({
+            mentorshipId,
+            title,
+            link,
+            notes,
+        });
+        await newResource.save();
+        return res.status(201).json(newResource);
+    }
+    catch (err) {
+        console.error("Add resource error:", err);
+        return res.status(500).json({ message: "Failed to add resource" });
+    }
+};
+exports.addResource = addResource;

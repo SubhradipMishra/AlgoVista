@@ -107,6 +107,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use("/uploads/courses", express.static(path.join(__dirname, "../uploads/courses")));
+app.use("/uploads/community", express.static(path.join(__dirname, "../uploads/community")));
 
 
 mongoose
@@ -175,3 +176,6 @@ app.use('/mentor-details', MentorDeatilsRouter)
 
 import MentorshipRouter from './mentorship/mentorship.routes'
 app.use('/mentorship', MentorshipRouter)
+
+import CommunityRouter from "./community/community.routes";
+app.use("/community", CommunityRouter);

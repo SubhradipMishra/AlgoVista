@@ -4,6 +4,7 @@ import Home from "./components/Home";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Dashboard from "./components/Dashboard";
+import Community from "./components/Community";
 import axios from "axios";
 import Context from "./util/context";
 import Problems from "./components/Problems";
@@ -27,6 +28,7 @@ import UserSidebar from "./components/UserSidebar";
 import AddProblems from "./components/admin/AddProblems";
 import CodeEditor from "./components/CodeEditor";
 import AddCourse from "./components/admin/AddCourse";
+import AdminCommunity from "./components/admin/AdminCommunity";
 import Course from "./components/Course";
 import CourseDetails from "./components/CourseDeatils";
 import CourseLearn from "./components/CourseLearn";
@@ -65,6 +67,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/community" element={<Community />} />
+          <Route path="/community/:id" element={<Community />} />
           <Route
             path="/dashboard"
             element={<Dashboard/>}
@@ -105,6 +109,7 @@ function App() {
           />
 
           <Route path="/admin/course" element={<AddCourse />}/>
+          <Route path="/admin/community" element={<AdminCommunity />} />
 
           <Route path="*" element={<NotFound />} />
 

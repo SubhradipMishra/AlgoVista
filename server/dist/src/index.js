@@ -79,6 +79,9 @@ io.on("connection", (socket) => {
             console.error("Socket message error:", err);
         }
     });
+    socket.on("delete_message", ({ room, messageId }) => {
+        io.to(room).emit("message_deleted", { messageId });
+    });
     socket.on("disconnect", () => {
         console.log("🔌 User disconnected from Socket:", socket.id);
     });
@@ -96,6 +99,7 @@ app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, cookie_parser_1.default)());
 app.use("/uploads/courses", express_1.default.static(path_1.default.join(__dirname, "../uploads/courses")));
+app.use("/uploads/community", express_1.default.static(path_1.default.join(__dirname, "../uploads/community")));
 mongoose_1.default
     .connect(process.env.DB_URL)
     .then(() => console.log("✅ Database connected successfully"))
@@ -136,3 +140,5 @@ const mentor_deatils_routes_1 = __importDefault(require("./mentor-deatils/mentor
 app.use('/mentor-details', mentor_deatils_routes_1.default);
 const mentorship_routes_1 = __importDefault(require("./mentorship/mentorship.routes"));
 app.use('/mentorship', mentorship_routes_1.default);
+const community_routes_1 = __importDefault(require("./community/community.routes"));
+app.use("/community", community_routes_1.default);

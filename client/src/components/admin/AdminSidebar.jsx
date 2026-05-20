@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import {
   DashboardOutlined,
   BranchesOutlined,
+  MessageOutlined,
   QuestionCircleOutlined,
   SettingOutlined,
   LogoutOutlined,
@@ -26,6 +27,7 @@ const AdminSidebar = ({ session, open, setOpen }) => {
     { key: "/admin/roadmaps", icon: <BranchesOutlined />, label: "Roadmaps" },
     { key: "/admin/problems", icon: <QuestionCircleOutlined />, label: "Problems" },
     { key: "/admin/course", icon: <BookOutlined />, label: "Courses" },
+    { key: "/admin/community", icon: <MessageOutlined />, label: "Community" },
     {
       key: "/admin/mentorship",
       icon: <CrownOutlined />,
