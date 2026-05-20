@@ -1432,7 +1432,7 @@ const Home = () => {
             <img
               src="https://coderarmy.in/assets/images/webp/contactmewebp.jpg"
               alt="Contact Illustration"
-              className="w-80 h-80 object-contain rounded-lg shadow-[0_0_25px_rgba(250,204,21,0.15)] hover:shadow-[0_0_35px_rgba(250,204,21,0.3)] hover:scale-105 transition duration-300"
+              className="w-full max-w-[320px] h-auto object-contain rounded-lg shadow-[0_0_25px_rgba(250,204,21,0.15)] hover:shadow-[0_0_35px_rgba(250,204,21,0.3)] hover:scale-105 transition duration-300 mx-auto"
             />
           </div>
 

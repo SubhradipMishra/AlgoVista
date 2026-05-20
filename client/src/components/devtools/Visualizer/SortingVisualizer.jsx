@@ -11,6 +11,8 @@ import {
   Input,
   message,
   Divider,
+  Row,
+  Col,
 } from "antd";
 import { PlayCircleOutlined, ReloadOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
@@ -280,34 +282,40 @@ const SortingVisualizer = () => {
       </div>
 
       {/* Info Panels */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 24 }}>
-        <Card title="Algorithm Steps" style={{ borderRadius: 16, background: isDark ? "#111118" : "#fff", color: isDark ? "#f1f5f9" : "#1e293b" }}>
-          <Paragraph>{steps[currentStep - 1] ? steps[currentStep - 1].message : "Press Start to visualize steps."}</Paragraph>
-          <Progress percent={((currentStep / steps.length) * 100).toFixed(0)} showInfo={false} strokeColor="#6366f1" />
-        </Card>
+      <Row gutter={[24, 24]}>
+        <Col xs={24} lg={8}>
+          <Card title="Algorithm Steps" style={{ borderRadius: 16, background: isDark ? "#111118" : "#fff", color: isDark ? "#f1f5f9" : "#1e293b", height: '100%' }}>
+            <Paragraph>{steps[currentStep - 1] ? steps[currentStep - 1].message : "Press Start to visualize steps."}</Paragraph>
+            <Progress percent={((currentStep / steps.length) * 100).toFixed(0)} showInfo={false} strokeColor="#6366f1" />
+          </Card>
+        </Col>
 
-        <Card title="Pseudocode" style={{ borderRadius: 16, background: isDark ? "#111118" : "#fff", color: isDark ? "#f1f5f9" : "#1e293b" }}>
-          <pre style={{ fontFamily: "monospace", lineHeight: "1.8em", fontSize: 15 }}>
-            {pseudocodeMap[algorithm].map((line, i) => (
-              <div key={i} style={{ background: pseudocodeLine === i + 1 ? "rgba(147,197,253,0.4)" : "transparent", borderRadius: 6, padding: "2px 6px" }}>
-                {line}
-              </div>
-            ))}
-          </pre>
-        </Card>
+        <Col xs={24} lg={8}>
+          <Card title="Pseudocode" style={{ borderRadius: 16, background: isDark ? "#111118" : "#fff", color: isDark ? "#f1f5f9" : "#1e293b", height: '100%' }}>
+            <pre style={{ fontFamily: "monospace", lineHeight: "1.8em", fontSize: 15, whiteSpace: "pre-wrap", overflowX: "auto" }}>
+              {pseudocodeMap[algorithm].map((line, i) => (
+                <div key={i} style={{ background: pseudocodeLine === i + 1 ? "rgba(147,197,253,0.4)" : "transparent", borderRadius: 6, padding: "2px 6px" }}>
+                  {line}
+                </div>
+              ))}
+            </pre>
+          </Card>
+        </Col>
 
-        <Card title="Time Complexity" style={{ borderRadius: 16, textAlign: "center", background: isDark ? "#111118" : "#fff", color: isDark ? "#f1f5f9" : "#1e293b" }}>
-          {algorithm === "bubble" && (<Paragraph><Text strong>Best:</Text> O(n) <br /><Text strong>Average:</Text> O(n²) <br /><Text strong>Worst:</Text> O(n²)</Paragraph>)}
-          {algorithm === "selection" && (<Paragraph><Text strong>Best:</Text> O(n²) <br /><Text strong>Average:</Text> O(n²) <br /><Text strong>Worst:</Text> O(n²)</Paragraph>)}
-          {algorithm === "insertion" && (<Paragraph><Text strong>Best:</Text> O(n) <br /><Text strong>Average:</Text> O(n²) <br /><Text strong>Worst:</Text> O(n²)</Paragraph>)}
-          <Divider />
-          <Paragraph>
-            <Text strong>Swaps:</Text> {liveStats.swaps || stats.swaps} <br />
-            <Text strong>Comparisons:</Text> {liveStats.comparisons || stats.comparisons} <br />
-            <Text strong>Time:</Text> {showFinalStats ? `${stats.time}s` : isSorting ? "Running..." : "--"}
-          </Paragraph>
-        </Card>
-      </div>
+        <Col xs={24} lg={8}>
+          <Card title="Time Complexity" style={{ borderRadius: 16, textAlign: "center", background: isDark ? "#111118" : "#fff", color: isDark ? "#f1f5f9" : "#1e293b", height: '100%' }}>
+            {algorithm === "bubble" && (<Paragraph><Text strong>Best:</Text> O(n) <br /><Text strong>Average:</Text> O(n²) <br /><Text strong>Worst:</Text> O(n²)</Paragraph>)}
+            {algorithm === "selection" && (<Paragraph><Text strong>Best:</Text> O(n²) <br /><Text strong>Average:</Text> O(n²) <br /><Text strong>Worst:</Text> O(n²)</Paragraph>)}
+            {algorithm === "insertion" && (<Paragraph><Text strong>Best:</Text> O(n) <br /><Text strong>Average:</Text> O(n²) <br /><Text strong>Worst:</Text> O(n²)</Paragraph>)}
+            <Divider style={{ margin: "12px 0" }} />
+            <Paragraph style={{ marginBottom: 0 }}>
+              <Text strong>Swaps:</Text> {liveStats.swaps || stats.swaps} <br />
+              <Text strong>Comparisons:</Text> {liveStats.comparisons || stats.comparisons} <br />
+              <Text strong>Time:</Text> {showFinalStats ? `${stats.time}s` : isSorting ? "Running..." : "--"}
+            </Paragraph>
+          </Card>
+        </Col>
+      </Row>
     </div>
   );
 };

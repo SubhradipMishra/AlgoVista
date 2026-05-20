@@ -236,7 +236,7 @@ export default function CodeEditor() {
 
   // main render
   return (
-    <div className="min-h-screen flex w-full bg-black text-gray-200 font-mono relative overflow-hidden">
+    <div className="min-h-screen flex flex-col md:flex-row w-full bg-black text-gray-200 font-mono relative overflow-hidden">
       {/* Decorative ambient backgrounds */}
       <div className="absolute top-0 right-1/4 w-[400px] h-[400px] bg-[rgba(250,204,21,0.015)] rounded-full blur-[140px] pointer-events-none"></div>
       
@@ -244,7 +244,7 @@ export default function CodeEditor() {
 
       {/* LEFT PANEL */}
       <aside
-        className="w-[38%] h-screen sticky top-0 overflow-y-auto p-6 border-r border-gray-900 bg-[#030303]/90 backdrop-blur-md relative z-10"
+        className="w-full md:w-[38%] h-auto md:h-screen relative md:sticky top-0 overflow-y-auto p-6 border-b md:border-b-0 md:border-r border-gray-900 bg-[#030303]/90 backdrop-blur-md z-10"
       >
         {/* header card */}
         <div className="relative rounded-2xl p-5 bg-[#07070a] border border-[rgba(250,204,21,0.15)] mb-5 overflow-hidden">
@@ -574,8 +574,8 @@ export default function CodeEditor() {
 
         {/* summary stats at bottom */}
         <div className="mt-6 border-t border-gray-950 pt-6">
-          <Row gutter={16}>
-            <Col span={6}>
+          <Row gutter={[16, 16]}>
+            <Col xs={24} sm={12} md={6}>
               <div className="relative rounded-2xl p-4 bg-[#07070a]/90 border border-gray-900 overflow-hidden group">
                 <div className="absolute top-1.5 left-1.5 w-1.5 h-1.5 border-t border-l border-[var(--primary)] opacity-30"></div>
                 <div className="text-[9px] font-black uppercase tracking-widest text-gray-500 mb-1">Total Executions</div>
@@ -583,7 +583,7 @@ export default function CodeEditor() {
               </div>
             </Col>
 
-            <Col span={6}>
+            <Col xs={24} sm={12} md={6}>
               <div className="relative rounded-2xl p-4 bg-[#07070a]/90 border border-gray-900 overflow-hidden group">
                 <div className="absolute top-1.5 left-1.5 w-1.5 h-1.5 border-t border-l border-green-400 opacity-30"></div>
                 <div className="text-[9px] font-black uppercase tracking-widest text-green-500 mb-1">Accepted Passed</div>
@@ -591,7 +591,7 @@ export default function CodeEditor() {
               </div>
             </Col>
 
-            <Col span={6}>
+            <Col xs={24} sm={12} md={6}>
               <div className="relative rounded-2xl p-4 bg-[#07070a]/90 border border-gray-900 overflow-hidden group">
                 <div className="absolute top-1.5 left-1.5 w-1.5 h-1.5 border-t border-l border-red-400 opacity-30"></div>
                 <div className="text-[9px] font-black uppercase tracking-widest text-red-500 mb-1">Failed Cases</div>
@@ -599,7 +599,7 @@ export default function CodeEditor() {
               </div>
             </Col>
 
-            <Col span={6}>
+            <Col xs={24} sm={12} md={6}>
               <div className="relative rounded-2xl p-4 bg-[#07070a]/90 border border-gray-900 overflow-hidden group">
                 <div className="absolute top-1.5 left-1.5 w-1.5 h-1.5 border-t border-l border-amber-400 opacity-30"></div>
                 <div className="text-[9px] font-black uppercase tracking-widest text-amber-500 mb-1">Fastest Compile</div>

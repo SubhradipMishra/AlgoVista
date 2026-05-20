@@ -35,7 +35,7 @@ import CourseLearn from "./components/CourseLearn";
 
 import MentorProfile from "./components/MentorProfile";
 import { ManageMentors } from "./components/super-admin/ManageMentors";
-import MentorshipDetails from "./components/MentorShipDetails";
+import MentorshipDetails from "./components/MentorshipDetails";
 import AdminMentorshipDetails from "./components/admin/AdminMentorshipDetails";
 
 function App() {
