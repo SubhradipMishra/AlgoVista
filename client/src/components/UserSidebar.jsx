@@ -57,6 +57,31 @@ const UserSidebar = ({ user, selectedKey, setSelectedKey, navigate }) => {
   if (!user) return null;
 
   const onMenuClick = (e) => {
+    setSelectedKey(e.key);
+    const item = menuItems.find((i) => i.key === e.key);
+    if (item?.link) navigate(item.link);
+  };
+
+  return (
+    <Sider
+      width={collapsed ? 70 : 260}
+      breakpoint="md"
+      onBreakpoint={(broken) => {
+        if (broken) {
+          setCollapsed(true);
+        }
+      }}
+      collapsible
+      collapsed={collapsed}
+      onCollapse={setCollapsed}
+      trigger={null}
+      className="glass-panel z-50"
+      style={{
+        height: "100vh",
+        position: "sticky",
+        top: 0,
+        left: 0,
+        backgroundColor: "rgba(9, 9, 11, 0.8)",
         borderRight: "1px solid var(--glass-border)",
         paddingTop: 20,
         display: "flex",

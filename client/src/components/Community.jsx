@@ -384,25 +384,25 @@ const Community = () => {
       return (
         <div
           key={comment._id}
-          className={`${depth > 0 ? "ml-8 border-l border-[rgba(250,204,21,0.08)] pl-4" : ""}`}
+          className={`${depth > 0 ? "ml-8 border-l border-white/10 pl-4" : ""}`}
         >
-          <div className="rounded-3xl bg-[#101214] px-4 py-3">
+          <div className="rounded-3xl bg-white/5 px-4 py-3">
             <div className="flex items-start gap-3">
               <Avatar
                 src={comment.author?.profileImage}
                 size={34}
-                className="border border-[rgba(250,204,21,0.12)] bg-black"
+                className="border border-white/10 bg-[#09090b]"
               >
                 {comment.author?.fullname?.slice(0, 1) || "U"}
               </Avatar>
               <div className="min-w-0 flex-1">
-                <div className="rounded-3xl bg-[#181b1f] px-4 py-3">
-                  <p className="text-[11px] font-black uppercase tracking-[0.14em] text-white">
+                <div className="rounded-3xl bg-white/10 px-4 py-3">
+                  <p className="text-[11px] font-semibold text-white">
                     {comment.author?.fullname || "Community Member"}
                   </p>
                   <p className="mt-2 text-sm leading-6 text-gray-300">{comment.content}</p>
                 </div>
-                <div className="mt-2 flex flex-wrap items-center gap-4 pl-2 text-[10px] font-black uppercase tracking-[0.16em] text-gray-500">
+                <div className="mt-2 flex flex-wrap items-center gap-4 pl-2 text-[10px] font-semibold text-gray-500">
                   <span>{formatDateTime(comment.createdAt)}</span>
                   <button
                     type="button"
@@ -432,7 +432,7 @@ const Community = () => {
                 type="primary"
                 icon={<SendOutlined />}
                 onClick={() => handleAddReply(postId, comment._id)}
-                className="!rounded-xl !border-none !bg-[var(--primary)] !px-4 !font-black !uppercase !tracking-[0.16em] !text-black hover:!bg-[var(--primary-hover)]"
+                className="!rounded-xl !border-none !bg-[var(--primary)] !px-4 !font-semibold !text-black hover:!bg-[var(--primary-hover)]"
               >
                 Send
               </Button>
@@ -447,20 +447,20 @@ const Community = () => {
     });
 
   const renderHeader = () => (
-    <header className="sticky top-0 z-30 border-b border-[rgba(250,204,21,0.08)] bg-black/75 backdrop-blur-2xl">
+    <header className="sticky top-0 z-30 border-b border-white/10 bg-[#09090b]/75 backdrop-blur-2xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
         <div className="flex items-center gap-3">
           <Link
             to="/"
-            className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#fde047,#f59e0b)] text-lg font-black text-black shadow-[0_0_30px_rgba(250,204,21,0.25)]"
+            className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#fde047,#f59e0b)] text-lg font-bold text-black shadow-[0_0_30px_rgba(250,204,21,0.25)]"
           >
             A
           </Link>
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.28em] text-[var(--primary)]">
+            <p className="text-[10px] font-bold tracking-widest uppercase text-[var(--primary)]">
               AlgoVista Social Layer
             </p>
-            <h1 className="text-lg font-black uppercase tracking-[0.18em] text-white">
+            <h1 className="text-lg font-bold text-white">
               Community
             </h1>
           </div>
@@ -469,7 +469,7 @@ const Community = () => {
         <div className="flex items-center gap-3">
           <Link
             to={isDetailPage ? "/community" : "/"}
-            className="hidden rounded-xl border border-[rgba(250,204,21,0.12)] px-4 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-gray-300 transition hover:border-[var(--primary)] hover:text-[var(--primary)] sm:inline-flex"
+            className="hidden rounded-xl border border-white/10 px-4 py-2 text-[10px] font-bold text-gray-300 transition hover:border-[var(--primary)] hover:text-[var(--primary)] sm:inline-flex"
           >
             <ArrowLeftOutlined className="mr-2" />
             {isDetailPage ? "All Communities" : "Back Home"}
@@ -480,7 +480,7 @@ const Community = () => {
               onClick={() =>
                 navigate(session.role === "admin" ? "/admin/dashboard" : "/dashboard")
               }
-              className="!h-11 !rounded-xl !border-none !bg-[var(--primary)] !px-5 !font-black !uppercase !tracking-[0.18em] !text-black hover:!bg-[var(--primary-hover)]"
+              className="!h-11 !rounded-xl !border-none !bg-[var(--primary)] !px-5 !font-bold !text-black hover:!bg-[var(--primary-hover)]"
             >
               Dashboard
             </Button>
@@ -488,7 +488,7 @@ const Community = () => {
             <Button
               onClick={() => navigate("/login")}
               icon={<LoginOutlined />}
-              className="!h-11 !rounded-xl !border-[rgba(250,204,21,0.15)] !bg-black !px-5 !font-black !uppercase !tracking-[0.18em] !text-[var(--primary)] hover:!border-[var(--primary)] hover:!text-[var(--primary-hover)]"
+              className="!h-11 !rounded-xl !border-white/10 !bg-[#09090b] !px-5 !font-bold !text-[var(--primary)] hover:!border-[var(--primary)] hover:!text-[var(--primary-hover)]"
             >
               Login
             </Button>
@@ -506,12 +506,12 @@ const Community = () => {
       onClick={() => openCommunity(community._id)}
       className={`w-full rounded-[28px] border p-5 text-left transition-all duration-300 ${
         featured
-          ? "border-[rgba(250,204,21,0.18)] bg-[linear-gradient(145deg,rgba(250,204,21,0.08),rgba(6,6,6,0.98))]"
-          : "border-[rgba(250,204,21,0.08)] bg-black/50 hover:border-[rgba(250,204,21,0.22)]"
+          ? "border-white/10 bg-white/5 backdrop-blur-xl"
+          : "border-white/10 bg-white/5 backdrop-blur-lg hover:border-white/10"
       }`}
     >
       <div className="flex items-start gap-4">
-        <div className="h-16 w-16 overflow-hidden rounded-2xl border border-[rgba(250,204,21,0.15)] bg-[#111]">
+        <div className="h-16 w-16 overflow-hidden rounded-2xl border border-white/10 bg-white/10">
           {community.coverImageUrl ? (
             <img
               src={community.coverImageUrl}
@@ -519,7 +519,7 @@ const Community = () => {
               className="h-full w-full object-cover"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center text-xl font-black text-[var(--primary)]">
+            <div className="flex h-full w-full items-center justify-center text-xl font-bold text-[var(--primary)]">
               {community.name?.slice(0, 1)?.toUpperCase() || "C"}
             </div>
           )}
@@ -527,17 +527,17 @@ const Community = () => {
 
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-sm font-black uppercase tracking-[0.16em] text-white">
+            <h3 className="text-sm font-semibold text-white">
               {community.name}
             </h3>
             <Tag
               color={community.active ? "gold" : "default"}
-              className="!m-0 !rounded-full !px-3 !py-1 !font-mono !text-[9px] !font-black !uppercase !tracking-[0.16em]"
+              className="!m-0 !rounded-full !px-3 !py-1 !font-sans !text-[9px] !font-semibold"
             >
               {community.active ? "Active" : "Paused"}
             </Tag>
             {community.membership?.joined ? (
-              <Tag className="!m-0 !rounded-full !border-none !bg-[rgba(250,204,21,0.12)] !px-3 !py-1 !font-mono !text-[9px] !font-black !uppercase !tracking-[0.16em] !text-[var(--primary)]">
+              <Tag className="!m-0 !rounded-full !border-none !bg-[rgba(250,204,21,0.12)] !px-3 !py-1 !font-sans !text-[9px] !font-semibold !text-[var(--primary)]">
                 Joined
               </Tag>
             ) : null}
@@ -555,7 +555,7 @@ const Community = () => {
             ].map((item) => (
               <span
                 key={item}
-                className="rounded-full border border-[rgba(250,204,21,0.1)] px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-gray-500"
+                className="rounded-full border border-white/10 px-3 py-1 text-[10px] font-semibold text-gray-500"
               >
                 {item}
               </span>
@@ -569,13 +569,13 @@ const Community = () => {
                   <Avatar
                     key={member._id}
                     src={member.profileImage}
-                    className="border border-[rgba(250,204,21,0.18)] bg-black"
+                    className="border border-white/10 bg-[#09090b]"
                   >
                     {member.fullname?.slice(0, 1) || "M"}
                   </Avatar>
                 ))}
               </Avatar.Group>
-              <span className="text-[10px] font-black uppercase tracking-[0.16em] text-gray-500">
+              <span className="text-[10px] font-semibold text-gray-500">
                 Open room page
               </span>
             </div>
@@ -592,13 +592,13 @@ const Community = () => {
         <motion.section
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-[34px] border border-[rgba(250,204,21,0.12)] bg-[linear-gradient(145deg,rgba(250,204,21,0.06),rgba(8,8,8,0.96))] p-6 shadow-[0_24px_90px_rgba(0,0,0,0.38)] md:p-8"
+          className="rounded-[34px] border border-white/10 bg-white/5 backdrop-blur-xl p-6 shadow-[0_24px_90px_rgba(0,0,0,0.38)] md:p-8"
         >
-          <span className="inline-flex items-center gap-2 rounded-full border border-[rgba(250,204,21,0.14)] bg-black/50 px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-[var(--primary)]">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-lg px-4 py-2 text-[10px] font-bold tracking-wide uppercase text-[var(--primary)]">
             <MessageOutlined />
             Room directory
           </span>
-          <h2 className="mt-5 max-w-3xl text-3xl font-black uppercase tracking-[0.14em] text-white md:text-5xl">
+          <h2 className="mt-5 max-w-3xl text-3xl font-semibold text-white md:text-5xl">
             Explore communities, then open a dedicated room page for each one.
           </h2>
           <p className="mt-4 max-w-3xl text-sm leading-7 text-gray-400 md:text-base">
@@ -610,12 +610,12 @@ const Community = () => {
             {statTiles.map((tile) => (
               <div
                 key={tile.label}
-                className="rounded-3xl border border-[rgba(250,204,21,0.1)] bg-black/55 p-4"
+                className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-lg p-4"
               >
-                <p className="text-[9px] font-black uppercase tracking-[0.18em] text-gray-500">
+                <p className="text-[9px] font-bold text-gray-500">
                   {tile.label}
                 </p>
-                <p className="mt-3 text-2xl font-black text-white">{tile.value}</p>
+                <p className="mt-3 text-2xl font-bold text-white">{tile.value}</p>
               </div>
             ))}
           </div>
@@ -625,12 +625,12 @@ const Community = () => {
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.05 }}
-          className="rounded-[34px] border border-[rgba(250,204,21,0.1)] bg-[linear-gradient(180deg,rgba(12,12,12,0.96),rgba(4,4,4,0.98))] p-6 shadow-[0_24px_70px_rgba(0,0,0,0.35)]"
+          className="rounded-[34px] border border-white/10 bg-white/5 backdrop-blur-xl p-6 shadow-[0_24px_70px_rgba(0,0,0,0.35)]"
         >
-          <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[var(--primary)]">
+          <p className="text-[10px] font-bold tracking-wide uppercase text-[var(--primary)]">
             Access model
           </p>
-          <h3 className="mt-4 text-2xl font-black uppercase tracking-[0.16em] text-white">
+          <h3 className="mt-4 text-2xl font-semibold text-white">
             Browse first. Join next. Contribute after that.
           </h3>
           <p className="mt-4 text-sm leading-7 text-gray-400">
@@ -638,19 +638,19 @@ const Community = () => {
             full social feed for that specific community page.
           </p>
 
-          <div className="mt-8 rounded-[28px] border border-[rgba(250,204,21,0.1)] bg-black/60 p-5">
-            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-gray-500">
+          <div className="mt-8 rounded-[28px] border border-white/10 bg-white/5 backdrop-blur-lg p-5">
+            <p className="text-[10px] font-bold text-gray-500">
               Session Status
             </p>
             <div className="mt-4 flex items-center gap-3">
-              <Avatar className="border border-[rgba(250,204,21,0.15)] bg-black">
+              <Avatar className="border border-white/10 bg-[#09090b]">
                 {session?.fullname?.slice(0, 1) || "G"}
               </Avatar>
               <div>
-                <p className="text-sm font-black uppercase tracking-[0.16em] text-white">
+                <p className="text-sm font-semibold text-white">
                   {session?.fullname || "Guest Visitor"}
                 </p>
-                <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">
+                <p className="text-[10px]  text-gray-500">
                   {session?.role || "Read-only visitor"}
                 </p>
               </div>
@@ -659,13 +659,13 @@ const Community = () => {
         </motion.section>
       </div>
 
-      <section className="rounded-[32px] border border-[rgba(250,204,21,0.1)] bg-black/55 p-6 shadow-[0_20px_70px_rgba(0,0,0,0.3)]">
-        <div className="flex items-center justify-between gap-4 border-b border-[rgba(250,204,21,0.08)] pb-4">
+      <section className="rounded-[32px] border border-white/10 bg-white/5 backdrop-blur-lg p-6 shadow-[0_20px_70px_rgba(0,0,0,0.3)]">
+        <div className="flex items-center justify-between gap-4 border-b border-white/10 pb-4">
           <div>
-            <h3 className="text-sm font-black uppercase tracking-[0.18em] text-white">
+            <h3 className="text-sm font-bold text-white">
               Community Rooms
             </h3>
-            <p className="mt-2 text-[10px] uppercase tracking-[0.18em] text-gray-500">
+            <p className="mt-2 text-[10px]  text-gray-500">
               Click a card to open its full room page
             </p>
           </div>
@@ -676,16 +676,16 @@ const Community = () => {
             [...Array(4)].map((_, index) => (
               <div
                 key={index}
-                className="rounded-[28px] border border-[rgba(250,204,21,0.08)] bg-black/50 p-5"
+                className="rounded-[28px] border border-white/10 bg-white/5 backdrop-blur-lg p-5"
               >
                 <Skeleton active paragraph={{ rows: 4 }} />
               </div>
             ))
           ) : communities.length === 0 ? (
-            <div className="rounded-[28px] border border-dashed border-[rgba(250,204,21,0.12)] bg-black/50 p-12 lg:col-span-2">
+            <div className="rounded-[28px] border border-dashed border-white/10 bg-white/5 backdrop-blur-lg p-12 lg:col-span-2">
               <Empty
                 description={
-                  <span className="text-xs uppercase tracking-[0.18em] text-gray-500">
+                  <span className="text-xs  text-gray-500">
                     No communities available yet
                   </span>
                 }
@@ -702,12 +702,12 @@ const Community = () => {
           {featuredCommunities.map((community) => (
             <div
               key={community._id}
-              className="rounded-[28px] border border-[rgba(250,204,21,0.08)] bg-[linear-gradient(180deg,rgba(12,12,12,0.96),rgba(5,5,5,0.98))] p-5"
+              className="rounded-[28px] border border-white/10 bg-white/5 backdrop-blur-xl p-5"
             >
-              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[var(--primary)]">
+              <p className="text-[10px] font-bold text-[var(--primary)]">
                 Featured room
               </p>
-              <h4 className="mt-3 text-lg font-black uppercase tracking-[0.16em] text-white">
+              <h4 className="mt-3 text-lg font-semibold text-white">
                 {community.name}
               </h4>
               <p className="mt-3 text-sm leading-7 text-gray-400">
@@ -715,7 +715,7 @@ const Community = () => {
               </p>
               <Button
                 onClick={() => openCommunity(community._id)}
-                className="!mt-5 !h-11 !rounded-xl !border-none !bg-[var(--primary)] !px-5 !font-black !uppercase !tracking-[0.16em] !text-black hover:!bg-[var(--primary-hover)]"
+                className="!mt-5 !h-11 !rounded-xl !border-none !bg-[var(--primary)] !px-5 !font-semibold !text-black hover:!bg-[var(--primary-hover)]"
               >
                 Open Community Page
               </Button>
@@ -730,14 +730,14 @@ const Community = () => {
     return (
       <section>
           {loadingDetails ? (
-            <div className="rounded-[30px] border border-[rgba(250,204,21,0.08)] bg-black/50 p-6">
+            <div className="rounded-[30px] border border-white/10 bg-white/5 backdrop-blur-lg p-6">
               <Skeleton active paragraph={{ rows: 16 }} />
             </div>
           ) : !selectedCommunity ? (
-            <div className="rounded-[28px] border border-dashed border-[rgba(250,204,21,0.12)] bg-black/50 p-12">
+            <div className="rounded-[28px] border border-dashed border-white/10 bg-white/5 backdrop-blur-lg p-12">
               <Empty
                 description={
-                  <span className="text-xs uppercase tracking-[0.18em] text-gray-500">
+                  <span className="text-xs  text-gray-500">
                     Community not found
                   </span>
                 }
@@ -745,7 +745,7 @@ const Community = () => {
             </div>
           ) : (
             <>
-              <div className="overflow-hidden rounded-[34px] border border-[rgba(250,204,21,0.12)] bg-[#0b0d10] shadow-[0_24px_80px_rgba(0,0,0,0.38)]">
+              <div className="overflow-hidden rounded-[34px] border border-white/10 bg-transparent shadow-[0_24px_80px_rgba(0,0,0,0.38)]">
                 <div className="relative h-72 bg-[linear-gradient(135deg,rgba(250,204,21,0.14),rgba(0,0,0,0.15))]">
                   {selectedCommunity.coverImageUrl ? (
                     <img
@@ -760,7 +760,7 @@ const Community = () => {
                       <Button
                         onClick={handleLeaveCommunity}
                         loading={joiningCommunity}
-                        className="!h-10 !rounded-full !border-[rgba(250,204,21,0.16)] !bg-black/65 !px-4 !font-black !uppercase !tracking-[0.14em] !text-gray-200 hover:!border-[var(--primary)] hover:!text-[var(--primary)]"
+                        className="!h-10 !rounded-full !border-white/10 !bg-[#09090b]/65 !px-4 !font-semibold !text-gray-200 hover:!border-[var(--primary)] hover:!text-[var(--primary)]"
                       >
                         Leave
                       </Button>
@@ -770,7 +770,7 @@ const Community = () => {
                         icon={<TeamOutlined />}
                         onClick={handleJoinCommunity}
                         loading={joiningCommunity}
-                        className="!h-10 !rounded-full !border-none !bg-[var(--primary)] !px-4 !font-black !uppercase !tracking-[0.14em] !text-black hover:!bg-[var(--primary-hover)]"
+                        className="!h-10 !rounded-full !border-none !bg-[var(--primary)] !px-4 !font-semibold !text-black hover:!bg-[var(--primary-hover)]"
                       >
                         Join
                       </Button>
@@ -787,28 +787,28 @@ const Community = () => {
                     <div className="flex flex-wrap items-start justify-between gap-4">
                       <div className="max-w-3xl">
                         <div className="mt-3 flex flex-wrap items-center gap-2">
-                          <h2 className="text-3xl font-black uppercase tracking-[0.16em] text-white md:text-5xl">
+                          <h2 className="text-3xl font-semibold text-white md:text-5xl">
                             {selectedCommunity.name}
                           </h2>
                           <Tag
                             color={selectedCommunity.active ? "gold" : "default"}
-                            className="!rounded-full !px-3 !py-1 !font-mono !text-[9px] !font-black !uppercase !tracking-[0.16em]"
+                            className="!rounded-full !px-3 !py-1 !font-sans !text-[9px] !font-semibold"
                           >
                             {selectedCommunity.active ? "Live Room" : "Paused Room"}
                           </Tag>
                           {isJoined ? (
-                            <Tag className="!rounded-full !border-none !bg-[rgba(250,204,21,0.16)] !px-3 !py-1 !font-mono !text-[9px] !font-black !uppercase !tracking-[0.16em] !text-[var(--primary)]">
+                            <Tag className="!rounded-full !border-none !bg-[rgba(250,204,21,0.16)] !px-3 !py-1 !font-sans !text-[9px] !font-semibold !text-[var(--primary)]">
                               Joined Member
                             </Tag>
                           ) : null}
                         </div>
                       </div>
 
-                      <div className="rounded-2xl border border-[rgba(250,204,21,0.12)] bg-black/60 px-4 py-3">
-                        <p className="text-[9px] font-black uppercase tracking-[0.18em] text-gray-500">
+                      <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-lg px-4 py-3">
+                        <p className="text-[9px] font-bold text-gray-500">
                           All Posts
                         </p>
-                        <p className="mt-2 text-sm font-black uppercase tracking-[0.16em] text-white">
+                        <p className="mt-2 text-sm font-semibold text-white">
                           {selectedCommunity.stats?.postsCount || 0} published
                         </p>
                       </div>
@@ -816,10 +816,10 @@ const Community = () => {
                   </div>
                 </div>
 
-                <div className="border-t border-[rgba(250,204,21,0.08)] p-5">
+                <div className="border-t border-white/10 p-5">
                   <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
                     <div className="flex-1">
-                      <p className="text-[10px] font-black uppercase tracking-[0.18em] text-gray-500">
+                      <p className="text-[10px] font-bold text-gray-500">
                         Joined Member Preview
                       </p>
                       <div className="mt-3 flex flex-wrap items-center gap-3">
@@ -830,18 +830,18 @@ const Community = () => {
                                 <Avatar
                                   key={member._id}
                                   src={member.profileImage}
-                                  className="border border-[rgba(250,204,21,0.18)] bg-black"
+                                  className="border border-white/10 bg-[#09090b]"
                                 >
                                   {member.fullname?.slice(0, 1) || "M"}
                                 </Avatar>
                               ))}
                             </Avatar.Group>
-                            <span className="text-xs uppercase tracking-[0.16em] text-gray-400">
+                            <span className="text-xs  text-gray-400">
                               {joinedMembers.map((member) => member.fullname).join(" • ")}
                             </span>
                           </>
                         ) : (
-                          <span className="text-xs uppercase tracking-[0.16em] text-gray-500">
+                          <span className="text-xs  text-gray-500">
                             No joined members to preview yet
                           </span>
                         )}
@@ -853,7 +853,7 @@ const Community = () => {
                         <Button
                           onClick={handleLeaveCommunity}
                           loading={joiningCommunity}
-                          className="!h-11 !rounded-xl !border-[rgba(250,204,21,0.15)] !bg-black !px-5 !font-black !uppercase !tracking-[0.18em] !text-gray-200 hover:!border-[var(--primary)] hover:!text-[var(--primary)]"
+                          className="!h-11 !rounded-xl !border-white/10 !bg-[#09090b] !px-5 !font-bold !text-gray-200 hover:!border-[var(--primary)] hover:!text-[var(--primary)]"
                         >
                           Leave Room
                         </Button>
@@ -863,7 +863,7 @@ const Community = () => {
                           icon={<TeamOutlined />}
                           onClick={handleJoinCommunity}
                           loading={joiningCommunity}
-                          className="!h-11 !rounded-xl !border-none !bg-[var(--primary)] !px-5 !font-black !uppercase !tracking-[0.18em] !text-black hover:!bg-[var(--primary-hover)]"
+                          className="!h-11 !rounded-xl !border-none !bg-[var(--primary)] !px-5 !font-bold !text-black hover:!bg-[var(--primary-hover)]"
                         >
                           Join Community
                         </Button>
@@ -880,12 +880,12 @@ const Community = () => {
                     ].map((item) => (
                       <div
                         key={item.label}
-                        className="rounded-2xl border border-[rgba(250,204,21,0.08)] bg-black/60 p-4"
+                        className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-lg p-4"
                       >
-                        <p className="text-[9px] font-black uppercase tracking-[0.18em] text-gray-500">
+                        <p className="text-[9px] font-bold text-gray-500">
                           {item.label}
                         </p>
-                        <p className="mt-2 text-2xl font-black text-white">{item.value}</p>
+                        <p className="mt-2 text-2xl font-bold text-white">{item.value}</p>
                       </div>
                     ))}
                   </div>
@@ -893,9 +893,9 @@ const Community = () => {
               </div>
 
               {showComposer ? (
-                <div className="border-t border-[rgba(250,204,21,0.08)] bg-[#0f1114] px-5 py-5">
+                <div className="border-t border-white/10 bg-transparent px-5 py-5">
                   {isJoined ? (
-                    <div className="rounded-[28px] border border-[rgba(250,204,21,0.1)] bg-black/45 p-4">
+                    <div className="rounded-[28px] border border-white/10 bg-[#09090b]/45 p-4">
                     <Input.TextArea
                       value={postContent}
                       onChange={(event) => setPostContent(event.target.value)}
@@ -914,7 +914,7 @@ const Community = () => {
                       >
                         <Button
                           icon={<UploadOutlined />}
-                          className="!rounded-xl !border-[rgba(250,204,21,0.15)] !bg-black !text-[var(--primary)] hover:!border-[var(--primary)] hover:!text-[var(--primary-hover)]"
+                          className="!rounded-xl !border-white/10 !bg-[#09090b] !text-[var(--primary)] hover:!border-[var(--primary)] hover:!text-[var(--primary-hover)]"
                         >
                           {postMedia ? "Change Media" : "Attach Media"}
                         </Button>
@@ -923,7 +923,7 @@ const Community = () => {
                       <div className="flex gap-3">
                         <Button
                           onClick={() => setShowComposer(false)}
-                          className="!h-11 !rounded-xl !border-[rgba(250,204,21,0.15)] !bg-black !px-4 !font-black !uppercase !tracking-[0.16em] !text-gray-200 hover:!border-[var(--primary)] hover:!text-[var(--primary)]"
+                          className="!h-11 !rounded-xl !border-white/10 !bg-[#09090b] !px-4 !font-semibold !text-gray-200 hover:!border-[var(--primary)] hover:!text-[var(--primary)]"
                         >
                           Close
                         </Button>
@@ -932,7 +932,7 @@ const Community = () => {
                           icon={<SendOutlined />}
                           loading={creatingPost}
                           onClick={handleCreatePost}
-                          className="!h-11 !rounded-xl !border-none !bg-[var(--primary)] !px-5 !font-black !uppercase !tracking-[0.18em] !text-black hover:!bg-[var(--primary-hover)]"
+                          className="!h-11 !rounded-xl !border-none !bg-[var(--primary)] !px-5 !font-bold !text-black hover:!bg-[var(--primary-hover)]"
                         >
                           Publish
                         </Button>
@@ -940,26 +940,26 @@ const Community = () => {
                     </div>
 
                     {postMedia ? (
-                      <p className="mt-3 text-[10px] uppercase tracking-[0.16em] text-gray-500">
+                      <p className="mt-3 text-[10px]  text-gray-500">
                         Selected file: {postMedia.name}
                       </p>
                     ) : null}
                     </div>
                   ) : !canInteract ? (
-                  <div className="rounded-[24px] border border-dashed border-[rgba(250,204,21,0.12)] bg-black/50 p-6">
+                  <div className="rounded-[24px] border border-dashed border-white/10 bg-white/5 backdrop-blur-lg p-6">
                     <p className="text-sm leading-7 text-gray-400">
                       Sign in first, then join this room to publish posts, react, and reply.
                     </p>
                     <Button
                       onClick={() => navigate("/login")}
                       icon={<LoginOutlined />}
-                      className="!mt-4 !rounded-xl !border-none !bg-[var(--primary)] !px-5 !font-black !uppercase !tracking-[0.18em] !text-black hover:!bg-[var(--primary-hover)]"
+                      className="!mt-4 !rounded-xl !border-none !bg-[var(--primary)] !px-5 !font-bold !text-black hover:!bg-[var(--primary-hover)]"
                     >
                       Login To Continue
                     </Button>
                   </div>
                 ) : (
-                  <div className="rounded-[24px] border border-dashed border-[rgba(250,204,21,0.12)] bg-black/50 p-6">
+                  <div className="rounded-[24px] border border-dashed border-white/10 bg-white/5 backdrop-blur-lg p-6">
                     <p className="text-sm leading-7 text-gray-400">
                       You are browsing this room in read-only mode. Join the community first to
                       unlock posting, likes, and replies.
@@ -969,7 +969,7 @@ const Community = () => {
                       icon={<TeamOutlined />}
                       onClick={handleJoinCommunity}
                       loading={joiningCommunity}
-                      className="!mt-4 !rounded-xl !border-none !bg-[var(--primary)] !px-5 !font-black !uppercase !tracking-[0.18em] !text-black hover:!bg-[var(--primary-hover)]"
+                      className="!mt-4 !rounded-xl !border-none !bg-[var(--primary)] !px-5 !font-bold !text-black hover:!bg-[var(--primary-hover)]"
                     >
                       Join This Room
                     </Button>
@@ -978,13 +978,13 @@ const Community = () => {
                 </div>
               ) : null}
 
-              <div className="max-h-[calc(100vh-15rem)] overflow-y-auto border-t border-[rgba(250,204,21,0.08)] bg-[#0f1114] px-5 py-5">
+              <div className="max-h-[calc(100vh-15rem)] overflow-y-auto border-t border-white/10 bg-transparent px-5 py-5">
                 <div className="space-y-5">
                 {posts.length === 0 ? (
-                  <div className="rounded-[28px] border border-dashed border-[rgba(250,204,21,0.12)] bg-black/50 p-12">
+                  <div className="rounded-[28px] border border-dashed border-white/10 bg-white/5 backdrop-blur-lg p-12">
                     <Empty
                       description={
-                        <span className="text-xs uppercase tracking-[0.18em] text-gray-500">
+                        <span className="text-xs  text-gray-500">
                           No posts published in this room yet
                         </span>
                       }
@@ -1001,7 +1001,7 @@ const Community = () => {
                         key={post._id}
                         initial={{ opacity: 0, y: 14 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="overflow-hidden rounded-[30px] border border-[rgba(250,204,21,0.1)] bg-[#0f1114] shadow-[0_18px_40px_rgba(0,0,0,0.24)]"
+                        className="overflow-hidden rounded-[30px] border border-white/10 bg-transparent shadow-[0_18px_40px_rgba(0,0,0,0.24)]"
                       >
                         <div className="p-5">
                           <div className="flex items-start justify-between gap-4">
@@ -1009,12 +1009,12 @@ const Community = () => {
                               <Avatar
                                 src={post.author?.profileImage}
                                 size={46}
-                                className="border border-[rgba(250,204,21,0.15)] bg-black"
+                                className="border border-white/10 bg-[#09090b]"
                               >
                                 {post.author?.fullname?.slice(0, 1) || "U"}
                               </Avatar>
                               <div>
-                                <p className="text-sm font-black text-white">
+                                <p className="text-sm font-bold text-white">
                                   {post.author?.fullname || "Community Member"}
                                 </p>
                                 <p className="text-[11px] text-gray-500">
@@ -1045,12 +1045,12 @@ const Community = () => {
                           </p>
 
                           {post.mediaUrl ? (
-                            <div className="mt-4 overflow-hidden rounded-[22px] border border-[rgba(250,204,21,0.08)] bg-black">
+                            <div className="mt-4 overflow-hidden rounded-[22px] border border-white/10 bg-[#09090b]">
                               {post.mediaType === "video" ? (
                                 <video
                                   src={post.mediaUrl}
                                   controls
-                                  className="max-h-[520px] w-full bg-black"
+                                  className="max-h-[520px] w-full bg-[#09090b]"
                                 />
                               ) : (
                                 <img
@@ -1062,7 +1062,7 @@ const Community = () => {
                             </div>
                           ) : null}
 
-                          <div className="mt-4 flex items-center justify-between gap-4 border-b border-[rgba(250,204,21,0.08)] pb-3 text-[11px] text-gray-500">
+                          <div className="mt-4 flex items-center justify-between gap-4 border-b border-white/10 pb-3 text-[11px] text-gray-500">
                             <div className="flex items-center gap-3">
                               <span>{post.likesCount || 0} likes</span>
                               <span>{post.dislikesCount || 0} dislikes</span>
@@ -1074,21 +1074,21 @@ const Community = () => {
                             <Button
                               icon={<LikeOutlined />}
                               onClick={() => handleReaction(post._id, "like")}
-                              className="!h-11 !rounded-2xl !border-none !bg-transparent !font-black !text-gray-300 hover:!bg-white/5 hover:!text-[var(--primary)]"
+                              className="!h-11 !rounded-2xl !border-none !bg-transparent !font-bold !text-gray-300 hover:!bg-white/5 hover:!text-[var(--primary)]"
                             >
                               Like
                             </Button>
                             <Button
                               icon={<MessageOutlined />}
                               onClick={() => handleToggleComments(post._id)}
-                              className="!h-11 !rounded-2xl !border-none !bg-transparent !font-black !text-gray-300 hover:!bg-white/5 hover:!text-[var(--primary)]"
+                              className="!h-11 !rounded-2xl !border-none !bg-transparent !font-bold !text-gray-300 hover:!bg-white/5 hover:!text-[var(--primary)]"
                             >
                               Comment
                             </Button>
                             <Button
                               icon={<DislikeOutlined />}
                               onClick={() => handleReaction(post._id, "dislike")}
-                              className="!h-11 !rounded-2xl !border-none !bg-transparent !font-black !text-gray-300 hover:!bg-white/5 hover:!text-[var(--primary)]"
+                              className="!h-11 !rounded-2xl !border-none !bg-transparent !font-bold !text-gray-300 hover:!bg-white/5 hover:!text-[var(--primary)]"
                             >
                               Dislike
                             </Button>
@@ -1096,20 +1096,20 @@ const Community = () => {
                         </div>
 
                         {!isJoined ? (
-                          <div className="border-t border-[rgba(250,204,21,0.08)] bg-[#0b0d10] px-5 py-3 text-[10px] font-black uppercase tracking-[0.16em] text-gray-500">
+                          <div className="border-t border-white/10 bg-transparent px-5 py-3 text-[10px] font-semibold text-gray-500">
                             Join this room to react, comment, and reply
                           </div>
                         ) : null}
 
                         {loadingComments[post._id] ? (
-                          <div className="border-t border-[rgba(250,204,21,0.08)] p-5">
+                          <div className="border-t border-white/10 p-5">
                             <Skeleton active paragraph={{ rows: 2 }} />
                           </div>
                         ) : commentInputs[post._id] ? (
-                          <div className="border-t border-[rgba(250,204,21,0.08)] bg-[#0b0d10] p-5">
+                          <div className="border-t border-white/10 bg-transparent p-5">
                             <div className="space-y-4">
                               {comments.length === 0 ? (
-                                <p className="text-[11px] uppercase tracking-[0.16em] text-gray-500">
+                                <p className="text-[11px]  text-gray-500">
                                   No comments yet. Start the thread.
                                 </p>
                               ) : (
@@ -1121,7 +1121,7 @@ const Community = () => {
                               <div className="mt-5 flex items-start gap-3">
                                 <Avatar
                                   src={session?.profileImage}
-                                  className="border border-[rgba(250,204,21,0.12)] bg-black"
+                                  className="border border-white/10 bg-[#09090b]"
                                 >
                                   {session?.fullname?.slice(0, 1) || "Y"}
                                 </Avatar>
@@ -1143,7 +1143,7 @@ const Community = () => {
                                       type="primary"
                                       icon={<SendOutlined />}
                                       onClick={() => handleAddComment(post._id)}
-                                      className="!rounded-xl !border-none !bg-[var(--primary)] !px-4 !font-black !uppercase !tracking-[0.16em] !text-black hover:!bg-[var(--primary-hover)]"
+                                      className="!rounded-xl !border-none !bg-[var(--primary)] !px-4 !font-semibold !text-black hover:!bg-[var(--primary-hover)]"
                                     >
                                       Comment
                                     </Button>
@@ -1151,14 +1151,14 @@ const Community = () => {
                                 </div>
                               </div>
                             ) : (
-                              <div className="mt-4 rounded-2xl border border-dashed border-[rgba(250,204,21,0.12)] bg-black/50 p-4">
-                                <p className="text-[11px] uppercase tracking-[0.16em] text-gray-500">
+                              <div className="mt-4 rounded-2xl border border-dashed border-white/10 bg-white/5 backdrop-blur-lg p-4">
+                                <p className="text-[11px]  text-gray-500">
                                   Join this community first to reply inside the thread.
                                 </p>
                                 <Button
                                   onClick={handleJoinCommunity}
                                   loading={joiningCommunity}
-                                  className="!mt-3 !rounded-xl !border-none !bg-[var(--primary)] !px-4 !font-black !uppercase !tracking-[0.16em] !text-black hover:!bg-[var(--primary-hover)]"
+                                  className="!mt-3 !rounded-xl !border-none !bg-[var(--primary)] !px-4 !font-semibold !text-black hover:!bg-[var(--primary-hover)]"
                                 >
                                   Join To Reply
                                 </Button>
@@ -1179,7 +1179,7 @@ const Community = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-gray-200 font-mono relative overflow-hidden">
+    <div className="min-h-screen bg-[#09090b] text-gray-200 font-sans relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(250,204,21,0.08),transparent_26%),radial-gradient(circle_at_bottom_right,rgba(120,119,198,0.08),transparent_20%)] pointer-events-none" />
       <div className="absolute inset-0 grid-bg opacity-40 pointer-events-none" />
       <div className="absolute -top-20 right-10 h-96 w-96 rounded-full bg-[rgba(250,204,21,0.07)] blur-[160px] pointer-events-none" />
