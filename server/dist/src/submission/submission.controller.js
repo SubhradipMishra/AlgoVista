@@ -7,10 +7,16 @@ exports.getProblemSubmissions = exports.getUserSubmissionsWithSpecificProblem = 
 const problem_model_1 = __importDefault(require("../problem/problem.model"));
 const submission_model_1 = __importDefault(require("./submission.model"));
 const dockerRunner_1 = require("../executor/dockerRunner");
+const activity_model_1 = __importDefault(require("../activity/activity.model"));
+const user_model_1 = __importDefault(require("../user/user.model"));
+const user_gamification_1 = require("../user/user.gamification");
 // Run code for all test cases
 const createSubmissionMultiple = async (req, res) => {
     try {
         const { language_id, source_code, problemId, userId } = req.body;
+        const previousUserState = userId
+            ? await user_model_1.default.findById(userId).select("xp badges").lean()
+            : null;
         const problem = await problem_model_1.default.findById(problemId);
         if (!problem)
             return res.status(404).json({ error: "Problem not found" });
@@ -33,7 +39,38 @@ const createSubmissionMultiple = async (req, res) => {
             score,
             finishedAt: new Date(),
         });
-        return res.status(200).json({ submission });
+        if (userId) {
+            await activity_model_1.default.create({
+                userId,
+                type: verdict === "Accepted" ? "problem-solved" : "submission-attempt",
+                route: `/problems/${problemId}`,
+                data: {
+                    name: problem.title,
+                    description: verdict === "Accepted"
+                        ? `Solved a ${problem.difficulty || "coding"} challenge successfully.`
+                        : `Attempted a ${problem.difficulty || "coding"} challenge and received ${verdict}.`,
+                },
+            }).catch((activityError) => {
+                console.error("Submission activity logging failed:", activityError);
+            });
+        }
+        const gamificationSnapshot = userId
+            ? await (0, user_gamification_1.syncUserGamification)(userId)
+            : null;
+        const previousBadgeKeys = new Set((previousUserState?.badges || []).map((badge) => badge.key));
+        const newBadges = gamificationSnapshot?.dashboard?.achievements?.filter((badge) => !previousBadgeKeys.has(badge.key)) || [];
+        const xpDelta = Math.max(0, (gamificationSnapshot?.user?.xp || 0) - (previousUserState?.xp || 0));
+        return res.status(200).json({
+            submission,
+            gamification: gamificationSnapshot
+                ? {
+                    user: gamificationSnapshot.user,
+                    dashboard: gamificationSnapshot.dashboard,
+                    xpDelta,
+                    newBadges,
+                }
+                : null,
+        });
     }
     catch (err) {
         const message = err?.message || "Submission failed";

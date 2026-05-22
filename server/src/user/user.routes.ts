@@ -10,8 +10,10 @@ import {
   refreshToken,
   session,
   signup,
+  uploadProfileImage,
   updateUser,
 } from "./user.controller";
+import uploadProfileImageMiddleware from "../../utils/profile_upload.middleware";
 
 import {
   AdminGuard,
@@ -37,6 +39,12 @@ UserRouter.put("/change-password", AdminUserGuard, changePassword);
 
 // -------------------- USER MANAGEMENT --------------------
 UserRouter.put("/update/:id", AdminUserGuard, updateUser);
+UserRouter.post(
+  "/upload-profile-image/:id",
+  AdminUserGuard,
+  uploadProfileImageMiddleware.single("profileImage"),
+  uploadProfileImage
+);
 
 // -------------------- MENTORS --------------------
 UserRouter.get("/mentors", fetchMentor);

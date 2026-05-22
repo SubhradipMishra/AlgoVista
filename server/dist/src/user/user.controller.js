@@ -3,11 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.changePassword = exports.fetchMentorBySuperAdmin = exports.fetchMentorById = exports.fetchMentor = exports.updateUser = exports.refreshToken = exports.logout = exports.login = exports.signup = exports.sendCredentialsMail = exports.mailer = exports.fetchUserById = exports.session = void 0;
+exports.changePassword = exports.fetchMentorBySuperAdmin = exports.fetchMentorById = exports.fetchMentor = exports.uploadProfileImage = exports.updateUser = exports.refreshToken = exports.logout = exports.login = exports.signup = exports.sendCredentialsMail = exports.mailer = exports.fetchUserById = exports.session = void 0;
 const user_model_1 = __importDefault(require("./user.model"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const nodemailer_1 = __importDefault(require("nodemailer"));
+const user_gamification_1 = require("./user.gamification");
 const FOURTEEN_MINUTE = 14 * 60 * 1000;
 const SIX_DAYS = 6 * 24 * 60 * 60 * 1000;
 const SALT_ROUNDS = 10;
@@ -27,10 +28,10 @@ const fetchUserById = async (req, res) => {
         const { id } = req.params;
         if (!id)
             return res.status(400).json({ message: "Id is required!" });
-        const user = await user_model_1.default.findById(id);
-        if (!user)
+        const snapshot = await (0, user_gamification_1.syncUserGamification)(id);
+        if (!snapshot?.user)
             return res.status(404).json({ message: "No user found!" });
-        return res.json(user);
+        return res.json(snapshot);
     }
     catch (err) {
         console.log(err);
@@ -309,6 +310,37 @@ const updateUser = async (req, res) => {
     }
 };
 exports.updateUser = updateUser;
+const uploadProfileImage = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const requesterId = req.user?.id;
+        const requesterRole = req.user?.role;
+        if (!req.file) {
+            return res.status(400).json({ message: "Profile image is required" });
+        }
+        if (requesterRole !== "super-admin" &&
+            requesterRole !== "admin" &&
+            requesterId !== userId) {
+            return res.status(403).json({ message: "You cannot update this profile image" });
+        }
+        const user = await user_model_1.default.findById(userId);
+        if (!user)
+            return res.status(404).json({ message: "User not found" });
+        const profileImageUrl = `${req.protocol}://${req.get("host")}/uploads/profiles/${req.file.filename}`;
+        user.profileImage = profileImageUrl;
+        await user.save();
+        return res.status(200).json({
+            message: "Profile image uploaded successfully",
+            profileImage: profileImageUrl,
+            user,
+        });
+    }
+    catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: err.message || "Failed to upload profile image" });
+    }
+};
+exports.uploadProfileImage = uploadProfileImage;
 // -------------------- FETCH MENTORS --------------------
 const fetchMentor = async (req, res) => {
     try {

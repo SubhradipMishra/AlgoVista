@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import UserInterface from "./user.interface";
+import { syncUserGamification } from "./user.gamification";
 const FOURTEEN_MINUTE = 14 * 60 * 1000;
 const SIX_DAYS = 6 * 24 * 60 * 60 * 1000;
 const SALT_ROUNDS = 10;
@@ -22,9 +23,9 @@ export const fetchUserById  = async(req:any , res:Response)=>{
    try {
     const { id } = req.params;
     if (!id) return res.status(400).json({ message: "Id is required!" });
-    const user = await UserModel.findById(id);
-    if (!user) return res.status(404).json({ message: "No user found!" });
-    return res.json(user);
+    const snapshot = await syncUserGamification(id);
+    if (!snapshot?.user) return res.status(404).json({ message: "No user found!" });
+    return res.json(snapshot);
   } catch (err: any) {
     console.log(err);
     return res.status(500).json({ message: "Failed to fetch user!" });
@@ -334,6 +335,43 @@ export const updateUser = async (req: any, res: Response) => {
   } catch (err: any) {
     console.error(err);
     return res.status(500).json({ message: err.message || "Internal Server Error" });
+  }
+};
+
+export const uploadProfileImage = async (req: any, res: Response) => {
+  try {
+    const userId = req.params.id;
+    const requesterId = req.user?.id;
+    const requesterRole = req.user?.role;
+
+    if (!req.file) {
+      return res.status(400).json({ message: "Profile image is required" });
+    }
+
+    if (
+      requesterRole !== "super-admin" &&
+      requesterRole !== "admin" &&
+      requesterId !== userId
+    ) {
+      return res.status(403).json({ message: "You cannot update this profile image" });
+    }
+
+    const user = await UserModel.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const profileImageUrl = `${req.protocol}://${req.get("host")}/uploads/profiles/${req.file.filename}`;
+
+    user.profileImage = profileImageUrl;
+    await user.save();
+
+    return res.status(200).json({
+      message: "Profile image uploaded successfully",
+      profileImage: profileImageUrl,
+      user,
+    });
+  } catch (err: any) {
+    console.error(err);
+    return res.status(500).json({ message: err.message || "Failed to upload profile image" });
   }
 };
 

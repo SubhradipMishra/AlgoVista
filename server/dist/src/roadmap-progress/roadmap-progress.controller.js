@@ -7,6 +7,8 @@ exports.updateResourceProgress = exports.getProgress = exports.saveProgress = vo
 const mongoose_1 = __importDefault(require("mongoose"));
 const roadmap_model_1 = __importDefault(require("../roadmap/roadmap.model"));
 const roadmap_progress_model_1 = __importDefault(require("./roadmap-progress.model"));
+const activity_model_1 = __importDefault(require("../activity/activity.model"));
+const user_gamification_1 = require("../user/user.gamification");
 // ==========================================================
 // Save or Update Full Progress
 // ==========================================================
@@ -32,7 +34,8 @@ const saveProgress = async (req, res) => {
         });
         const overallProgress = totalResources > 0 ? (totalCompleted / totalResources) * 100 : 0;
         const progress = await roadmap_progress_model_1.default.findOneAndUpdate({ userId: new mongoose_1.default.Types.ObjectId(userId), roadmapId: new mongoose_1.default.Types.ObjectId(roadmapId) }, { subtopics, overallProgress, updatedAt: Date.now() }, { new: true, upsert: true });
-        return res.status(200).json({ success: true, progress });
+        const gamification = await (0, user_gamification_1.syncUserGamification)(userId);
+        return res.status(200).json({ success: true, progress, gamification });
     }
     catch (err) {
         console.error("❌ Error saving progress:", err);
@@ -109,6 +112,7 @@ const updateResourceProgress = async (req, res) => {
         const resource = subtopic.resources.find((r) => r.title === resourceTitle);
         if (!resource)
             return res.status(404).json({ success: false, message: "Resource not found" });
+        const wasCompleted = Boolean(resource.completed);
         // ✅ Toggle completion
         resource.completed = completed ?? !resource.completed;
         resource.completedAt = resource.completed ? new Date() : null;
@@ -121,10 +125,25 @@ const updateResourceProgress = async (req, res) => {
             totalResources > 0 ? (totalCompleted / totalResources) * 100 : 0;
         progress.updatedAt = new Date();
         await progress.save();
+        if (!wasCompleted && resource.completed) {
+            await activity_model_1.default.create({
+                userId,
+                type: "roadmap-progress",
+                route: `/roadmaps/${roadmapId}`,
+                data: {
+                    name: subtopicName,
+                    description: `Completed roadmap resource: ${resourceTitle}`,
+                },
+            }).catch((activityError) => {
+                console.error("Roadmap activity logging failed:", activityError);
+            });
+        }
+        const gamification = await (0, user_gamification_1.syncUserGamification)(userId);
         return res.status(200).json({
             success: true,
             message: "Progress updated successfully",
             progress,
+            gamification,
         });
     }
     catch (err) {

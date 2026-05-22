@@ -2,11 +2,17 @@ import ProblemModel from "../problem/problem.model";
 import SubmissionModel from "./submission.model";
 import { Request, Response } from "express";
 import { checkDockerExecutorHealth, executeSubmissionInDocker, prewarmDockerImage } from "../executor/dockerRunner";
+import ActivityModel from "../activity/activity.model";
+import UserModel from "../user/user.model";
+import { syncUserGamification } from "../user/user.gamification";
 
 // Run code for all test cases
 export const createSubmissionMultiple = async (req: Request, res: Response) => {
   try {
     const { language_id, source_code, problemId, userId } = req.body;
+    const previousUserState = userId
+      ? await UserModel.findById(userId).select("xp badges").lean()
+      : null;
 
     const problem: any = await ProblemModel.findById(problemId);
     if (!problem) return res.status(404).json({ error: "Problem not found" });
@@ -34,7 +40,48 @@ export const createSubmissionMultiple = async (req: Request, res: Response) => {
       finishedAt: new Date(),
     });
 
-    return res.status(200).json({ submission });
+    if (userId) {
+      await ActivityModel.create({
+        userId,
+        type: verdict === "Accepted" ? "problem-solved" : "submission-attempt",
+        route: `/problems/${problemId}`,
+        data: {
+          name: problem.title,
+          description:
+            verdict === "Accepted"
+              ? `Solved a ${problem.difficulty || "coding"} challenge successfully.`
+              : `Attempted a ${problem.difficulty || "coding"} challenge and received ${verdict}.`,
+        },
+      }).catch((activityError) => {
+        console.error("Submission activity logging failed:", activityError);
+      });
+    }
+
+    const gamificationSnapshot = userId
+      ? await syncUserGamification(userId)
+      : null;
+
+    const previousBadgeKeys = new Set((previousUserState?.badges || []).map((badge: any) => badge.key));
+    const newBadges =
+      gamificationSnapshot?.dashboard?.achievements?.filter(
+        (badge: any) => !previousBadgeKeys.has(badge.key)
+      ) || [];
+    const xpDelta = Math.max(
+      0,
+      (gamificationSnapshot?.user?.xp || 0) - (previousUserState?.xp || 0)
+    );
+
+    return res.status(200).json({
+      submission,
+      gamification: gamificationSnapshot
+        ? {
+            user: gamificationSnapshot.user,
+            dashboard: gamificationSnapshot.dashboard,
+            xpDelta,
+            newBadges,
+          }
+        : null,
+    });
   } catch (err: any) {
     const message = err?.message || "Submission failed";
     const statusCode = message.includes("Unsupported language_id") ? 400 : 500;

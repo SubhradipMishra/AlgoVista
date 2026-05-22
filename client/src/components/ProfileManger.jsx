@@ -100,6 +100,7 @@ const ProfileManager = () => {
   const [editField, setEditField] = useState(null);
   const [allSkills, setAllSkills] = useState([]);
   const [selectedKey, setSelectedKey] = useState("2");
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   useEffect(() => {
     if (!session?.id) return;
@@ -154,11 +155,39 @@ const ProfileManager = () => {
     }
   };
 
-  const handleUpload = ({ file }) => {
-    const preview = URL.createObjectURL(file);
-    updateField({ profileImage: preview });
-    setUserData((prev) => ({ ...prev, profileImage: preview }));
-    toast.success(`${file.name} uploaded`);
+  const handleUpload = async ({ file, onSuccess, onError }) => {
+    try {
+      setUploadingImage(true);
+
+      const formData = new FormData();
+      formData.append("profileImage", file);
+
+      const res = await axios.post(
+        `http://localhost:4000/auth/upload-profile-image/${id}`,
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      setUserData((prev) => ({
+        ...prev,
+        ...res.data.user,
+        profileImage: res.data.profileImage || res.data.user?.profileImage,
+      }));
+
+      toast.success(`${file.name} uploaded successfully`);
+      onSuccess?.(res.data, file);
+    } catch (error) {
+      console.error(error);
+      toast.error(error?.response?.data?.message || "Failed to upload profile image");
+      onError?.(error);
+    } finally {
+      setUploadingImage(false);
+    }
   };
 
   if (!userData) {
@@ -211,7 +240,7 @@ const ProfileManager = () => {
                 <UserOutlined />
               </div>
               <div className="text-left font-mono">
-                <div className="text-xs font-black text-white tracking-wide uppercase">{userData.username}</div>
+                <div className="text-xs font-black text-white tracking-wide uppercase">{userData.fullname}</div>
                 <div className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">{userData.role} Account</div>
               </div>
             </div>
@@ -257,10 +286,11 @@ const ProfileManager = () => {
                   accept="image/*"
                 >
                   <Button
+                    loading={uploadingImage}
                     icon={<UploadOutlined />}
                     className="!bg-black hover:!bg-[#07070a] !text-gray-300 hover:!text-[var(--primary)] !border-gray-900 hover:!border-[var(--primary)] !rounded-xl text-xs font-black uppercase tracking-widest py-5 flex items-center transition-all duration-300"
                   >
-                    Upload Avatar
+                    {uploadingImage ? "Uploading..." : "Upload Avatar"}
                   </Button>
                 </Upload>
               </div>

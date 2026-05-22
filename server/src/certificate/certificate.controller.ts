@@ -4,6 +4,8 @@ import QRCode from "qrcode";
 import fs from "fs";
 import path from "path";
 import CertificateModel from "./certificate.model";
+import ActivityModel from "../activity/activity.model";
+import { syncUserGamification } from "../user/user.gamification";
 
 
 export const generateCertificate = async (req: Request, res: Response): Promise<void> => {
@@ -212,11 +214,26 @@ export const generateCertificate = async (req: Request, res: Response): Promise<
     });
     await newCert.save();
 
+    await ActivityModel.create({
+      userId,
+      type: "certificate-earned",
+      route: `/roadmaps/${roadmapId}`,
+      data: {
+        name: roadmapName,
+        description: "Unlocked a verified roadmap completion certificate.",
+      },
+    }).catch((activityError) => {
+      console.error("Certificate activity logging failed:", activityError);
+    });
+
+    const gamification = await syncUserGamification(userId);
+
     res.json({
       success: true,
       message: "Certificate generated successfully",
       fileUrl: newCert.fileUrl,
       certificateId,
+      gamification,
     });
   } catch (error) {
     console.error("Certificate generation failed:", error);

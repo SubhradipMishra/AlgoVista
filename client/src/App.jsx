@@ -24,6 +24,16 @@ import ProfileManger from "./components/ProfileManger";
 import DevTools from "./components/DevTools";
 import AlgoVisualizer from "./components/devtools/Visualizer/AlgoVisualizer";
 import SortingVisualizer from "./components/devtools/Visualizer/SortingVisualizer";
+import GraphVisualizer from "./components/devtools/Visualizer/GraphVisualizer";
+import TreeVisualizer from "./components/devtools/Visualizer/TreeVisualizer";
+import RecursionVisualizer from "./components/devtools/Visualizer/RecursionVisualizer";
+import DynamicProgrammingVisualizer from "./components/devtools/Visualizer/DynamicProgrammingVisualizer";
+import BacktrackingVisualizer from "./components/devtools/Visualizer/BacktrackingVisualizer";
+import JsonGenerator from "./components/devtools/JsonGenerator";
+import PhotoGenerator from "./components/devtools/PhotoGenerator";
+import TaskPlanner from "./components/devtools/TaskPlanner";
+import CodeFormatter from "./components/devtools/CodeFormatter";
+import EnvConfigurator from "./components/devtools/EnvConfigurator";
 import UserSidebar from "./components/UserSidebar";
 import AddProblems from "./components/admin/AddProblems";
 import CodeEditor from "./components/CodeEditor";
@@ -150,6 +160,16 @@ function App() {
 
 <Route path="/devtools/visualizer"  element={<AlgoVisualizer/>}/>
 <Route path="/devtools/visualizer/sorting" element={<SortingVisualizer/>}/>
+<Route path="/devtools/visualizer/graph" element={<GraphVisualizer/>}/>
+<Route path="/devtools/visualizer/tree" element={<TreeVisualizer/>}/>
+<Route path="/devtools/visualizer/recursion" element={<RecursionVisualizer/>}/>
+<Route path="/devtools/visualizer/dynamic" element={<DynamicProgrammingVisualizer/>}/>
+<Route path="/devtools/visualizer/backtracking" element={<BacktrackingVisualizer/>}/>
+<Route path="/devtools/json-generator" element={<JsonGenerator />} />
+<Route path="/devtools/photo-generator" element={<PhotoGenerator />} />
+<Route path="/devtools/task-planner" element={<TaskPlanner />} />
+<Route path="/devtools/code-formatter" element={<CodeFormatter />} />
+<Route path="/devtools/configurator" element={<EnvConfigurator />} />
 
         </Routes>
       </Router>

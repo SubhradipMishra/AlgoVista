@@ -100,6 +100,7 @@ app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, cookie_parser_1.default)());
 app.use("/uploads/courses", express_1.default.static(path_1.default.join(__dirname, "../uploads/courses")));
 app.use("/uploads/community", express_1.default.static(path_1.default.join(__dirname, "../uploads/community")));
+app.use("/uploads/profiles", express_1.default.static(path_1.default.join(__dirname, "../uploads/profiles")));
 mongoose_1.default
     .connect(process.env.DB_URL)
     .then(() => console.log("✅ Database connected successfully"))

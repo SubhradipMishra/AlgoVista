@@ -108,6 +108,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use("/uploads/courses", express.static(path.join(__dirname, "../uploads/courses")));
 app.use("/uploads/community", express.static(path.join(__dirname, "../uploads/community")));
+app.use("/uploads/profiles", express.static(path.join(__dirname, "../uploads/profiles")));
 
 
 mongoose

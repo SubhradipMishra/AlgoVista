@@ -37,6 +37,7 @@ const mongoose_1 = __importStar(require("mongoose"));
 const certificateSchema = new mongoose_1.Schema({
     userId: { type: mongoose_1.Schema.Types.ObjectId, ref: "User", required: true },
     roadmapId: { type: mongoose_1.Schema.Types.ObjectId, ref: "Roadmap", required: false },
+    roadmapName: { type: String, default: "" },
     certificateId: { type: String, unique: true },
     issuedAt: { type: Date, default: Date.now },
     fileUrl: { type: String },

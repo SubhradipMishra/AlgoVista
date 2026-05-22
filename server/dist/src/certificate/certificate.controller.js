@@ -9,6 +9,8 @@ const qrcode_1 = __importDefault(require("qrcode"));
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const certificate_model_1 = __importDefault(require("./certificate.model"));
+const activity_model_1 = __importDefault(require("../activity/activity.model"));
+const user_gamification_1 = require("../user/user.gamification");
 const generateCertificate = async (req, res) => {
     try {
         const { userId, roadmapId, roadmapName, userName } = req.body;
@@ -167,11 +169,24 @@ const generateCertificate = async (req, res) => {
             fileUrl: `/certificate/file/${certificateId}`,
         });
         await newCert.save();
+        await activity_model_1.default.create({
+            userId,
+            type: "certificate-earned",
+            route: `/roadmaps/${roadmapId}`,
+            data: {
+                name: roadmapName,
+                description: "Unlocked a verified roadmap completion certificate.",
+            },
+        }).catch((activityError) => {
+            console.error("Certificate activity logging failed:", activityError);
+        });
+        const gamification = await (0, user_gamification_1.syncUserGamification)(userId);
         res.json({
             success: true,
             message: "Certificate generated successfully",
             fileUrl: newCert.fileUrl,
             certificateId,
+            gamification,
         });
     }
     catch (error) {

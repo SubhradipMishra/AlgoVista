@@ -120,12 +120,12 @@ const UserSidebar = ({ user, selectedKey, setSelectedKey, navigate }) => {
               {user.fullname}
             </div>
             <div style={{ marginTop: 4, display: "flex", gap: 8, flexWrap: "wrap" }}>
-              <Tag style={{ fontWeight: 600, fontSize: 12, backgroundColor: "rgba(255,215,0,0.1)", color: "var(--primary-yellow)", border: "1px solid var(--glass-border)" }}>{user.rank}</Tag>
-              <Tag style={{ fontWeight: 600, fontSize: 12, backgroundColor: "rgba(255,215,0,0.1)", color: "var(--primary-yellow)", border: "1px solid var(--glass-border)" }}>XP {user.xp}</Tag>
+              <Tag style={{ fontWeight: 600, fontSize: 12, backgroundColor: "rgba(255,215,0,0.1)", color: "var(--primary-yellow)", border: "1px solid var(--glass-border)" }}>{user.rank || "Rookie"}</Tag>
+              <Tag style={{ fontWeight: 600, fontSize: 12, backgroundColor: "rgba(255,215,0,0.1)", color: "var(--primary-yellow)", border: "1px solid var(--glass-border)" }}>XP {user.xp || 0}</Tag>
             </div>
             <div style={{ marginTop: 6, fontSize: 12, display: "flex", alignItems: "center", gap: 6, color: "#f1f5f9" }}>
               <FireOutlined />
-              <span>{user.streak}-day streak</span>
+              <span>{user.streak || 0}-day streak</span>
             </div>
           </div>
         )}

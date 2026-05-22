@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import mongoose from "mongoose";
 import RoadmapModel from "../roadmap/roadmap.model";
 import RoadmapProgressModel from "./roadmap-progress.model";
+import ActivityModel from "../activity/activity.model";
+import { syncUserGamification } from "../user/user.gamification";
 
 interface ResourceUpdateBody {
   userId: string;
@@ -61,7 +63,9 @@ export const saveProgress = async (
       { new: true, upsert: true }
     );
 
-    return res.status(200).json({ success: true, progress });
+    const gamification = await syncUserGamification(userId);
+
+    return res.status(200).json({ success: true, progress, gamification });
   } catch (err) {
     console.error("❌ Error saving progress:", err);
     return res.status(500).json({ success: false, message: "Internal Server Error" });
@@ -152,6 +156,8 @@ export const updateResourceProgress = async (
     if (!resource)
       return res.status(404).json({ success: false, message: "Resource not found" });
 
+    const wasCompleted = Boolean(resource.completed);
+
     // ✅ Toggle completion
     resource.completed = completed ?? !resource.completed;
     resource.completedAt = resource.completed ? new Date() : null;
@@ -175,10 +181,27 @@ export const updateResourceProgress = async (
 
     await progress.save();
 
+    if (!wasCompleted && resource.completed) {
+      await ActivityModel.create({
+        userId,
+        type: "roadmap-progress",
+        route: `/roadmaps/${roadmapId}`,
+        data: {
+          name: subtopicName,
+          description: `Completed roadmap resource: ${resourceTitle}`,
+        },
+      }).catch((activityError) => {
+        console.error("Roadmap activity logging failed:", activityError);
+      });
+    }
+
+    const gamification = await syncUserGamification(userId);
+
     return res.status(200).json({
       success: true,
       message: "Progress updated successfully",
       progress,
+      gamification,
     });
   } catch (err) {
     console.error("❌ Error updating progress:", err);
