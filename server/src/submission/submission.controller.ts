@@ -1,7 +1,7 @@
 import ProblemModel from "../problem/problem.model";
 import SubmissionModel from "./submission.model";
 import { Request, Response } from "express";
-import { checkDockerExecutorHealth, executeSubmissionInDocker, prewarmDockerImage } from "../executor/dockerRunner";
+import { checkJudge0Health as checkDockerExecutorHealth, executeSubmissionInJudge0 as executeSubmissionInDocker, prewarmJudge0Image as prewarmDockerImage } from "../executor/judge0Runner";
 import ActivityModel from "../activity/activity.model";
 import UserModel from "../user/user.model";
 import { syncUserGamification } from "../user/user.gamification";
