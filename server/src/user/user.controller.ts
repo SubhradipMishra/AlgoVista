@@ -13,11 +13,10 @@ const SALT_ROUNDS = 10;
 const isProduction = process.env.NODE_ENV === "production";
 
 const getCookieOptions = (maxAge: number) => ({
-  maxAge,
   httpOnly: true,
-  secure: isProduction,
-  sameSite: isProduction ? ("none" as const) : ("lax" as const),
-  ...(isProduction ? {} : {}),
+  secure: true,
+  sameSite: "none" as const,
+  maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
 });
 
 // -------------------- SESSION --------------------
