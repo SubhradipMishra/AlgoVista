@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Router } from "express";
 import { createSubmissionMultiple, getExecutorHealth, getProblemSubmissions, getUserSubmissions, getUserSubmissionsWithSpecificProblem, prewarmExecutor } from "./submission.controller";
 

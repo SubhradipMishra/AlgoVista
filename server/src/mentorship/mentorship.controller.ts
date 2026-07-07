@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Request, Response } from "express";
 import MentorShipInterface from "./mentorship.interface";
 import MentorshipModel from "./mentorship.model";

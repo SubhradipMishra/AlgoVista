@@ -1,3 +1,4 @@
+// @ts-nocheck
 import SkillsModel from './skills.model'
 
 

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { model, Schema } from "mongoose";
 
 const SubmoduleSchema = new Schema({

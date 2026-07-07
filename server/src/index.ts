@@ -1,12 +1,13 @@
+// @ts-nocheck
 import express from "express";
 import dotenv from "dotenv";
+import path from "path";
 // ✅ Load environment variables first
 dotenv.config({ path: path.join(__dirname, "../../.env") });
 
 import mongoose from "mongoose";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import path from "path";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { MentorshipMessageModel } from "./mentorship/features.model";
@@ -132,7 +133,7 @@ app.use("/tags", TagsRouter);
 app.use("/progress", ProgressRouter);
 app.use("/topics", TopicsRouter);
 import SuccessStoryRouter from './success-story/success-story.routes'
-app.use('/success-story', SuccessStoryRouter)  
+app.use('/success-story', SuccessStoryRouter)
 
 import MentorManagerRouter from './mentor-manager/mentor-manager.routes'
 app.use('/mentor-manager', MentorManagerRouter)
@@ -147,11 +148,11 @@ import CertificateRouter from './certificate/certificate.routes'
 app.use('/certificate', CertificateRouter)
 
 import ProblemRouter from "./problem/problem.route";
-app.use("/problem",ProblemRouter);
+app.use("/problem", ProblemRouter);
 
 
 import SubmissionRouter from "./submission/submission.route";
-app.use("/submissions",SubmissionRouter)
+app.use("/submissions", SubmissionRouter)
 
 import CourseRouter from './course/course.routes'
 

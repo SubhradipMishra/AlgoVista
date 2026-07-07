@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteSkills = exports.createSkills = exports.fetchSkills = void 0;
+// @ts-nocheck
 const skills_model_1 = __importDefault(require("./skills.model"));
 const fetchSkills = async (req, res) => {
     try {

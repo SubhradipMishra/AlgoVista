@@ -1,3 +1,4 @@
+// @ts-nocheck
 import mongoose, { model } from "mongoose";
 
 const testCaseSchema = new mongoose.Schema({

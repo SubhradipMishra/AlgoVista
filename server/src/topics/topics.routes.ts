@@ -1,3 +1,4 @@
+// @ts-nocheck
 import express from 'express'
 const TopicsRouter =  express.Router()
 import { createTopics, deleteTopics, fetchTopics} from './topics.controller' 

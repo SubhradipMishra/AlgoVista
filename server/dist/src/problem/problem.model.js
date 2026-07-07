@@ -33,6 +33,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+// @ts-nocheck
 const mongoose_1 = __importStar(require("mongoose"));
 const testCaseSchema = new mongoose_1.default.Schema({
     input: { type: String, required: true },

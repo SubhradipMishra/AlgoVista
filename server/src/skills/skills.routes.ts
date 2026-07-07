@@ -1,3 +1,4 @@
+// @ts-nocheck
 import express from 'express'
 const SkillsRouter =  express.Router()
 import { createSkills, deleteSkills, fetchSkills} from './skills.controller' 

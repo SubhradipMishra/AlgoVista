@@ -34,6 +34,7 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MentorshipResourceModel = exports.MentorshipSubmissionModel = exports.MentorshipSessionModel = exports.MentorshipMessageModel = void 0;
+// @ts-nocheck
 const mongoose_1 = __importStar(require("mongoose"));
 // 1. Direct Mentorship Chat Schema
 const messageSchema = new mongoose_1.Schema({

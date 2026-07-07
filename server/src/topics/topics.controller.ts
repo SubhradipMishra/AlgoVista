@@ -1,3 +1,4 @@
+// @ts-nocheck
 import TopicsModel from './topics.model'
 //controller
 

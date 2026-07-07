@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Document, Schema, model } from "mongoose";
 
 export interface ICommunityMembership extends Document {

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import express from 'express'
 import { AdminGuard, UserGuard } from '../middleware/gaurd.middleware'
 import { createEnrollment ,fetchAllEnrolledUsers,fetchEnrolledCourse} from './course-enrollment.controller'

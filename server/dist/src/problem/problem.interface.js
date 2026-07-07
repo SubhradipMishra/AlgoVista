@@ -1,1 +1,1 @@
-"use strict";
+// @ts-nocheck

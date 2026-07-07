@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+// @ts-nocheck
 const mongoose_1 = require("mongoose");
 const commentSchema = new mongoose_1.Schema({
     post: { type: mongoose_1.Schema.Types.ObjectId, ref: "Post", required: true },

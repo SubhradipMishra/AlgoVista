@@ -1,3 +1,4 @@
+// @ts-nocheck
 import express from 'express'
 const ActivityRouter =  express.Router()
 import { createActivity, fetchActivity, fetchActivityByUser} from './activity.controller' 

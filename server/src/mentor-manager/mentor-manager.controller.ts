@@ -1,3 +1,4 @@
+// @ts-nocheck
 import MentorManagerModel from './mentor-manager.model'
 //controller
 

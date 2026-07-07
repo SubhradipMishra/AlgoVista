@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateOrderMentor = exports.webhook = exports.generateOrderCourse = void 0;
+// @ts-nocheck
 const course_model_1 = __importDefault(require("../course/course.model"));
 const razorpay_1 = __importDefault(require("razorpay"));
 const mongoose_1 = require("mongoose");

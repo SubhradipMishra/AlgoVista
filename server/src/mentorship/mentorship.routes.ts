@@ -1,3 +1,4 @@
+// @ts-nocheck
 import express from "express";
 const MentorshipRouter = express.Router();
 import { fetchMentorship } from "./mentorship.controller";

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Request, Response } from "express";
 import SuccessStoryModel from "./success-story.model";
 

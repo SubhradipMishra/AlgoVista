@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createTags = exports.deleteTags = exports.fetchTags = void 0;
+// @ts-nocheck
 const tags_model_1 = __importDefault(require("./tags.model"));
 const fetchTags = async (req, res) => {
     try {

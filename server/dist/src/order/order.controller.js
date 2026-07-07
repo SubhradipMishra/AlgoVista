@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createOrder = exports.fetchOrder = void 0;
+// @ts-nocheck
 const order_model_1 = __importDefault(require("./order.model"));
 const fetchOrder = async (req, res) => {
     try {

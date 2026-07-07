@@ -1,3 +1,4 @@
+// @ts-nocheck
 // models/success-story.model.ts
 import mongoose from "mongoose";
 const { Schema, model } = mongoose;

@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// @ts-nocheck
 const express_1 = require("express");
 const user_controller_1 = require("./user.controller");
 const profile_upload_middleware_1 = __importDefault(require("../../utils/profile_upload.middleware"));

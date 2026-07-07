@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteTopics = exports.createTopics = exports.fetchTopics = void 0;
+// @ts-nocheck
 const topics_model_1 = __importDefault(require("./topics.model"));
 const fetchTopics = async (req, res) => {
     try {

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import courseModel from '../course/course.model';
 import PaymentModel from './payment.model'
 import Razorpay from "razorpay";

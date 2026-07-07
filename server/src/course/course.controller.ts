@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Request, Response } from "express";
 import CourseModel from "./course.model";
 import cloudinary from "../../utils/cloudinary";

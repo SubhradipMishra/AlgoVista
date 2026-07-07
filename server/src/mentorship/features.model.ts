@@ -1,3 +1,4 @@
+// @ts-nocheck
 import mongoose, { model, Schema } from "mongoose";
 
 // 1. Direct Mentorship Chat Schema

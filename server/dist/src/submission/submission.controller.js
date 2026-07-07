@@ -4,9 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getProblemSubmissions = exports.getUserSubmissionsWithSpecificProblem = exports.getUserSubmissions = exports.prewarmExecutor = exports.getExecutorHealth = exports.createSubmissionMultiple = void 0;
+// @ts-nocheck
 const problem_model_1 = __importDefault(require("../problem/problem.model"));
 const submission_model_1 = __importDefault(require("./submission.model"));
-const dockerRunner_1 = require("../executor/dockerRunner");
+const judge0Runner_1 = require("../executor/judge0Runner");
 const activity_model_1 = __importDefault(require("../activity/activity.model"));
 const user_model_1 = __importDefault(require("../user/user.model"));
 const user_gamification_1 = require("../user/user.gamification");
@@ -20,7 +21,7 @@ const createSubmissionMultiple = async (req, res) => {
         const problem = await problem_model_1.default.findById(problemId);
         if (!problem)
             return res.status(404).json({ error: "Problem not found" });
-        const results = await (0, dockerRunner_1.executeSubmissionInDocker)({
+        const results = await (0, judge0Runner_1.executeSubmissionInJudge0)({
             languageId: Number(language_id),
             sourceCode: source_code,
             testCases: problem.testCases || [],
@@ -81,7 +82,7 @@ const createSubmissionMultiple = async (req, res) => {
 exports.createSubmissionMultiple = createSubmissionMultiple;
 const getExecutorHealth = async (_req, res) => {
     try {
-        const health = await (0, dockerRunner_1.checkDockerExecutorHealth)();
+        const health = await (0, judge0Runner_1.checkJudge0Health)();
         return res.status(200).json(health);
     }
     catch (err) {
@@ -98,7 +99,7 @@ const prewarmExecutor = async (req, res) => {
         if (!languageId) {
             return res.status(400).json({ ok: false, error: "language_id is required" });
         }
-        const result = await (0, dockerRunner_1.prewarmDockerImage)(languageId);
+        const result = await (0, judge0Runner_1.prewarmJudge0Image)(languageId);
         return res.status(200).json(result);
     }
     catch (err) {

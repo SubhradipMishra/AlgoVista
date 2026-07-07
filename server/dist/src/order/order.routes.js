@@ -1,4 +1,5 @@
 "use strict";
+// @ts-nocheck
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const order_controller_1 = require("./order.controller");

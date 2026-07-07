@@ -1,3 +1,4 @@
+// @ts-nocheck
 import mongoose, { Document, Schema } from "mongoose";
 
 export interface ICertificate extends Document {

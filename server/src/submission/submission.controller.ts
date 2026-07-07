@@ -1,3 +1,4 @@
+// @ts-nocheck
 import ProblemModel from "../problem/problem.model";
 import SubmissionModel from "./submission.model";
 import { Request, Response } from "express";

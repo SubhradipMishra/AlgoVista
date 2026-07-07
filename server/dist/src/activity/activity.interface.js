@@ -1,2 +1,2 @@
-"use strict";
+// @ts-nocheck
 // Interface

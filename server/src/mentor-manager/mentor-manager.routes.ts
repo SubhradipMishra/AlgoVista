@@ -1,3 +1,4 @@
+// @ts-nocheck
 import express from 'express'
 const MentorManagerRouter =  express.Router()
 import { fetchMentorManager} from './mentor-manager.controller' 

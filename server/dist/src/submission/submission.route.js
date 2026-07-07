@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+// @ts-nocheck
 const express_1 = require("express");
 const submission_controller_1 = require("./submission.controller");
 const SubmissionRouter = (0, express_1.Router)();

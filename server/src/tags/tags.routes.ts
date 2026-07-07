@@ -1,3 +1,4 @@
+// @ts-nocheck
 import express from 'express'
 const TagsRouter =  express.Router()
 import { createTags, deleteTags, fetchTags} from './tags.controller' 

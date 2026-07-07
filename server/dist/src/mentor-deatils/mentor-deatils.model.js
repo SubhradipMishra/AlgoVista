@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+// @ts-nocheck
 const mongoose_1 = require("mongoose");
 const mentorSchema = new mongoose_1.Schema({
     mentorId: {

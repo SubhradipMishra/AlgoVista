@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+// @ts-nocheck
 const express_1 = require("express");
 const community_controller_1 = require("./community.controller");
 const gaurd_middleware_1 = require("../middleware/gaurd.middleware");

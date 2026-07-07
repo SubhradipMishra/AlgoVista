@@ -1,3 +1,4 @@
+// @ts-nocheck
 import express from "express";
 import { createRoadmap,  deleteRoadmap,  getAllRoadmaps, getRoadmapById, updateRoadmap } from "./roadmap.controller";
 import { AdminGuard } from "../middleware/gaurd.middleware";

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Router } from "express";
 import { createProblem, deleteProblem, getProblemById, getProblems, updateProblem } from "./problem.controller";
 

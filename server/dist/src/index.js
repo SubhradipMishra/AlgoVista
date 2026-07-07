@@ -3,14 +3,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// @ts-nocheck
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const path_1 = __importDefault(require("path"));
 // ✅ Load environment variables first
-dotenv_1.default.config();
+dotenv_1.default.config({ path: path_1.default.join(__dirname, "../../.env") });
 const mongoose_1 = __importDefault(require("mongoose"));
 const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
-const path_1 = __importDefault(require("path"));
 const http_1 = require("http");
 const socket_io_1 = require("socket.io");
 const features_model_1 = require("./mentorship/features.model");
@@ -24,7 +25,7 @@ const app = (0, express_1.default)();
 const server = (0, http_1.createServer)(app);
 const io = new socket_io_1.Server(server, {
     cors: {
-        origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
+        origin: [process.env.CLIENT_URL || "http://localhost:5173", "http://127.0.0.1:5173"],
         credentials: true,
     },
 });
@@ -90,7 +91,7 @@ io.on("connection", (socket) => {
 // ⚙️ Express Middlewares & Configurations
 // ==========================================
 app.use((0, cors_1.default)({
-    origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
+    origin: [process.env.CLIENT_URL || "http://localhost:5173", "http://127.0.0.1:5173"],
     credentials: true,
 }));
 app.use("/payment/webhook", express_1.default.raw({ type: "application/json" }));

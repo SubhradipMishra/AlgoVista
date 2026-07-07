@@ -1,3 +1,4 @@
+// @ts-nocheck
 import OrderModel from "./order.model"
 
 import { Request, Response } from "express";

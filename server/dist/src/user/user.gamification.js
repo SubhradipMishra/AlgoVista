@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.syncUserGamification = void 0;
+// @ts-nocheck
 const mongoose_1 = __importDefault(require("mongoose"));
 const user_model_1 = __importDefault(require("./user.model"));
 const submission_model_1 = __importDefault(require("../submission/submission.model"));

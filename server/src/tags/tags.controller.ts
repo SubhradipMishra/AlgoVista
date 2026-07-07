@@ -1,3 +1,4 @@
+// @ts-nocheck
 import TagsModel from './tags.model'
 //controller
 

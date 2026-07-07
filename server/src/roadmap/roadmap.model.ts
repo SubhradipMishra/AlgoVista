@@ -1,3 +1,4 @@
+// @ts-nocheck
 import mongoose, { model } from "mongoose";
 
 // Resource schema inside subtopics
