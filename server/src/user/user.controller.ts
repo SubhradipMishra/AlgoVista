@@ -10,14 +10,14 @@ const FOURTEEN_MINUTE = 14 * 60 * 1000;
 const SIX_DAYS = 6 * 24 * 60 * 60 * 1000;
 const SALT_ROUNDS = 10;
 
-const isDev = () => process.env.NODE_ENV === "dev";
+const isProduction = process.env.NODE_ENV === "production";
 
 const getCookieOptions = (maxAge: number) => ({
   maxAge,
   httpOnly: true,
-  secure: !isDev(),
-  sameSite: isDev() ? ("lax" as const) : ("none" as const),
-  ...(isDev() ? {} : { domain: process.env.DOMAIN }),
+  secure: isProduction,
+  sameSite: isProduction ? ("none" as const) : ("lax" as const),
+  ...(isProduction ? {} : {}),
 });
 
 // -------------------- SESSION --------------------
@@ -30,8 +30,8 @@ export const session = async (req: any, res: Response) => {
   }
 };
 
-export const fetchUserById  = async(req:any , res:Response)=>{
-   try {
+export const fetchUserById = async (req: any, res: Response) => {
+  try {
     const { id } = req.params;
     if (!id) return res.status(400).json({ message: "Id is required!" });
     const snapshot = await syncUserGamification(id);
@@ -190,11 +190,11 @@ export const signup = async (req: Request, res: Response): Promise<Response> => 
     await newUser.save();
 
     // ✅ Send email with login credentials
-   
+
     // Send email with login credentials
-console.log("📤 Attempting to send email to:", email);
-await sendCredentialsMail(email, fullname, defaultPassword);
-console.log("📬 Email sending function executed.");
+    console.log("📤 Attempting to send email to:", email);
+    await sendCredentialsMail(email, fullname, defaultPassword);
+    console.log("📬 Email sending function executed.");
 
 
 
@@ -294,12 +294,12 @@ export const refreshToken = async (req: any, res: Response) => {
 export const updateUser = async (req: any, res: Response) => {
   try {
 
-  
+
     const userId = req.params.id;
     const user = await UserModel.findById(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    
+
 
     // if (user.role === "user" || user.role === "admin" && req.user.id !== userId)
     //   return res.status(403).json({ message: "Cannot update other users" });

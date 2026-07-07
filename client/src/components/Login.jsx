@@ -10,41 +10,44 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const {session,setSession} = useContext(Context) ; 
+  const { session, setSession } = useContext(Context);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
 
     try {
-      if (!email || !password) {
-        setError("Please fill in all fields.");
-        return;
-      }
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_API_URL}/auth/login`,
+        { email, password },
+        { withCredentials: true }
+      );
 
-      const user = { email, password };
-      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, user, {
-        withCredentials: true,
-      });
+      console.log("LOGIN RESPONSE:", data);
 
-      console.log(data);
+      const sessionData = await axios.get(
+        `${import.meta.env.VITE_API_URL}/auth/session`,
+        { withCredentials: true }
+      );
 
-
-       const sessionData = await axios.get(`${import.meta.env.VITE_API_URL}/auth/session`,{
-        withCredentials: true,
-      });
+      console.log("SESSION RESPONSE:", sessionData.data);
 
       setSession(sessionData.data);
+
       navigate("/");
     } catch (err) {
-      setError("Invalid credentials. Try again.");
+      console.log("FULL ERROR:", err);
+      console.log("STATUS:", err.response?.status);
+      console.log("DATA:", err.response?.data);
+
+      setError(err.response?.data?.message || err.message);
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center grid-bg relative overflow-hidden text-[var(--text-main)] font-mono">
       <div className="w-full max-w-md glass-card p-8 relative z-10">
-        
+
         {/* Website Name */}
         <h1 className="text-4xl font-extrabold text-center mb-4 tracking-widest text-gray-100">
           AlgoVista
