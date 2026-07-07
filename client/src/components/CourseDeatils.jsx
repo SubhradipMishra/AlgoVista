@@ -30,7 +30,7 @@ const CourseDetails = () => {
   const checkEnrollment = async () => {
   try {
     const res = await axios.get(
-      "http://localhost:4000/course-enrollment/course",
+      `${import.meta.env.VITE_API_URL}/course-enrollment/course`,
       { withCredentials: true }
     );
 
@@ -50,7 +50,7 @@ const CourseDetails = () => {
   const init = async () => {
     try {
       // fetch course
-      const { data } = await axios.get(`http://localhost:4000/course/${id}`, {
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/course/${id}`, {
         withCredentials: true,
       });
       setCourse(data.course || null);
@@ -73,7 +73,7 @@ const CourseDetails = () => {
   const handleFreeCourseStart = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:4000/course-enrollment",
+        `${import.meta.env.VITE_API_URL}/course-enrollment`,
         { courseId: id },
         { withCredentials: true }
       );
@@ -93,7 +93,7 @@ const CourseDetails = () => {
     try{
 
        const {data} = await axios.post(
-        "http://localhost:4000/payment/course/order",
+        `${import.meta.env.VITE_API_URL}/payment/course/order`,
         { productId: course._id },
         { withCredentials: true }
       );

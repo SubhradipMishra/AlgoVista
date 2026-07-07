@@ -27,7 +27,7 @@ import { useNavigate } from "react-router-dom";
 import Context from "../../util/context";
 import AdminSidebar from "./AdminSidebar";
 
-const API_BASE_URL = "http://localhost:4000";
+const API_BASE_URL = `${import.meta.env.VITE_API_URL}`;
 
 const statCards = [
   { key: "totalCommunities", label: "Communities", icon: <AppstoreOutlined /> },

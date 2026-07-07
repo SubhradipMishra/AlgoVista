@@ -23,14 +23,14 @@ const Login = () => {
       }
 
       const user = { email, password };
-      const { data } = await axios.post("http://localhost:4000/auth/login", user, {
+      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, user, {
         withCredentials: true,
       });
 
       console.log(data);
 
 
-       const sessionData = await axios.get("http://localhost:4000/auth/session",{
+       const sessionData = await axios.get(`${import.meta.env.VITE_API_URL}/auth/session`,{
         withCredentials: true,
       });
 

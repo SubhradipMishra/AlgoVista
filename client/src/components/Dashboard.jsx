@@ -90,7 +90,7 @@ const Dashboard = () => {
 
     const loadDashboard = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/auth/user/${session.id}`, {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/auth/user/${session.id}`, {
           withCredentials: true,
         });
         setUser(response.data.user || response.data);
@@ -103,7 +103,7 @@ const Dashboard = () => {
 
     const loadActivities = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/activity/byId", {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/activity/byId`, {
           withCredentials: true,
         });
         setActivities(Array.isArray(response.data) ? response.data : []);
@@ -114,7 +114,7 @@ const Dashboard = () => {
 
     const loadCertificates = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/certificate/byUser", {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/certificate/byUser`, {
           withCredentials: true,
         });
         setCertificates(response.data?.certificate || []);
@@ -126,7 +126,7 @@ const Dashboard = () => {
 
     const loadCourses = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/course-enrollment/course", {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/course-enrollment/course`, {
           withCredentials: true,
         });
         setEnrolledCourses(response.data?.courses || []);
@@ -138,7 +138,7 @@ const Dashboard = () => {
     const loadMentorships = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/mentorship?userId=${session.id}&status=active`,
+          `${import.meta.env.VITE_API_URL}/mentorship?userId=${session.id}&status=active`,
           { withCredentials: true }
         );
 
@@ -146,7 +146,7 @@ const Dashboard = () => {
           (response.data || []).map(async (entry) => {
             try {
               const mentorResponse = await axios.get(
-                `http://localhost:4000/mentor-details/${entry.mentor}`,
+                `${import.meta.env.VITE_API_URL}/mentor-details/${entry.mentor}`,
                 { withCredentials: true }
               );
               const mentor = Array.isArray(mentorResponse.data)
@@ -197,7 +197,7 @@ const Dashboard = () => {
             .map((course) => course?.courseId)
             .filter(Boolean)
             .map((courseId) =>
-              axios.get(`http://localhost:4000/course/${courseId}`, {
+              axios.get(`${import.meta.env.VITE_API_URL}/course/${courseId}`, {
                 withCredentials: true,
               })
             )
@@ -255,7 +255,7 @@ const Dashboard = () => {
     : EMPTY_DASHBOARD.monthlyXP;
 
   const handleDownload = (certificateId) => {
-    window.location.href = `http://localhost:4000/certificate/file/${certificateId}`;
+    window.location.href = `${import.meta.env.VITE_API_URL}/certificate/file/${certificateId}`;
   };
 
   return (
@@ -786,7 +786,7 @@ const Dashboard = () => {
 
                       <div className="flex justify-center border border-gray-950 rounded-xl overflow-hidden bg-black p-4">
                         <iframe
-                          src={`http://localhost:4000/certificate/file/${previewCertId}`}
+                          src={`${import.meta.env.VITE_API_URL}/certificate/file/${previewCertId}`}
                           title="Certificate Preview"
                           className="w-full h-[55vh] border-none"
                         />

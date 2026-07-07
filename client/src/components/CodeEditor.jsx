@@ -88,7 +88,7 @@ export default function CodeEditor() {
     const fetchProblem = async () => {
       setLoading(true);
       try {
-        const { data } = await axios.get(`http://localhost:4000/problem/${id}`);
+        const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/problem/${id}`);
         if (cancelled) return;
         setProblem(data.problem || null);
 
@@ -116,7 +116,7 @@ export default function CodeEditor() {
       if (!session?.id || !id) return;
       try {
         const { data } = await axios.get(
-          `http://localhost:4000/submissions/user/${session.id}/problem/${id}`
+          `${import.meta.env.VITE_API_URL}/submissions/user/${session.id}/problem/${id}`
         );
         setUserSubmissions(data.submissions || []);
       } catch (err) {
@@ -160,11 +160,11 @@ export default function CodeEditor() {
 
     try {
       toast.info("Preparing Docker runtime...");
-      await axios.post("http://localhost:4000/submissions/prewarm", {
+      await axios.post(`${import.meta.env.VITE_API_URL}/submissions/prewarm`, {
         language_id: languageId,
       });
 
-      const { data } = await axios.post("http://localhost:4000/submissions", {
+      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/submissions`, {
         source_code: code,
         language_id: languageId, // C++
         problemId: id,

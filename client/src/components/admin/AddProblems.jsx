@@ -90,7 +90,7 @@ export default function AddProblems() {
       const parsed = JSON.parse(jsonText);
 
       axios
-        .post("http://localhost:4000/problem", parsed, { withCredentials: true })
+        .post(`${import.meta.env.VITE_API_URL}/problem`, parsed, { withCredentials: true })
         .then(() => toast.success("✅ Problem uploaded successfully!"))
         .catch(() => toast.error("❌ Upload failed!"));
     } catch {
@@ -106,7 +106,7 @@ export default function AddProblems() {
         const parsed = JSON.parse(e.target.result);
 
         axios
-          .post("http://localhost:4000/problem", parsed, { withCredentials: true })
+          .post(`${import.meta.env.VITE_API_URL}/problem`, parsed, { withCredentials: true })
           .then(() => toast.success("✅ Problem uploaded successfully!"))
           .catch(() => toast.error("❌ Upload failed!"));
       } catch {

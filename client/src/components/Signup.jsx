@@ -20,7 +20,7 @@ const Signup = () => {
       }
 
       const user = { fullname: name, email, password };
-      const { data } = await axios.post("http://localhost:4000/auth/signup", user);
+      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/auth/signup`, user);
 
       console.log(data);
       navigate("/login");

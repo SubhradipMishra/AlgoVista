@@ -46,7 +46,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { io } from "socket.io-client";
 
-const API = "http://localhost:4000";
+const API = `${import.meta.env.VITE_API_URL}`;
 const GROUP_ROOM_ID = "696e640ad1839372fa975000";
 const TECH_EMOJIS = ["💻", "🚀", "💡", "🔥", "✅", "❌", "👏", "💯", "👍", "🙌", "🎯", "📝", "📊", "🧠", "✨", "🎉", "👨‍💻", "👑"];
 
@@ -123,7 +123,7 @@ const MentorshipDetails = () => {
   // Socket room connection hook
   useEffect(() => {
     if (userMentorship?._id) {
-      socketRef.current = io("http://localhost:4000");
+      socketRef.current = io(`${import.meta.env.VITE_API_URL}`);
 
       socketRef.current.emit("join_room", userMentorship._id);
       socketRef.current.emit("join_room", GROUP_ROOM_ID);

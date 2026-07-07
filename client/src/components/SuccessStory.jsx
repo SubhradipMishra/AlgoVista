@@ -54,7 +54,7 @@ const SuccessStory = () => {
   }, [sessionLoading, session, navigate]);
 
   const { data, error, isLoading } = useSWR(
-    session ? "http://localhost:4000/success-story" : null,
+    session ? `${import.meta.env.VITE_API_URL}/success-story` : null,
     fetcher
   );
 

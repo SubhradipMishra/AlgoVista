@@ -43,7 +43,7 @@ export default function Problems() {
     const init = async () => {
       setLoading(true);
       try {
-        const res = await axios.get("http://localhost:4000/problem");
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/problem`);
         const arr = Array.isArray(res.data.problems) ? res.data.problems : [];
 
         const normalized = arr.map((p) => ({

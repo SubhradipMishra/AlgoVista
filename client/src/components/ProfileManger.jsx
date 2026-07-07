@@ -113,7 +113,7 @@ const ProfileManager = () => {
     const fetchUser = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:4000/auth/user/${id}`,
+          `${import.meta.env.VITE_API_URL}/auth/user/${id}`,
           { withCredentials: true }
         );
         setUserData(res.data.user || res.data);
@@ -125,7 +125,7 @@ const ProfileManager = () => {
     const fetchSkills = async () => {
       try {
         const { data } = await axios.get(
-          "http://localhost:4000/skills",
+          `${import.meta.env.VITE_API_URL}/skills`,
           { withCredentials: true }
         );
         setAllSkills(data.map((s) => s.title));
@@ -141,7 +141,7 @@ const ProfileManager = () => {
   const updateField = async (updatedValue) => {
     try {
       const res = await axios.put(
-        `http://localhost:4000/auth/update/${id}`,
+        `${import.meta.env.VITE_API_URL}/auth/update/${id}`,
         updatedValue,
         { withCredentials: true }
       );
@@ -163,7 +163,7 @@ const ProfileManager = () => {
       formData.append("profileImage", file);
 
       const res = await axios.post(
-        `http://localhost:4000/auth/upload-profile-image/${id}`,
+        `${import.meta.env.VITE_API_URL}/auth/upload-profile-image/${id}`,
         formData,
         {
           withCredentials: true,

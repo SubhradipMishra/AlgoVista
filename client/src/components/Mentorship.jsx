@@ -28,12 +28,12 @@ const Mentorship = () => {
       setLoading(true);
 
       const usersRes = await axios.get(
-        "http://localhost:4000/auth/mentors",
+        `${import.meta.env.VITE_API_URL}/auth/mentors`,
         { withCredentials: true }
       );
 
       const detailsRes = await axios.get(
-        "http://localhost:4000/mentor-details",
+        `${import.meta.env.VITE_API_URL}/mentor-details`,
         { withCredentials: true }
       );
 

@@ -50,9 +50,9 @@ const AdminSettings = () => {
     try {
       setLoading(true);
       const [topicsRes, tagsRes, skillsRes] = await Promise.all([
-        axios.get("http://localhost:4000/topics", { withCredentials: true }),
-        axios.get("http://localhost:4000/tags", { withCredentials: true }),
-        axios.get("http://localhost:4000/skills", { withCredentials: true }),
+        axios.get(`${import.meta.env.VITE_API_URL}/topics`, { withCredentials: true }),
+        axios.get(`${import.meta.env.VITE_API_URL}/tags`, { withCredentials: true }),
+        axios.get(`${import.meta.env.VITE_API_URL}/skills`, { withCredentials: true }),
       ]);
       setTopics(topicsRes.data || []);
       setTags(tagsRes.data || []);
@@ -73,7 +73,7 @@ const AdminSettings = () => {
     try {
       setLoading(true);
       await axios.post(
-        `http://localhost:4000/${type}`,
+        `${import.meta.env.VITE_API_URL}/${type}`,
         { title: value },
         { withCredentials: true }
       );
@@ -90,7 +90,7 @@ const AdminSettings = () => {
   const handleDelete = async (type, id) => {
     try {
       setLoading(true);
-      await axios.delete(`http://localhost:4000/${type}/${id}`, { withCredentials: true });
+      await axios.delete(`${import.meta.env.VITE_API_URL}/${type}/${id}`, { withCredentials: true });
       toast.success(`${type} deleted!`);
       fetchAll();
     } catch {
@@ -103,7 +103,7 @@ const AdminSettings = () => {
   const handleChangePassword = async (values) => {
     try {
       setLoading(true);
-      const res = await axios.put("http://localhost:4000/auth/change-password", values, { withCredentials: true });
+      const res = await axios.put(`${import.meta.env.VITE_API_URL}/auth/change-password`, values, { withCredentials: true });
       toast.success(res.data.message || "Password changed successfully!");
       setTimeout(() => {
         setSession(null);

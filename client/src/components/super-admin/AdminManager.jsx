@@ -48,7 +48,7 @@ const AdminManager = () => {
     try {
       setLoading(true);
       const res = await axios.get(
-        "http://localhost:4000/auth/mentorsBySuperMentors",
+        `${import.meta.env.VITE_API_URL}/auth/mentorsBySuperMentors`,
         { withCredentials: true }
       );
       setUsers(res.data);
@@ -98,7 +98,7 @@ const AdminManager = () => {
         return message.error("No valid user data found");
 
       await axios.post(
-        "http://localhost:4000/auth/bulk-signup",
+        `${import.meta.env.VITE_API_URL}/auth/bulk-signup`,
         validData,
         { withCredentials: true }
       );
@@ -115,7 +115,7 @@ const AdminManager = () => {
   // ➕ Create single user
   const handleSubmit = async (values) => {
     try {
-     const {data} =  await axios.post("http://localhost:4000/auth/signup", values, {
+     const {data} =  await axios.post(`${import.meta.env.VITE_API_URL}/auth/signup`, values, {
         withCredentials: true,
       });
       console.log(data);
@@ -131,7 +131,7 @@ const AdminManager = () => {
   // ❌ Delete user
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:4000/auth/users/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/auth/users/${id}`, {
         withCredentials: true,
       });
       message.success("User deleted successfully");
@@ -153,7 +153,7 @@ const AdminManager = () => {
   const handleRenew = async (values) => {
     try {
       await axios.post(
-        "http://localhost:4000/auth/renew-admin",
+        `${import.meta.env.VITE_API_URL}/auth/renew-admin`,
         { adminId: selectedAdmin._id, days: values.days },
         { withCredentials: true }
       );

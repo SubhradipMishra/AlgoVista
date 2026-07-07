@@ -27,7 +27,7 @@ const Course = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await axios.get("http://localhost:4000/course");
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/course`);
         setCourses(res.data.courses || []);
       } catch (error) {
         console.error(error);
@@ -37,7 +37,7 @@ const Course = () => {
     const fetchEnrolled = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:4000/course-enrollment/course",
+          `${import.meta.env.VITE_API_URL}/course-enrollment/course`,
           { withCredentials: true }
         );
 

@@ -20,7 +20,7 @@ const Roadmaps = () => {
     const fetchUser = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:4000/auth/user/${session.id}`,
+          `${import.meta.env.VITE_API_URL}/auth/user/${session.id}`,
           { withCredentials: true }
         );
         const data = res.data.user || res.data;
@@ -40,7 +40,7 @@ const Roadmaps = () => {
 
   const fetchRoadmaps = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/roadmap");
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/roadmap`);
       if (res.data.success) {
         setRoadmaps(res.data.data || []); // FIX → only store array
       }

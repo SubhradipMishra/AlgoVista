@@ -20,7 +20,7 @@ import { Avatar, Button, Empty, Input, Skeleton, Tag, Upload, message } from "an
 import { motion } from "framer-motion";
 import Context from "../util/context";
 
-const API_BASE_URL = "http://localhost:4000";
+const API_BASE_URL = `${import.meta.env.VITE_API_URL}`;
 
 const formatDateTime = (value) => new Date(value).toLocaleString();
 

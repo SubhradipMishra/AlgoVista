@@ -36,7 +36,7 @@ const CourseLearn = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        const { data } = await axios.get(`http://localhost:4000/course/${id}`);
+        const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/course/${id}`);
         setCourse(data.course);
         setActiveModule(0);
         setActiveLesson(0);

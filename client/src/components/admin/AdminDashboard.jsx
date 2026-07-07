@@ -84,7 +84,7 @@ const AdminDashboard = () => {
     try {
       // Fetch all mentorship plans active for this mentor directly using their user ID
       const mentorshipsRes = await axios.get(
-        `http://localhost:4000/mentorship?mentorId=${session.id}`,
+        `${import.meta.env.VITE_API_URL}/mentorship?mentorId=${session.id}`,
         { withCredentials: true }
       );
       setMentorships(mentorshipsRes.data || []);
@@ -98,7 +98,7 @@ const AdminDashboard = () => {
     if (activeChatMentorship?._id) {
       fetchChatHistory(activeChatMentorship._id);
 
-      socketRef.current = io("http://localhost:4000");
+      socketRef.current = io(`${import.meta.env.VITE_API_URL}`);
 
       socketRef.current.emit("join_room", activeChatMentorship._id);
 
@@ -126,7 +126,7 @@ const AdminDashboard = () => {
   const fetchChatHistory = async (mentorshipId) => {
     try {
       const { data } = await axios.get(
-        `http://localhost:4000/mentorship/${mentorshipId}/messages`,
+        `${import.meta.env.VITE_API_URL}/mentorship/${mentorshipId}/messages`,
         { withCredentials: true }
       );
       setMessages(data || []);

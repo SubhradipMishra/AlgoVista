@@ -69,7 +69,7 @@ export default function RoadmapDetail() {
   /* fetch progress */
   useEffect(() => {
     if (!session?.id || !id) return;
-    fetch(`http://localhost:4000/progress/${session.id}/${id}`, {
+    fetch(`${import.meta.env.VITE_API_URL}/progress/${session.id}/${id}`, {
       credentials: "include",
     })
       .then((r) => r.json())
@@ -96,7 +96,7 @@ export default function RoadmapDetail() {
     });
 
     try {
-      await fetch(`http://localhost:4000/progress/update`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/progress/update`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -127,7 +127,7 @@ export default function RoadmapDetail() {
   /* certificate */
   const generateCertificate = async () => {
     try {
-      const res = await fetch("http://localhost:4000/certificate/generate", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/certificate/generate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -142,7 +142,7 @@ export default function RoadmapDetail() {
       if (d.success) {
         setCertificate({
           id: d.certificateId,
-          fileUrl: `http://localhost:4000${d.fileUrl}`,
+          fileUrl: `${import.meta.env.VITE_API_URL}${d.fileUrl}`,
         });
       }
     } catch {

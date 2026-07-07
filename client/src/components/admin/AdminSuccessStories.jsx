@@ -9,7 +9,7 @@ import Context from "../../util/context";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const BASE_URL = "http://localhost:4000/success-story";
+const BASE_URL = `${import.meta.env.VITE_API_URL}/success-story`;
 
 const AdminSuccessStories = () => {
   const { session, sessionLoading, setSession } = useContext(Context);

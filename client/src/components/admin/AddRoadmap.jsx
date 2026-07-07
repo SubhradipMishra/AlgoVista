@@ -56,7 +56,7 @@ const AddRoadmap = () => {
     const fetchTags = async () => {
       try {
         setTagsLoading(true);
-        const res = await axios.get("http://localhost:4000/tags", { withCredentials: true });
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/tags`, { withCredentials: true });
         setTags(Array.isArray(res.data) ? res.data : []);
       } catch {
         message.error("Failed to load tags");
@@ -85,7 +85,7 @@ const AddRoadmap = () => {
   const fetchRoadmaps = async () => {
     try {
       setTableLoading(true);
-      const res = await axios.get("http://localhost:4000/roadmap", { withCredentials: true });
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/roadmap`, { withCredentials: true });
       const all = res.data?.data || [];
       const createdByUser = all.filter(
         (r) => r.createdBy === session?._id || r.createdBy?._id === session?._id
@@ -111,7 +111,7 @@ const AddRoadmap = () => {
       centered: true,
       async onOk() {
         try {
-          await axios.delete(`http://localhost:4000/roadmap/${id}`, { withCredentials: true });
+          await axios.delete(`${import.meta.env.VITE_API_URL}/roadmap/${id}`, { withCredentials: true });
           message.success("Roadmap deleted successfully!");
           fetchRoadmaps();
         } catch (err) {
@@ -143,14 +143,14 @@ const AddRoadmap = () => {
       const payload = { ...values, order: Number(values.order), createdBy: session?._id };
 
       if (editingRoadmap) {
-        await axios.put(`http://localhost:4000/roadmap/${editingRoadmap._id}`, payload, {
+        await axios.put(`${import.meta.env.VITE_API_URL}/roadmap/${editingRoadmap._id}`, payload, {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
         });
         message.success("Roadmap updated successfully!");
         setEditingRoadmap(null);
       } else {
-        await axios.post("http://localhost:4000/roadmap", payload, {
+        await axios.post(`${import.meta.env.VITE_API_URL}/roadmap`, payload, {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
         });

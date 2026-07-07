@@ -39,7 +39,7 @@ import { motion } from "framer-motion";
 import Context from "../../util/context";
 import AdminSidebar from "./AdminSidebar";
 
-const API = "http://localhost:4000";
+const API = `${import.meta.env.VITE_API_URL}`;
 const GROUP_ROOM_ID = "696e640ad1839372fa975000"; // Dynamic group room ObjectId
 
 const TECH_EMOJIS = ["💻", "🚀", "💡", "🔥", "✅", "❌", "👏", "💯", "👍", "🙌", "🎯", "📝", "📊", "🧠", "✨", "🎉", "👨‍💻", "👑"];

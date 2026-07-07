@@ -55,7 +55,7 @@ function App() {
   const getSession = async () => {
     try {
       setSessionLoading(true);
-      const { data } = await axios.get("http://localhost:4000/auth/session", {
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/auth/session`, {
         withCredentials: true,
       });
       setSession(data);

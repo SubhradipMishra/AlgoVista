@@ -40,12 +40,12 @@ const MentorProfile = () => {
   const fetchMentor = async () => {
     try {
       const usersRes = await axios.get(
-        "http://localhost:4000/auth/mentors",
+        `${import.meta.env.VITE_API_URL}/auth/mentors`,
         { withCredentials: true }
       );
 
       const detailsRes = await axios.get(
-        "http://localhost:4000/mentor-details",
+        `${import.meta.env.VITE_API_URL}/mentor-details`,
         { withCredentials: true }
       );
 
@@ -64,7 +64,7 @@ const MentorProfile = () => {
   const fetchMentorships = async () => {
     try {
       const { data } = await axios.get(
-        `http://localhost:4000/mentorship?userId=${session.id}&mentorId=${id}&status=active`,
+        `${import.meta.env.VITE_API_URL}/mentorship?userId=${session.id}&mentorId=${id}&status=active`,
         { withCredentials: true }
       );
       setActiveMentorships(data || []);
@@ -90,7 +90,7 @@ const MentorProfile = () => {
   const handleBuyNow = async (plan) => {
     try {
       const { data } = await axios.post(
-        "http://localhost:4000/payment/mentorship/order",
+        `${import.meta.env.VITE_API_URL}/payment/mentorship/order`,
         { productId: plan._id, mentorId: mentor.mentorId, userId: session.id },
         { withCredentials: true }
       );

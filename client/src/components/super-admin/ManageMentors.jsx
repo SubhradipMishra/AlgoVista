@@ -24,7 +24,7 @@ const { Title, Text } = Typography;
 const { TextArea } = Input;
 
 export const ManageMentors = () => {
-  const API = "http://localhost:4000";
+  const API = `${import.meta.env.VITE_API_URL}`;
 
   const [mentorList, setMentorList] = useState([]);
   const [loading, setLoading] = useState(false);
