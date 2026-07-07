@@ -49,7 +49,7 @@ export const AdminGuard = async (
   next: NextFunction
 ) => {
   try {
-        const { accessToken } = req.cookies;
+    const { accessToken } = req.cookies;
 
     if (!accessToken) return expireSession(res);
 
@@ -78,7 +78,7 @@ export const AdminUserGuard = async (
     // console.log('hit')
     const { accessToken } = req.cookies;
     // console.log(accessToken);
-    
+
     if (!accessToken) return expireSession(res);
 
     const payload: any = jwt.verify(
@@ -131,7 +131,7 @@ export const SuperAdminGaurd = async (
   res: Response,
   next: NextFunction
 ) => {
-   
+
   try {
 
     const { accessToken } = req.cookies;
@@ -142,11 +142,11 @@ export const SuperAdminGaurd = async (
       process.env.AUTH_SECRET as string
     );
 
-    if (payload.role !== "super-admin") { 
+    if (payload.role !== "super-admin") {
       return expireSession(res);
     }
 
-  
+
 
     req.user = payload;
     next();
@@ -164,31 +164,32 @@ export const AdminUserSuperAdminGuard = async (
   try {
 
     console.log("Hit super")
-    
+    console.log(req.cookies)
+
     const { accessToken } = req.cookies;
-    console.log("Access Token ",req.cookies);
-    if (!accessToken) return expireSession(res);
+    console.log("Access Token ", req.cookies);
+    if (!accessToken) return res.status(403).json({ message: "BAD REQUEST!" });
 
     const payload: any = await jwt.verify(
       accessToken,
       process.env.AUTH_SECRET as string
     );
 
-    console.log("payload" , payload);
+    console.log("payload", payload);
 
     if (
       payload.role !== "admin" &&
       payload.role !== "user" &&
       payload.role !== "super-admin"
     ) {
-      return expireSession(res);
+      return res.status(403).json({ message: "BAD REQUEST!" });
     }
 
     req.user = payload;
     next();
   } catch (error) {
     console.error("AdminUserSuperAdminGuard Error:", error);
-    return expireSession(res);
+    return res.status(403).json({ message: "BAD REQUEST!" });
   }
 };
 
@@ -196,7 +197,7 @@ export const AdminUserSuperAdminGuard = async (
 
 
 
-export const RefreshTokenGaurd = async ( req: any,res: Response,next: NextFunction) => {
+export const RefreshTokenGaurd = async (req: any, res: Response, next: NextFunction) => {
   try {
     const { refreshToken } = req.cookies;
     if (!refreshToken) return expireSession(res);
@@ -220,12 +221,12 @@ export const RefreshTokenGaurd = async ( req: any,res: Response,next: NextFuncti
 
 
 
-export const RazorpayGaurd = async (req:any, res:any, next:NextFunction) => {
+export const RazorpayGaurd = async (req: any, res: any, next: NextFunction) => {
   try {
     const signature = req.headers["x-razorpay-signature"];
 
     console.log("[Razorpay Webhook] Webhook request received. Checking signature...");
-  
+
     const payload = typeof req.body === "string"
       ? req.body
       : Buffer.isBuffer(req.body)
@@ -246,7 +247,7 @@ export const RazorpayGaurd = async (req:any, res:any, next:NextFunction) => {
     }
 
     next();
-  } 
+  }
   catch (err) {
     console.error("[Razorpay Webhook] Error in RazorpayGuard signature verification:", err);
     return res.status(401).json({ message: "Invalid Token" });
