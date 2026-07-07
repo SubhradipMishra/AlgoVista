@@ -10,6 +10,16 @@ const FOURTEEN_MINUTE = 14 * 60 * 1000;
 const SIX_DAYS = 6 * 24 * 60 * 60 * 1000;
 const SALT_ROUNDS = 10;
 
+const isDev = () => process.env.NODE_ENV === "dev";
+
+const getCookieOptions = (maxAge: number) => ({
+  maxAge,
+  httpOnly: true,
+  secure: !isDev(),
+  sameSite: isDev() ? ("lax" as const) : ("none" as const),
+  ...(isDev() ? {} : { domain: process.env.DOMAIN }),
+});
+
 // -------------------- SESSION --------------------
 export const session = async (req: any, res: Response) => {
   try {
@@ -240,19 +250,8 @@ export const login = async (req: Request, res: Response) => {
 
     const { accessToken, refreshToken } = generateToken(user);
 
-    res.cookie("accessToken", accessToken, {
-      maxAge: SIX_DAYS,
-      domain: process.env.NODE_ENV === "dev" ? "localhost" : process.env.DOMAIN,
-      secure: process.env.NODE_ENV !== "dev",
-      httpOnly: true,
-    });
-
-    res.cookie("refreshToken", refreshToken, {
-      maxAge: SIX_DAYS,
-      domain: process.env.NODE_ENV === "dev" ? "localhost" : process.env.DOMAIN,
-      secure: process.env.NODE_ENV !== "dev",
-      httpOnly: true,
-    });
+    res.cookie("accessToken", accessToken, getCookieOptions(SIX_DAYS));
+    res.cookie("refreshToken", refreshToken, getCookieOptions(SIX_DAYS));
 
     return res.status(200).json({
       message: "Login successful",
@@ -271,18 +270,8 @@ export const login = async (req: Request, res: Response) => {
 
 // -------------------- LOGOUT --------------------
 export const logout = async (req: Request, res: Response) => {
-  res.cookie("accessToken", null, {
-    maxAge: 0,
-    domain: process.env.NODE_ENV === "dev" ? "localhost" : process.env.DOMAIN,
-    secure: process.env.NODE_ENV !== "dev",
-    httpOnly: true,
-  });
-  res.cookie("refreshToken", null, {
-    maxAge: 0,
-    domain: process.env.NODE_ENV === "dev" ? "localhost" : process.env.DOMAIN,
-    secure: process.env.NODE_ENV !== "dev",
-    httpOnly: true,
-  });
+  res.cookie("accessToken", null, getCookieOptions(0));
+  res.cookie("refreshToken", null, getCookieOptions(0));
   res.json({ message: "Logout success!" });
 };
 

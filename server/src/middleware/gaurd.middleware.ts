@@ -3,19 +3,18 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import * as crypto from "crypto";
 
+const isDev = () => process.env.NODE_ENV === "dev";
+
 const expireSession = async (res: Response) => {
-  res.cookie("accessToken", null, {
+  const opts: any = {
     maxAge: 0,
-    domain: process.env.NODE_ENV === "dev" ? undefined : process.env.DOMAIN,
-    secure: process.env.NODE_ENV === "dev" ? false : true,
     httpOnly: true,
-  });
-  res.cookie("refreshToken", null, {
-    maxAge: 0,
-    domain: process.env.NODE_ENV === "dev" ? undefined : process.env.DOMAIN,
-    secure: process.env.NODE_ENV === "dev" ? false : true,
-    httpOnly: true,
-  });
+    secure: !isDev(),
+    sameSite: isDev() ? "lax" : "none",
+    ...(isDev() ? {} : { domain: process.env.DOMAIN }),
+  };
+  res.cookie("accessToken", null, opts);
+  res.cookie("refreshToken", null, opts);
 
   res.status(400).json({ message: "Bad Request" });
 };

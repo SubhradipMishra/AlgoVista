@@ -5,9 +5,14 @@
         "module": "commonjs",
         "strict": false,
         "esModuleInterop": true,
+        "skipLibCheck": true,
         "skipDefaultLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "outDir": "./dist"
+    },
+    "ts-node": {
+        "transpileOnly": true,
+        "skipIgnore": false
     },
     "include": ["src"],
     "exclude": ["node_modules"]
