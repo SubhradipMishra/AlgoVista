@@ -2,22 +2,42 @@ import chalk from "chalk";
 import inquirer from "inquirer";
 import { MongoClient } from "mongodb";
 import bcrypt from "bcrypt";
+import dotenv from "dotenv";
+import path from "path";
 import { sendCredentialsMail } from "../utils/mail";
 
+
+// Load .env
+dotenv.config({
+  path: path.resolve(process.cwd(), ".env"),
+});
+
 const log = console.log;
+
 log(chalk.bgRed.white.bold.underline("⭐ ADMIN SIGNUP CONSOLE ⭐"));
+
+const DB_URL = "mongodb+srv://mishrasubhradip2005_db_user:Subhradip%407781@cluster0.knrtn05.mongodb.net/Algovista?retryWrites=true&w=majority";
+
+if (!DB_URL) {
+  console.log("❌ DB_URL is missing from .env");
+  process.exit(1);
+}
 
 let db: any = null;
 
-/* ------------------ MongoDB Connection ------------------ */
-MongoClient.connect("mongodb://localhost:27017/algovista")
-  .then((conn) => {
-    db = conn.db("algovista");
+MongoClient.connect(DB_URL)
+  .then((client) => {
+    console.log("✅ Connected to MongoDB Atlas");
+
+    // Use the same database name that's in your connection string
+    db = client.db("Algovista");
+
     createUser();
   })
-  .catch(() => {
-    log(chalk.red.bold("\n ❌ Failed to connect database"));
-    process.exit();
+  .catch((err) => {
+    console.error("MongoDB Connection Error:");
+    console.error(err);
+    process.exit(1);
   });
 
 /* ------------------ Role Selection ------------------ */
