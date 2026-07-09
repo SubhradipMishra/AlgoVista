@@ -176,6 +176,18 @@ export const signup = async (req: Request, res: Response): Promise<Response> => 
 
     console.log("Default Password:", defaultPassword);
 
+    const userCount = await UserModel.countDocuments({ role: "user" });
+    const badges = [];
+    if (userCount < 50 && (!role || role === "user")) {
+      badges.push({
+        key: "pioneer",
+        label: "Pioneer",
+        description: "Awarded to the first 50 early students! Enjoys 5% extra OFF on everything.",
+        icon: "star",
+        earnedAt: new Date()
+      });
+    }
+
     const newUserData: any = {
       fullname,
       email,
@@ -183,6 +195,7 @@ export const signup = async (req: Request, res: Response): Promise<Response> => 
       role: role || "user",
       createdBy: role === "admin" ? createdById : null,
       active: true,
+      badges
     };
 
     const newUser = new UserModel(newUserData);

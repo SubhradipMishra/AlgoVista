@@ -5,11 +5,11 @@ import { PlayCircleOutlined, MenuOutlined, CloseOutlined } from "@ant-design/ico
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import CountUp from "react-countup";
-import { 
-  FaGithub, 
-  FaLinkedin, 
-  FaTwitter, 
-  FaStar, 
+import {
+  FaGithub,
+  FaLinkedin,
+  FaTwitter,
+  FaStar,
   FaUserCircle,
   FaLaptopCode,
   FaBook,
@@ -274,15 +274,13 @@ const Home = () => {
         `}
       >
         <div className="max-w-[90rem] mx-auto flex items-center justify-between gap-6 px-6 sm:px-8">
-          {/* Slick Modern Logo & Icon */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 via-yellow-400 to-[var(--primary)] text-black font-black text-xl shadow-[0_0_20px_rgba(250,204,21,0.35)] group-hover:rotate-6 transition-all duration-300">
-              ◈
-            </div>
-            <h1 className="text-2xl font-black tracking-widest uppercase flex items-center">
-              <span className="text-white group-hover:text-gray-200 transition-colors">Algo</span>
-              <span className="text-[var(--primary)] ml-1 animate-text-glow font-semibold drop-shadow-[0_0_8px_rgba(250,204,21,0.3)]">Vista</span>
-            </h1>
+          {/* Slick Modern Logo */}
+          <Link to="/" className="flex items-center group">
+            <img
+              src="/images/logo.png"
+              alt="AlgoVista Logo"
+              className="w-10 h-10 md:w-12 md:h-12 object-cover rounded-full group-hover:scale-105 transition-transform duration-300 shadow-[0_0_15px_rgba(250,204,21,0.3)] border border-[rgba(250,204,21,0.2)]"
+            />
           </Link>
 
           {/* Desktop Menu */}
@@ -440,128 +438,196 @@ const Home = () => {
 
 
       {/* Hero Section */}
-      <section className="relative flex flex-col items-center justify-center px-4 sm:px-8 py-32 md:py-44 mt-16 overflow-hidden">
+      <section className="relative w-full min-h-screen flex items-center justify-center px-6 sm:px-12 pt-32 pb-20 overflow-hidden font-mono">
+        {/* Animated Background Gradients */}
+        <div className="absolute inset-0 bg-[#020202]"></div>
+        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-[rgba(250,204,21,0.08)] rounded-full blur-[150px] pointer-events-none animate-pulse"></div>
+        <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-[rgba(250,204,21,0.05)] rounded-full blur-[150px] pointer-events-none animate-bloat-slower"></div>
 
-        {/* Background Grid */}
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:48px_48px] pointer-events-none"></div>
+        {/* Premium Grid Pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_70%,transparent_100%)]"></div>
 
-        {/* Gold Glow Orbs */}
-        <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[rgba(250,204,21,0.06)] rounded-full blur-[150px] pointer-events-none"></div>
-        <div className="absolute bottom-[-20%] right-[-10%] w-[400px] h-[400px] bg-[rgba(250,204,21,0.04)] rounded-full blur-[120px] pointer-events-none animate-bloat-slow"></div>
-        <div className="absolute top-1/3 left-[-5%] w-[300px] h-[300px] bg-[rgba(250,204,21,0.03)] rounded-full blur-[100px] pointer-events-none animate-bloat-slower"></div>
+        <div className="max-w-[90rem] w-full mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
 
-        {/* Scan Line Effect */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[var(--primary)]/20 to-transparent animate-scan-line"></div>
-        </div>
-
-        <div className="relative z-10 max-w-5xl mx-auto text-center">
-
-          {/* Status Badge */}
+          {/* Left Content */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--glass-border)] bg-[rgba(0,0,0,0.5)] backdrop-blur-md text-sm font-mono mb-10"
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, type: "spring" }}
+            className="flex flex-col items-start text-left"
           >
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--primary)] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--primary)]"></span>
-            </span>
-            <span className="text-[var(--primary)]">Platform Active</span>
-            <span className="text-gray-500">•</span>
-            <span className="text-gray-400">12,000+ developers learning</span>
-          </motion.div>
-
-          {/* Main Heading — Static, Centered */}
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.15 }}
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[0.95] mb-8"
-            style={{ fontFamily: "var(--font-display)" }}
-          >
-            <span className="text-white">Master the</span>
-            <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary)] via-amber-400 to-yellow-300 animate-text-glow">
-              Art of Code
-            </span>
-          </motion.h1>
-
-          {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
-            className="text-gray-400 text-lg sm:text-xl max-w-2xl mx-auto mb-12 leading-relaxed"
-          >
-            Visualize algorithms, solve curated problems, and prepare for interviews
-            with step-by-step guidance from industry mentors.
-          </motion.p>
-
-          {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.45 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
-          >
-            <Link
-              to="/problems"
-              className="btn-yellow font-mono text-base px-8 py-4 rounded-xl"
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2 }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--primary)] bg-[rgba(250,204,21,0.1)] text-xs font-bold tracking-widest uppercase mb-8 shadow-[0_0_20px_rgba(250,204,21,0.15)]"
             >
-              Start Coding →
-            </Link>
-            <Link
-              to="/roadmaps"
-              className="btn-outline font-mono text-base px-8 py-4 rounded-xl"
-            >
-              Explore Roadmaps
-            </Link>
-          </motion.div>
+              <span className="relative flex h-2 w-2 mr-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--primary)] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--primary)]"></span>
+              </span>
+              The Ultimate Learning Platform
+            </motion.div>
 
-          {/* Terminal Preview — Below Hero, Centered */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.6 }}
-            className="mt-16 max-w-2xl mx-auto"
-          >
-            <div className="glass-card overflow-hidden rounded-2xl border border-[var(--glass-border)] shadow-[0_0_60px_rgba(250,204,21,0.08)] bg-[#060606]/90 backdrop-blur-md">
-              {/* Terminal Header */}
-              <div className="flex items-center px-4 py-3 border-b border-white/5 bg-[#0a0a0a]">
-                <div className="flex gap-2">
-                  <div className="w-3 h-3 rounded-full bg-[#ff5f57]"></div>
-                  <div className="w-3 h-3 rounded-full bg-[#febc2e]"></div>
-                  <div className="w-3 h-3 rounded-full bg-[#28c840]"></div>
-                </div>
-                <div className="mx-auto text-xs text-gray-600 font-mono tracking-wider">algovista — terminal</div>
-              </div>
-              {/* Terminal Body */}
-              <div className="p-6 font-mono text-sm leading-7 text-gray-400">
-                <div className="text-[var(--primary)] mb-1"><span className="text-gray-600">$</span> ./init_algovista.sh</div>
-                <div className="text-gray-500 mb-1">[✓] Loading data structures...</div>
-                <div className="text-gray-500 mb-1">[✓] Compiling system design modules...</div>
-                <div className="text-gray-500 mb-3">[✓] Connecting to mentor network...</div>
-                {staticLines.map((line, index) => {
-                  const safeLine = typeof line === "string" ? line : "";
-                  return (
-                    <div key={index}>
-                      {safeLine.includes("//") ? <span className="text-gray-600">{safeLine}</span> :
-                        safeLine.includes("function") || safeLine.includes("return") ? <span className="text-purple-400">{safeLine}</span> :
-                          <span className="text-gray-300">{safeLine}</span>}
-                    </div>
-                  );
-                })}
-                <div className="mt-2 text-[var(--primary)] animate-pulse">█</div>
-              </div>
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.1] mb-6 text-white drop-shadow-2xl uppercase">
+              <motion.span 
+                className="block mb-2 font-mono"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                ALGOVISTA -
+              </motion.span>
+              <motion.span 
+                className="inline-block text-[var(--primary)] font-serif italic drop-shadow-[0_0_15px_rgba(250,204,21,0.5)] whitespace-pre-wrap"
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  hidden: { opacity: 1 },
+                  visible: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.5 } }
+                }}
+              >
+                {"DETA SAPNO KI UDAN".split("").map((char, index) => (
+                  <motion.span
+                    key={index}
+                    variants={{ hidden: { opacity: 0, display: "none" }, visible: { opacity: 1, display: "inline-block" } }}
+                  >
+                    {char === " " ? "\u00A0" : char}
+                  </motion.span>
+                ))}
+              </motion.span>
+              <motion.span
+                animate={{ opacity: [1, 0] }}
+                transition={{ repeat: Infinity, duration: 0.5, ease: "linear" }}
+                className="inline-block w-[6px] h-[1em] bg-[var(--primary)] ml-2 align-middle rounded-sm"
+              />
+            </h1>
+
+            <p className="text-gray-400 text-lg md:text-xl max-w-lg mb-10 leading-relaxed">
+              Experience the next generation of tech education. Visualize data structures, master system design, and crack top-tier interviews with our revolutionary platform.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-5 w-full sm:w-auto">
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Link to="/problems" className="flex items-center justify-center gap-3 btn-yellow px-8 py-4 rounded-xl text-lg font-bold shadow-[0_0_25px_rgba(250,204,21,0.3)]">
+                  Start Exploring <FaRocket />
+                </Link>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Link to="/roadmaps" className="flex items-center justify-center btn-outline px-8 py-4 rounded-xl text-lg font-bold bg-black/40 backdrop-blur-md">
+                  View Roadmaps
+                </Link>
+              </motion.div>
             </div>
           </motion.div>
 
-        </div>
+          {/* Right Content - Visual/Code Editor Mockup */}
+          <motion.div
+            initial={{ opacity: 0, x: 50, rotateY: 20 }}
+            animate={{ opacity: 1, x: 0, rotateY: 0 }}
+            transition={{ duration: 1, type: "spring", delay: 0.2 }}
+            className="relative lg:h-[600px] flex items-center justify-center perspective-[1000px]"
+          >
+            {/* Glowing Backdrop for 3D Effect */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[rgba(250,204,21,0.15)] to-transparent rounded-[40px] blur-3xl transform rotate-12 scale-90"></div>
 
+            <motion.div
+              animate={{ y: [-10, 10, -10] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              className="relative w-full max-w-lg rounded-2xl border border-[rgba(250,204,21,0.2)] bg-[#0A0A0A]/90 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_30px_rgba(250,204,21,0.1)] overflow-hidden"
+              style={{ transformStyle: 'preserve-3d', transform: 'rotateX(5deg) rotateY(-5deg)' }}
+            >
+              {/* Fake Mac Window Header */}
+              <div className="flex items-center gap-2 px-4 py-3 bg-[#111] border-b border-white/5">
+                <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                <div className="ml-auto text-xs text-gray-500">algovista.exe</div>
+              </div>
+
+              <div className="p-6 font-mono text-sm leading-8 text-gray-300">
+                <div className="text-[var(--primary)] font-bold mb-2">$ init algovista --fast</div>
+                <div className="text-gray-400">Loading modules... <span className="text-green-400">[OK]</span></div>
+                <div className="text-gray-400">Compiling success... <span className="text-green-400">[OK]</span></div>
+                <br />
+                <div className="text-purple-400">function <span className="text-blue-400">crackInterview</span>() {'{'}</div>
+                <div className="ml-4">
+                  <span className="text-yellow-300">const</span> skills = <span className="text-green-300">"Mastered"</span>;
+                </div>
+                <div className="ml-4">
+                  <span className="text-yellow-300">const</span> offer = await AlgoVista.<span className="text-blue-300">prepare</span>();
+                </div>
+                <div className="ml-4 text-purple-400">return <span className="text-green-300">"Dream Job Secured! 🚀"</span>;</div>
+                <div>{'}'}</div>
+                <br />
+                <div className="text-[var(--primary)] flex items-center gap-2">
+                  <FaStar className="animate-spin-slow" /> SYSTEM READY_
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Floating Elements */}
+            <motion.div
+              animate={{ y: [-15, 15, -15], rotate: [0, 10, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+              className="absolute -top-10 -right-10 w-24 h-24 bg-[rgba(250,204,21,0.1)] backdrop-blur-md rounded-2xl border border-[rgba(250,204,21,0.3)] flex items-center justify-center text-4xl shadow-xl"
+            >
+              <FaLaptopCode className="text-[var(--primary)]" />
+            </motion.div>
+
+            <motion.div
+              animate={{ y: [15, -15, 15], rotate: [0, -10, 0] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+              className="absolute -bottom-10 -left-10 w-20 h-20 bg-[rgba(250,204,21,0.1)] backdrop-blur-md rounded-2xl border border-[rgba(250,204,21,0.3)] flex items-center justify-center text-3xl shadow-xl"
+            >
+              <FaFire className="text-orange-500" />
+            </motion.div>
+
+          </motion.div>
+
+        </div>
       </section>
 
+      {/* Launching Soon Section */}
+      <section className="w-full text-gray-200 py-20 px-6 font-mono grid-bg relative overflow-hidden border-y border-[var(--glass-border)]">
+        <div className="absolute top-[-20%] left-[-10%] w-[400px] h-[400px] bg-[rgba(250,204,21,0.05)] rounded-full blur-[100px] pointer-events-none animate-pulse"></div>
+        <div className="max-w-6xl mx-auto text-center relative z-10">
+          <div className="inline-block border border-[var(--primary)] text-[var(--primary)] bg-[rgba(250,204,21,0.1)] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-[0.2em] mb-6 shadow-[0_0_10px_rgba(250,204,21,0.2)]">
+            <span className="relative flex h-2 w-2 inline-block mr-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--primary)] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--primary)]"></span>
+            </span>
+            Limited Time Offer
+          </div>
+          <h2 className="text-4xl md:text-5xl font-black text-white mb-6 drop-shadow-md tracking-tight">
+            🚀 LAUNCHING <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary)] to-amber-500 animate-text-glow">SOON</span>
+          </h2>
+          <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-12 leading-relaxed">
+            Get ready to boost your tech career with our exclusive Launch Day bonuses. Special discounts apply for a limited time!
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="glass-card p-8 rounded-2xl border border-[rgba(250,204,21,0.2)] hover:-translate-y-2 transition duration-300">
+              <div className="text-4xl text-[var(--primary)] mb-4 flex justify-center"><FaBookOpen /></div>
+              <h3 className="text-2xl font-bold text-white mb-2">25% OFF Courses</h3>
+              <p className="text-gray-400 text-sm">On Launch Day, unlock any premium structured course at an exclusive 25% discount.</p>
+            </div>
+
+            <div className="glass-card p-8 rounded-2xl border border-[rgba(250,204,21,0.2)] hover:-translate-y-2 transition duration-300">
+              <div className="text-4xl text-[var(--primary)] mb-4 flex justify-center"><FaUserCircle /></div>
+              <h3 className="text-2xl font-bold text-white mb-2">30 Days Mentorship</h3>
+              <p className="text-gray-400 text-sm">Access personalized 1-on-1 industry mentorship free for the first 30 days.</p>
+            </div>
+
+            <div className="glass-card p-8 rounded-2xl border border-[rgba(250,204,21,0.2)] hover:-translate-y-2 transition duration-300 bg-[rgba(250,204,21,0.05)] relative overflow-hidden">
+              <div className="absolute -right-8 top-4 bg-[var(--primary)] text-black text-[10px] font-bold px-10 py-1.5 rotate-45 shadow-md">FIRST 50</div>
+              <div className="text-4xl text-[var(--primary)] mb-4 flex justify-center"><FaStar /></div>
+              <h3 className="text-2xl font-bold text-[var(--primary)] mb-2 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]">Pioneer Badge</h3>
+              <p className="text-gray-300 text-sm">Be among the first 50 students to get a special profile badge granting an <span className="text-[var(--primary)] font-bold text-base">Extra 5% OFF</span> on all future products!</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Stats Section */}
       <section
@@ -679,8 +745,8 @@ const Home = () => {
                 key={index}
                 onClick={() => setActiveTab(index)}
                 className={`rounded-full px-5 py-3 text-sm font-semibold uppercase tracking-[0.18em] transition-all duration-300 border cursor-pointer ${activeTab === index
-                    ? "border-[var(--primary)] bg-[linear-gradient(135deg,rgba(250,204,21,0.15),rgba(250,204,21,0.08))] text-[var(--primary)] shadow-[0_0_24px_rgba(250,204,21,0.16)]"
-                    : "border-[var(--glass-border)] bg-black/30 text-gray-300 hover:border-[var(--primary)] hover:text-[var(--primary)]"
+                  ? "border-[var(--primary)] bg-[linear-gradient(135deg,rgba(250,204,21,0.15),rgba(250,204,21,0.08))] text-[var(--primary)] shadow-[0_0_24px_rgba(250,204,21,0.16)]"
+                  : "border-[var(--glass-border)] bg-black/30 text-gray-300 hover:border-[var(--primary)] hover:text-[var(--primary)]"
                   }`}
               >
                 {tab.title}
@@ -787,10 +853,10 @@ const Home = () => {
                   className="flex flex-col gap-6"
                   animate={columnIndex === 0 ? { y: ["0%", "-50%"] } : { y: ["-50%", "0%"] }}
                   transition={{
-                     repeat: Infinity,
-                     repeatType: "loop",
-                     duration: columnIndex === 0 ? 18 : 20,
-                     ease: "linear",
+                    repeat: Infinity,
+                    repeatType: "loop",
+                    duration: columnIndex === 0 ? 18 : 20,
+                    ease: "linear",
                   }}
                 >
                   {[...column, ...column].map((review, i) => (
@@ -922,7 +988,7 @@ const Home = () => {
                 {/* 3. Right Card: The Mastery */}
                 <div className="relative rounded-3xl p-8 bg-[#0d0d10]/90 border border-[rgba(250,204,21,0.18)] group-hover:border-[var(--primary)] group-hover:shadow-[0_0_35px_rgba(250,204,21,0.12)] transition-all duration-500 min-h-[170px] flex flex-col justify-between overflow-hidden">
                   <div className="absolute top-0 right-0 w-24 h-24 bg-[rgba(250,204,21,0.03)] rounded-full blur-xl pointer-events-none"></div>
-                  
+
                   <div>
                     <div className="flex items-center justify-between mb-4">
                       <span className="text-xs uppercase tracking-widest text-[var(--primary)] font-bold bg-[rgba(250,204,21,0.08)] border border-[rgba(250,204,21,0.25)] px-3 py-1 rounded-full flex items-center gap-1.5">
@@ -1108,9 +1174,9 @@ const Home = () => {
                 <div className="flex flex-col items-center text-center">
                   <div className="w-28 h-28 rounded-xl overflow-hidden mb-6 shadow-sm">
                     <img
-                       src={mentor.img}
-                       alt={mentor.name}
-                       className="w-full h-full object-cover"
+                      src={mentor.img}
+                      alt={mentor.name}
+                      className="w-full h-full object-cover"
                     />
                   </div>
                   <h3 className="text-xl font-bold text-[var(--primary)] mb-1">{mentor.name}</h3>
@@ -1439,6 +1505,42 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Core Team Section */}
+      <section className="w-full text-gray-200 py-24 px-6 font-mono grid-bg relative overflow-hidden">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-black text-[var(--primary)] tracking-wide animate-text-glow drop-shadow-[0_0_15px_rgba(250,204,21,0.3)]">
+              Meet Our Core Team
+            </h2>
+            <p className="text-gray-400 mt-4 max-w-xl mx-auto text-sm">
+              The passionate engineers, designers, and specialists building AlgoVista behind the scenes.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
+            {[
+              { name: "SUBHRADIP MISHRA", role: "Founder, Owner", desc: "Backend & Deployment" },
+              { name: "SHREYAS", role: "Co-Founder, Co-Owner", desc: "DB Management & Deployment" },
+              { name: "Taniya", role: "UI/UX & Frontend", desc: "Design & Documentation" },
+              { name: "Harshdeep", role: "System Design", desc: "System Design Expert" },
+              { name: "Harsh", role: "QA Specialist", desc: "Quality Assurance & Testing" },
+              { name: "Manjeet", role: "Data & Business", desc: "Business Management" },
+              { name: "Prdeep", role: "Customer Support", desc: "Support & Relations" },
+            ].map((member, idx) => (
+              <div key={idx} className="glass-card p-6 rounded-2xl border border-[var(--glass-border)] hover:border-[var(--primary)] hover:-translate-y-2 transition-all duration-300 text-center flex flex-col items-center group shadow-[0_0_20px_rgba(250,204,21,0.02)] hover:shadow-[0_0_25px_rgba(250,204,21,0.15)] bg-black/40">
+                <div className="w-24 h-24 rounded-full bg-[rgba(250,204,21,0.05)] border-2 border-[rgba(250,204,21,0.3)] group-hover:border-[var(--primary)] flex items-center justify-center mb-5 overflow-hidden transition-all duration-300">
+                  <FaUserCircle className="text-5xl text-[var(--primary)] opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300" />
+                </div>
+                <h3 className="text-lg font-extrabold text-gray-100 mb-1 tracking-wider uppercase">{member.name}</h3>
+                <p className="text-[var(--primary)] text-xs font-semibold uppercase tracking-widest mb-3 drop-shadow-[0_0_8px_rgba(250,204,21,0.4)]">{member.role}</p>
+                <div className="w-10 h-0.5 bg-[var(--primary)]/30 mb-3 group-hover:w-16 transition-all duration-300"></div>
+                <p className="text-gray-400 text-xs leading-relaxed uppercase">{member.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
 
 
 
@@ -1511,15 +1613,14 @@ const Home = () => {
                 {cliOutput.map((line, idx) => (
                   <div
                     key={idx}
-                    className={`leading-relaxed whitespace-pre-wrap ${
-                      line.startsWith("$")
+                    className={`leading-relaxed whitespace-pre-wrap ${line.startsWith("$")
                         ? "text-[var(--primary)] font-bold"
                         : line.startsWith("✓") || line.startsWith("🔓")
-                        ? "text-green-400 font-semibold"
-                        : line.includes("Available commands") || line.includes(" - ")
-                        ? "text-amber-200"
-                        : "text-gray-400"
-                    }`}
+                          ? "text-green-400 font-semibold"
+                          : line.includes("Available commands") || line.includes(" - ")
+                            ? "text-amber-200"
+                            : "text-gray-400"
+                      }`}
                   >
                     {line}
                   </div>
