@@ -1544,19 +1544,26 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Core Team Section */}
-      <section className="w-full text-gray-200 py-24 px-6 font-mono grid-bg relative overflow-hidden">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-black text-[var(--primary)] tracking-wide animate-text-glow drop-shadow-[0_0_15px_rgba(250,204,21,0.3)]">
+      {/* Core Team Section - Cinematic Bollywood x Big Startup Style */}
+      <section className="w-full text-gray-200 py-32 px-6 font-mono bg-[#030305] relative overflow-hidden">
+        {/* Cinematic Spotlights */}
+        <div className="absolute top-0 left-1/4 w-96 h-[600px] bg-[rgba(250,204,21,0.08)] blur-[120px] -rotate-45 pointer-events-none"></div>
+        <div className="absolute bottom-0 right-1/4 w-96 h-[600px] bg-[rgba(250,204,21,0.06)] blur-[120px] rotate-45 pointer-events-none"></div>
+
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="text-center mb-24 relative">
+            <div className="inline-block px-6 py-2 rounded-full border border-[rgba(250,204,21,0.3)] bg-[rgba(250,204,21,0.05)] text-[var(--primary)] text-sm font-bold uppercase tracking-[0.3em] mb-6 backdrop-blur-md">
+              The Visionaries
+            </div>
+            <h2 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-amber-200 to-white animate-text-glow drop-shadow-[0_0_30px_rgba(250,204,21,0.4)] tracking-tight uppercase">
               Meet Our Core Team
             </h2>
-            <p className="text-gray-400 mt-4 max-w-xl mx-auto text-sm">
-              The passionate engineers, designers, and specialists building AlgoVista behind the scenes.
+            <p className="text-gray-400 mt-6 max-w-2xl mx-auto text-lg">
+              The rockstars behind AlgoVista. Blending code, design, and business into a symphony of digital excellence.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 justify-center">
             {[
               { name: "SUBHRADIP MISHRA", role: "Founder, Owner", desc: "Backend & Deployment" },
               { name: "SHREYAS", role: "Co-Founder, Co-Owner", desc: "DB Management & Deployment" },
@@ -1566,40 +1573,62 @@ const Home = () => {
               { name: "Manjeet", role: "Data & Business", desc: "Business Management" },
               { name: "Prdeep", role: "Customer Support", desc: "Support & Relations" },
             ].map((member, idx) => (
-              <div key={idx} className="glass-card p-6 rounded-2xl border border-[var(--glass-border)] hover:border-[var(--primary)] hover:-translate-y-2 transition-all duration-300 text-center flex flex-col items-center group shadow-[0_0_20px_rgba(250,204,21,0.02)] hover:shadow-[0_0_25px_rgba(250,204,21,0.15)] bg-black/40">
-                <div className="w-24 h-24 rounded-full bg-[rgba(250,204,21,0.05)] border-2 border-[rgba(250,204,21,0.3)] group-hover:border-[var(--primary)] flex items-center justify-center mb-5 overflow-hidden transition-all duration-300">
-                  <FaUserCircle className="text-5xl text-[var(--primary)] opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300" />
+              <div key={idx} className="relative group rounded-3xl p-[1px] overflow-hidden transition-all duration-500 hover:-translate-y-4 hover:shadow-[0_20px_50px_rgba(250,204,21,0.2)]">
+                {/* Glowing Animated Border */}
+                <div className="absolute inset-0 bg-gradient-to-b from-[var(--primary)] to-transparent opacity-30 group-hover:opacity-100 transition-opacity duration-500"></div>
+                
+                <div className="relative h-full w-full bg-[#0a0a0f] rounded-3xl p-8 flex flex-col items-center text-center z-10 backdrop-blur-xl border border-white/5">
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-[rgba(250,204,21,0.2)] rounded-bl-full blur-xl group-hover:bg-[rgba(250,204,21,0.4)] transition-all duration-500"></div>
+                  
+                  <div className="w-28 h-28 rounded-full bg-gradient-to-tr from-[rgba(250,204,21,0.1)] to-[rgba(250,204,21,0.02)] border-2 border-[rgba(250,204,21,0.4)] group-hover:border-[var(--primary)] flex items-center justify-center mb-6 overflow-hidden transition-all duration-500 shadow-[0_0_20px_rgba(250,204,21,0.2)] group-hover:shadow-[0_0_40px_rgba(250,204,21,0.6)]">
+                    <FaUserCircle className="text-6xl text-[var(--primary)] opacity-90 group-hover:scale-125 transition-transform duration-700" />
+                  </div>
+                  
+                  <h3 className="text-xl font-extrabold text-white mb-2 tracking-wider uppercase drop-shadow-md">{member.name}</h3>
+                  <p className="text-[var(--primary)] text-sm font-bold uppercase tracking-widest mb-4 drop-shadow-[0_0_8px_rgba(250,204,21,0.6)]">{member.role}</p>
+                  
+                  <div className="w-12 h-1 bg-gradient-to-r from-transparent via-[var(--primary)] to-transparent mb-4 group-hover:w-full transition-all duration-500"></div>
+                  
+                  <p className="text-gray-400 text-sm leading-relaxed uppercase tracking-wide group-hover:text-gray-200 transition-colors">{member.desc}</p>
                 </div>
-                <h3 className="text-lg font-extrabold text-gray-100 mb-1 tracking-wider uppercase">{member.name}</h3>
-                <p className="text-[var(--primary)] text-xs font-semibold uppercase tracking-widest mb-3 drop-shadow-[0_0_8px_rgba(250,204,21,0.4)]">{member.role}</p>
-                <div className="w-10 h-0.5 bg-[var(--primary)]/30 mb-3 group-hover:w-16 transition-all duration-300"></div>
-                <p className="text-gray-400 text-xs leading-relaxed uppercase">{member.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
+      {/* Built by Nexora Labs Section - Epic Scale */}
+      <section className="w-full py-32 px-6 font-mono text-center relative overflow-hidden bg-[#020202]">
+        {/* Starfield / Grid Background */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_70%,transparent_100%)]"></div>
+        
+        {/* Glowing Orb */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-[rgba(250,204,21,0.05)] rounded-full blur-[150px] pointer-events-none"></div>
 
-
-
-
-
-
-      {/* Built by Nexora Labs Section */}
-      <section className="w-full py-12 px-6 font-mono text-center relative overflow-hidden bg-black/50 border-t border-[var(--glass-border)]">
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(250,204,21,0.03)_1px,transparent_1px),linear-gradient(0deg,rgba(250,204,21,0.03)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
-        <div className="max-w-4xl mx-auto relative z-10 flex flex-col items-center justify-center">
-          <p className="text-gray-400 mb-2 uppercase tracking-widest text-xs font-semibold">Innovation Partner</p>
-          <div className="flex items-center justify-center gap-3">
-            <h2 className="text-2xl md:text-3xl font-extrabold text-white flex items-center gap-2">
-              Built by <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary)] to-amber-500 animate-text-glow">Nexora Labs</span>
-            </h2>
-            <FaRocket className="text-[var(--primary)] text-2xl" />
-          </div>
-          <p className="mt-4 text-sm text-gray-500 max-w-lg">
-            Empowering the next generation of digital education platforms through scalable and elegant technology.
-          </p>
+        <div className="max-w-5xl mx-auto relative z-10 flex flex-col items-center justify-center">
+          <motion.div 
+            initial={{ scale: 0.8, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="flex flex-col items-center"
+          >
+            <p className="text-[var(--primary)] mb-6 uppercase tracking-[0.5em] text-sm font-bold drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]">
+              Official Innovation Partner
+            </p>
+            <div className="flex items-center justify-center gap-6 mb-8 group cursor-default">
+              <h2 className="text-5xl md:text-7xl font-black text-white flex items-center gap-4 transition-transform duration-500 group-hover:scale-105">
+                Built by 
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-[var(--primary)] to-amber-200 animate-text-glow drop-shadow-[0_0_30px_rgba(250,204,21,0.4)] px-2">
+                  Nexora Labs
+                </span>
+              </h2>
+              <FaRocket className="text-[var(--primary)] text-6xl group-hover:translate-x-4 group-hover:-translate-y-4 transition-transform duration-700 drop-shadow-[0_0_20px_rgba(250,204,21,0.6)]" />
+            </div>
+            <p className="text-xl text-gray-400 max-w-2xl leading-relaxed">
+              Empowering the next generation of digital education platforms through scalable, elegant, and state-of-the-art technology.
+            </p>
+          </motion.div>
         </div>
       </section>
 
