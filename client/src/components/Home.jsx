@@ -163,6 +163,7 @@ const Home = () => {
   const { session, setSession } = useContext(Context);
   const [profileOpen, setProfileOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState(null);
+  const [showOfferPopup, setShowOfferPopup] = useState(true);
   const [cliInput, setCliInput] = useState("");
   const [cliOutput, setCliOutput] = useState([
     "algovista-cli v2.0.4 - system loaded.",
@@ -257,7 +258,46 @@ const Home = () => {
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, ease: "easeOut" }}
-    >      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+    >      {/* Launching Offer Popup */}
+      {showOfferPopup && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <motion.div 
+            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            className="relative w-full max-w-md bg-[#07070a] border border-[var(--primary)] rounded-3xl p-8 shadow-[0_0_40px_rgba(250,204,21,0.3)] overflow-hidden text-center"
+          >
+            <div className="absolute -top-10 -right-10 w-32 h-32 bg-[rgba(250,204,21,0.2)] rounded-full blur-3xl pointer-events-none"></div>
+            <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-[rgba(250,204,21,0.1)] rounded-full blur-3xl pointer-events-none"></div>
+            
+            <button 
+              onClick={() => setShowOfferPopup(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-white hover:bg-[rgba(250,204,21,0.1)] p-2 rounded-full transition-all cursor-pointer z-10"
+            >
+              <CloseOutlined />
+            </button>
+            
+            <div className="relative z-10">
+              <div className="inline-block px-4 py-1.5 bg-[rgba(250,204,21,0.1)] text-[var(--primary)] text-[10px] font-bold uppercase tracking-widest rounded-full mb-5 border border-[var(--primary)]">
+                Special Launch Offer
+              </div>
+              <h3 className="text-2xl font-black text-white mb-3">
+                Full Stack AI Development
+              </h3>
+              <p className="text-gray-400 text-sm mb-6 leading-relaxed">
+                Our upcoming course is launching on <span className="text-white font-bold">15th August</span>! Register now to get an exclusive <span className="text-[var(--primary)] font-bold text-lg">15% OFF</span> only available on the launch day.
+              </p>
+              <button 
+                onClick={() => setShowOfferPopup(false)}
+                className="w-full btn-yellow py-3.5 rounded-xl font-bold text-black uppercase tracking-wider text-sm transition-transform hover:scale-105 active:scale-95 cursor-pointer shadow-[0_0_20px_rgba(250,204,21,0.4)]"
+              >
+                Got It!
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute left-[-8rem] top-24 h-72 w-72 rounded-full bg-[rgba(250,204,21,0.06)] blur-3xl" />
         <div className="absolute right-[-10rem] top-[32rem] h-96 w-96 rounded-full bg-[rgba(250,204,21,0.04)] blur-3xl" />
         <div className="absolute bottom-[-10rem] left-1/3 h-80 w-80 rounded-full bg-[rgba(250,204,21,0.03)] blur-3xl" />
@@ -293,36 +333,37 @@ const Home = () => {
               <span className="absolute left-0 -bottom-1.5 w-0 h-[2px] bg-[var(--primary)] transition-all duration-300 group-hover:w-full"></span>
             </Link>
 
-            {/* Resources Dropdown */}
+            {/* Product Dropdown */}
             <div className="relative group">
               <button className="flex h-10 items-center gap-1 whitespace-nowrap hover:text-[var(--primary)] transition-all cursor-pointer">
-                Resources <FaChevronDown className="ml-1 text-[10px] group-hover:rotate-180 transition-transform duration-300" />
+                Product <FaChevronDown className="ml-1 text-[10px] group-hover:rotate-180 transition-transform duration-300" />
               </button>
-              <div className="absolute left-0 mt-3 w-60 rounded-2xl border border-[rgba(250,204,21,0.15)] bg-[#07070a]/95 backdrop-blur-2xl shadow-xl opacity-0 scale-95 invisible group-hover:opacity-100 group-hover:visible group-hover:scale-100 transition-all duration-300 overflow-hidden">
+              <div className="absolute left-0 mt-3 w-72 rounded-2xl border border-[rgba(250,204,21,0.15)] bg-[#07070a]/95 backdrop-blur-2xl shadow-xl opacity-0 scale-95 invisible group-hover:opacity-100 group-hover:visible group-hover:scale-100 transition-all duration-300 overflow-hidden">
                 <div className="p-3 space-y-1">
-                  {[
-                    { name: "SDE Sheet", icon: <FaFileAlt className="text-[var(--primary)]" /> },
-                    { name: "System Design", icon: <FaCog className="text-[var(--primary)]" /> },
-                    { name: "Core Subjects", icon: <FaBook className="text-[var(--primary)]" /> },
-                    { name: "Interview Story", icon: <FaComments className="text-[var(--primary)]" /> }
-                  ].map((item, i) => (
-                    <div key={i} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[rgba(250,204,21,0.06)] hover:border-[rgba(250,204,21,0.12)] border border-transparent cursor-pointer transition-all duration-200">
-                      {item.icon} <span className="text-gray-300 hover:text-white transition-colors">{item.name}</span>
+                  <Link to="/roadmaps" className="flex items-start gap-3 p-3 rounded-xl hover:bg-[rgba(250,204,21,0.06)] hover:border-[rgba(250,204,21,0.12)] border border-transparent cursor-pointer transition-all duration-200 group/link">
+                    <div className="w-10 h-10 rounded-lg bg-[rgba(250,204,21,0.1)] flex items-center justify-center text-[var(--primary)] shrink-0"><FaRoad className="text-lg" /></div>
+                    <div>
+                      <div className="text-gray-200 group-hover/link:text-white font-semibold text-sm">Roadmap</div>
+                      <div className="text-[11px] text-gray-500 leading-snug mt-0.5">Guided paths to master skills step-by-step</div>
                     </div>
-                  ))}
+                  </Link>
+                  <Link to="/problems" className="flex items-start gap-3 p-3 rounded-xl hover:bg-[rgba(250,204,21,0.06)] hover:border-[rgba(250,204,21,0.12)] border border-transparent cursor-pointer transition-all duration-200 group/link">
+                    <div className="w-10 h-10 rounded-lg bg-[rgba(250,204,21,0.1)] flex items-center justify-center text-[var(--primary)] shrink-0"><FaLaptopCode className="text-lg" /></div>
+                    <div>
+                      <div className="text-gray-200 group-hover/link:text-white font-semibold text-sm">Problems</div>
+                      <div className="text-[11px] text-gray-500 leading-snug mt-0.5">Solve coding challenges & prepare</div>
+                    </div>
+                  </Link>
+                  <Link to="/resources" className="flex items-start gap-3 p-3 rounded-xl hover:bg-[rgba(250,204,21,0.06)] hover:border-[rgba(250,204,21,0.12)] border border-transparent cursor-pointer transition-all duration-200 group/link">
+                    <div className="w-10 h-10 rounded-lg bg-[rgba(250,204,21,0.1)] flex items-center justify-center text-[var(--primary)] shrink-0"><FaBook className="text-lg" /></div>
+                    <div>
+                      <div className="text-gray-200 group-hover/link:text-white font-semibold text-sm">Resources</div>
+                      <div className="text-[11px] text-gray-500 leading-snug mt-0.5">Curated SDE sheets & core subjects</div>
+                    </div>
+                  </Link>
                 </div>
               </div>
             </div>
-
-            <Link to="/roadmaps" className="relative flex h-10 items-center whitespace-nowrap hover-tech-yellow transition-all group">
-              Roadmap
-              <span className="absolute left-0 -bottom-1.5 w-0 h-[2px] bg-[var(--primary)] transition-all duration-300 group-hover:w-full"></span>
-            </Link>
-
-            <Link to="/problems" className="relative flex h-10 items-center whitespace-nowrap hover-tech-yellow transition-all group">
-              Problems
-              <span className="absolute left-0 -bottom-1.5 w-0 h-[2px] bg-[var(--primary)] transition-all duration-300 group-hover:w-full"></span>
-            </Link>
 
             <Link to="/mentorship" className="relative flex h-10 items-center whitespace-nowrap hover-tech-yellow transition-all group">
               Mentorship
@@ -407,9 +448,7 @@ const Home = () => {
           <div className="md:hidden w-full absolute top-full left-0 flex flex-col items-center py-6 space-y-4 animate-slide-down text-gray-200 font-mono border-t border-[rgba(250,204,21,0.15)] bg-black/95 backdrop-blur-3xl shadow-xl mt-2">
             {[
               { name: "Home", link: "/" },
-              { name: "Resources", link: "/resources" },
-              { name: "Roadmap", link: "/roadmaps" },
-              { name: "Problems", link: "/problems" },
+              { name: "Product", link: "/roadmaps" },
               { name: "Community", link: "/community" },
               { name: "Devtools", link: "/devtools" }
             ].map((item, i) => (
@@ -1547,8 +1586,25 @@ const Home = () => {
 
 
 
+      {/* Built by Nexora Labs Section */}
+      <section className="w-full py-12 px-6 font-mono text-center relative overflow-hidden bg-black/50 border-t border-[var(--glass-border)]">
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(250,204,21,0.03)_1px,transparent_1px),linear-gradient(0deg,rgba(250,204,21,0.03)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
+        <div className="max-w-4xl mx-auto relative z-10 flex flex-col items-center justify-center">
+          <p className="text-gray-400 mb-2 uppercase tracking-widest text-xs font-semibold">Innovation Partner</p>
+          <div className="flex items-center justify-center gap-3">
+            <h2 className="text-2xl md:text-3xl font-extrabold text-white flex items-center gap-2">
+              Built by <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary)] to-amber-500 animate-text-glow">Nexora Labs</span>
+            </h2>
+            <FaRocket className="text-[var(--primary)] text-2xl" />
+          </div>
+          <p className="mt-4 text-sm text-gray-500 max-w-lg">
+            Empowering the next generation of digital education platforms through scalable and elegant technology.
+          </p>
+        </div>
+      </section>
+
       <motion.footer
-        className="footer-shell relative mt-8 border-t border-[var(--glass-border)] text-[var(--text-main)] font-mono"
+        className="footer-shell relative border-t border-[var(--glass-border)] text-[var(--text-main)] font-mono"
         variants={revealUp}
         initial="hidden"
         whileInView="visible"
