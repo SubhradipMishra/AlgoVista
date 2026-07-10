@@ -258,40 +258,69 @@ const Home = () => {
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, ease: "easeOut" }}
-    >      {/* Launching Offer Popup */}
+    >      {/* Launching Offer Popup - Ultra Innovative */}
       {showOfferPopup && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <motion.div 
-            initial={{ scale: 0.9, opacity: 0, y: 20 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            className="relative w-full max-w-md bg-[#07070a] border border-[var(--primary)] rounded-3xl p-8 shadow-[0_0_40px_rgba(250,204,21,0.3)] overflow-hidden text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="absolute inset-0 bg-black/60 backdrop-blur-md"
+            onClick={() => setShowOfferPopup(false)}
+          />
+          <motion.div 
+            initial={{ scale: 0.8, opacity: 0, rotateX: 20, y: 50 }}
+            animate={{ scale: 1, opacity: 1, rotateX: 0, y: 0 }}
+            transition={{ type: "spring", damping: 15, stiffness: 100 }}
+            className="relative w-full max-w-lg bg-[#050508] border border-[rgba(250,204,21,0.3)] rounded-[2rem] p-10 shadow-[0_30px_60px_rgba(0,0,0,0.8),0_0_50px_rgba(250,204,21,0.15)] overflow-hidden text-center z-10"
+            style={{ transformPerspective: 1000 }}
           >
-            <div className="absolute -top-10 -right-10 w-32 h-32 bg-[rgba(250,204,21,0.2)] rounded-full blur-3xl pointer-events-none"></div>
-            <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-[rgba(250,204,21,0.1)] rounded-full blur-3xl pointer-events-none"></div>
+            {/* Animated Laser Grid Background inside popup */}
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(250,204,21,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(250,204,21,0.05)_1px,transparent_1px)] bg-[size:20px_20px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] pointer-events-none opacity-50"></div>
+            
+            {/* Pulsing Orbs */}
+            <div className="absolute -top-20 -right-20 w-48 h-48 bg-[var(--primary)] rounded-full blur-[80px] opacity-30 animate-pulse pointer-events-none"></div>
+            <div className="absolute -bottom-20 -left-20 w-48 h-48 bg-purple-600 rounded-full blur-[80px] opacity-20 pointer-events-none"></div>
             
             <button 
               onClick={() => setShowOfferPopup(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white hover:bg-[rgba(250,204,21,0.1)] p-2 rounded-full transition-all cursor-pointer z-10"
+              className="absolute top-5 right-5 text-gray-500 hover:text-[var(--primary)] bg-black/40 hover:bg-[rgba(250,204,21,0.1)] p-2.5 rounded-full transition-all cursor-pointer z-20 border border-transparent hover:border-[rgba(250,204,21,0.3)]"
             >
               <CloseOutlined />
             </button>
             
-            <div className="relative z-10">
-              <div className="inline-block px-4 py-1.5 bg-[rgba(250,204,21,0.1)] text-[var(--primary)] text-[10px] font-bold uppercase tracking-widest rounded-full mb-5 border border-[var(--primary)]">
-                Special Launch Offer
-              </div>
-              <h3 className="text-2xl font-black text-white mb-3">
-                Full Stack AI Development
-              </h3>
-              <p className="text-gray-400 text-sm mb-6 leading-relaxed">
-                Our upcoming course is launching on <span className="text-white font-bold">15th August</span>! Register now to get an exclusive <span className="text-[var(--primary)] font-bold text-lg">15% OFF</span> only available on the launch day.
-              </p>
-              <button 
-                onClick={() => setShowOfferPopup(false)}
-                className="w-full btn-yellow py-3.5 rounded-xl font-bold text-black uppercase tracking-wider text-sm transition-transform hover:scale-105 active:scale-95 cursor-pointer shadow-[0_0_20px_rgba(250,204,21,0.4)]"
+            <div className="relative z-10 flex flex-col items-center">
+              <motion.div 
+                animate={{ y: [0, -5, 0] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                className="w-16 h-16 rounded-2xl bg-[rgba(250,204,21,0.1)] border border-[rgba(250,204,21,0.3)] flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(250,204,21,0.2)]"
               >
-                Got It!
-              </button>
+                <FaRocket className="text-3xl text-[var(--primary)]" />
+              </motion.div>
+
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-gradient-to-r from-[rgba(250,204,21,0.1)] to-transparent text-[var(--primary)] text-[11px] font-black uppercase tracking-[0.2em] rounded-full mb-4 border-l-2 border-[var(--primary)]">
+                Exclusive Launch
+              </div>
+              
+              <h3 className="text-3xl font-black text-white mb-4 leading-tight">
+                Full Stack <br/>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary)] to-amber-300 animate-text-glow">AI Development</span>
+              </h3>
+              
+              <p className="text-gray-400 text-sm mb-8 leading-relaxed max-w-sm">
+                Next-gen curriculum drops on <span className="text-white font-bold border-b border-dashed border-gray-500 pb-0.5">August 15th</span>. Secure your spot now to lock in an exclusive <span className="text-[var(--primary)] font-black text-lg bg-[rgba(250,204,21,0.1)] px-2 py-0.5 rounded">15% OFF</span> launch discount!
+              </p>
+              
+              <motion.button 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setShowOfferPopup(false)}
+                className="w-full relative overflow-hidden group btn-yellow py-4 rounded-2xl font-black text-black uppercase tracking-widest text-sm cursor-pointer shadow-[0_0_25px_rgba(250,204,21,0.4)]"
+              >
+                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
+                <span className="relative flex items-center justify-center gap-2">
+                  Claim Offer <FaArrowRight />
+                </span>
+              </motion.button>
             </div>
           </motion.div>
         </div>
@@ -1597,40 +1626,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Built by Nexora Labs Section - Epic Scale */}
-      <section className="w-full py-32 px-6 font-mono text-center relative overflow-hidden bg-[#020202]">
-        {/* Starfield / Grid Background */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_70%,transparent_100%)]"></div>
-        
-        {/* Glowing Orb */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-[rgba(250,204,21,0.05)] rounded-full blur-[150px] pointer-events-none"></div>
 
-        <div className="max-w-5xl mx-auto relative z-10 flex flex-col items-center justify-center">
-          <motion.div 
-            initial={{ scale: 0.8, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="flex flex-col items-center"
-          >
-            <p className="text-[var(--primary)] mb-6 uppercase tracking-[0.5em] text-sm font-bold drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]">
-              Official Innovation Partner
-            </p>
-            <div className="flex items-center justify-center gap-6 mb-8 group cursor-default">
-              <h2 className="text-5xl md:text-7xl font-black text-white flex items-center gap-4 transition-transform duration-500 group-hover:scale-105">
-                Built by 
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-[var(--primary)] to-amber-200 animate-text-glow drop-shadow-[0_0_30px_rgba(250,204,21,0.4)] px-2">
-                  Nexora Labs
-                </span>
-              </h2>
-              <FaRocket className="text-[var(--primary)] text-6xl group-hover:translate-x-4 group-hover:-translate-y-4 transition-transform duration-700 drop-shadow-[0_0_20px_rgba(250,204,21,0.6)]" />
-            </div>
-            <p className="text-xl text-gray-400 max-w-2xl leading-relaxed">
-              Empowering the next generation of digital education platforms through scalable, elegant, and state-of-the-art technology.
-            </p>
-          </motion.div>
-        </div>
-      </section>
 
       <motion.footer
         className="footer-shell relative border-t border-[var(--glass-border)] text-[var(--text-main)] font-mono"
@@ -1783,9 +1779,31 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="mt-10 flex flex-col gap-3 border-t border-[var(--glass-border)] pt-6 text-sm text-gray-500 md:flex-row md:items-center md:justify-between">
-            <p>(c) {new Date().getFullYear()} AlgoVista. All rights reserved.</p>
-            <p>Designed for focused prep, visual clarity, and steady momentum.</p>
+          <div className="mt-12 flex flex-col gap-6 border-t border-[rgba(250,204,21,0.15)] pt-8">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="flex items-center gap-6">
+                <div className="flex flex-col">
+                  <span className="text-[10px] uppercase tracking-widest text-gray-600 font-bold mb-1">Business Partner</span>
+                  <a href="#" className="flex items-center gap-2 group">
+                    <span className="text-gray-300 font-bold group-hover:text-[var(--primary)] transition-colors">Nexora Labs</span>
+                    <FaRocket className="text-gray-500 group-hover:text-[var(--primary)] transition-colors text-xs" />
+                  </a>
+                </div>
+                <div className="w-px h-8 bg-[rgba(250,204,21,0.1)]"></div>
+                <div className="flex flex-col">
+                  <span className="text-[10px] uppercase tracking-widest text-gray-600 font-bold mb-1">AI Partner</span>
+                  <a href="#" className="flex items-center gap-2 group">
+                    <span className="text-gray-300 font-bold group-hover:text-purple-400 transition-colors">Vichaar</span>
+                    <FaFire className="text-gray-500 group-hover:text-purple-400 transition-colors text-xs" />
+                  </a>
+                </div>
+              </div>
+              
+              <div className="flex flex-col items-center md:items-end text-sm text-gray-500 gap-1">
+                <p>&copy; {new Date().getFullYear()} AlgoVista. All rights reserved.</p>
+                <p className="text-xs">Designed for focused prep, visual clarity, and steady momentum.</p>
+              </div>
+            </div>
           </div>
         </div>
       </motion.footer>
