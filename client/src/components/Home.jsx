@@ -36,6 +36,7 @@ import { Collapse } from "antd";
 const { Panel } = Collapse;
 import { useContext } from "react";
 import Context from "../util/context";
+import AlgoTufEliteSection from "./AlgoTufEliteSection";
 
 const typingCode = [
   "// Example: Quick Sort",
@@ -394,6 +395,14 @@ const Home = () => {
               </div>
             </div>
 
+            <Link to="/algotuf-elite" className="relative flex h-10 items-center whitespace-nowrap text-[var(--primary)] font-bold hover-tech-yellow transition-all group">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                AlgoTUF Elite
+              </span>
+              <span className="absolute left-0 -bottom-1.5 w-0 h-[2px] bg-[var(--primary)] transition-all duration-300 group-hover:w-full"></span>
+            </Link>
+
             <Link to="/mentorship" className="relative flex h-10 items-center whitespace-nowrap hover-tech-yellow transition-all group">
               Mentorship
               <span className="absolute left-0 -bottom-1.5 w-0 h-[2px] bg-[var(--primary)] transition-all duration-300 group-hover:w-full"></span>
@@ -477,6 +486,7 @@ const Home = () => {
           <div className="md:hidden w-full absolute top-full left-0 flex flex-col items-center py-6 space-y-4 animate-slide-down text-gray-200 font-mono border-t border-[rgba(250,204,21,0.15)] bg-black/95 backdrop-blur-3xl shadow-xl mt-2">
             {[
               { name: "Home", link: "/" },
+              { name: "AlgoTUF Elite ⚡", link: "/algotuf-elite" },
               { name: "Product", link: "/roadmaps" },
               { name: "Community", link: "/community" },
               { name: "Devtools", link: "/devtools" }
@@ -1627,6 +1637,9 @@ const Home = () => {
       </section>
 
 
+
+      {/* AlgoTUF Elite Section - Collaboration Program */}
+      <AlgoTufEliteSection />
 
       <motion.footer
         className="footer-shell relative border-t border-[var(--glass-border)] text-[var(--text-main)] font-mono"

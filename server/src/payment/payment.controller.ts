@@ -11,6 +11,7 @@ import { raw, Request, Response } from "express"
 import { createOrder } from '../order/order.controller';
 import MentorDetailsModel from '../mentor-deatils/mentor-deatils.model';
 import { createMentorship } from '../mentorship/mentorship.controller';
+import AlgoTufModel from '../algotuf/algotuf.model';
 
 
 const getInstance = () => {
@@ -245,6 +246,85 @@ export const generateOrderMentor = async (req: any, res: Response) => {
     return res.status(500).json({
       success: false,
       message: "Something went wrong while creating order",
+    });
+  }
+};
+
+export const generateOrderAlgoTuf = async (req: any, res: Response) => {
+  try {
+    const price = 5999;
+    const order = await getInstance().orders.create({
+      amount: price * 100,
+      currency: "INR",
+      receipt: `AlgoTUF_${Date.now()}`,
+      notes: {
+        user: req.user.id || req.user._id,
+        programName: "AlgoTUF Elite",
+        programType: "algotuf_elite",
+        price: 5999,
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      order,
+      price,
+    });
+  } catch (error: any) {
+    console.error("Generate AlgoTUF order error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to create AlgoTUF order",
+    });
+  }
+};
+
+export const verifyAlgoTufPayment = async (req: any, res: Response) => {
+  try {
+    const { paymentId, orderId } = req.body;
+    const userId = req.user.id || req.user._id;
+
+    if (!paymentId) {
+      return res.status(400).json({ success: false, message: "Payment ID is required" });
+    }
+
+    const existing = await AlgoTufModel.findOne({ paymentId });
+    if (existing) {
+      return res.json({ success: true, enrollment: existing, message: "Already enrolled!" });
+    }
+
+    const startDate = new Date();
+    const expiresAt = new Date(startDate);
+    expiresAt.setMonth(expiresAt.getMonth() + 18);
+
+    const enrollment = new AlgoTufModel({
+      user: userId,
+      paymentId: paymentId,
+      amount: 5999,
+      programName: "AlgoTUF Elite",
+      benefits: [
+        { name: "TUF Sprint Package", duration: "18 Months" },
+        { name: "AlgoVista MERN Stack Full Course", duration: "12 Months" },
+        { name: "AlgoVista Premium System Design Roadmap", duration: "6 Months" },
+        { name: "Group Mentorship", duration: "1 Month" }
+      ],
+      status: "active",
+      enrolledAt: startDate,
+      expiresAt: expiresAt,
+    });
+
+    await enrollment.save();
+
+    return res.status(200).json({
+      success: true,
+      enrollment,
+      message: "Successfully enrolled in AlgoTUF Elite!",
+    });
+  } catch (error: any) {
+    console.error("Verify AlgoTUF payment error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Payment verification failed",
     });
   }
 };

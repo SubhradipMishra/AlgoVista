@@ -47,6 +47,7 @@ import MentorProfile from "./components/MentorProfile";
 import { ManageMentors } from "./components/super-admin/ManageMentors";
 import MentorshipDetails from "./components/MentorshipDetails";
 import AdminMentorshipDetails from "./components/admin/AdminMentorshipDetails";
+import AlgoTufElitePage from "./components/AlgoTufElitePage";
 
 function App() {
   const [sessionLoading, setSessionLoading] = useState(true);
@@ -75,6 +76,8 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/algotuf-elite" element={<AlgoTufElitePage />} />
+          <Route path="/algotuf" element={<AlgoTufElitePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/community" element={<Community />} />

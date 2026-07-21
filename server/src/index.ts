@@ -181,3 +181,6 @@ app.use('/mentorship', MentorshipRouter)
 
 import CommunityRouter from "./community/community.routes";
 app.use("/community", CommunityRouter);
+
+import AlgoTufRouter from "./algotuf/algotuf.routes";
+app.use("/algotuf", AlgoTufRouter);
